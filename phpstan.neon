@@ -1,0 +1,19 @@
+includes:
+    - vendor/phpstan/phpstan-doctrine/extension.neon
+    - vendor/phpstan/phpstan-symfony/extension.neon
+
+parameters:
+    level: 8
+    paths:
+        - src
+    excludePaths:
+        - src/Kernel.php
+    symfony:
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+    doctrine:
+        repositoryClass: Doctrine\ORM\EntityRepository
+    ignoreErrors:
+        # SQL Server uses string IDs, which is intentional
+        - '#Property App\\Entity\\.*::\$.*Id \(string\) does not accept#'
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false

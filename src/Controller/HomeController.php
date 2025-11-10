@@ -5,42 +5,40 @@ namespace App\Controller;
 use App\Repository\TitleRepository;
 use App\Repository\AuthorRepository;
 use App\Repository\PublisherRepository;
-use App\Repository\SaleRepository;
+use App\Repository\StoreRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted('ROLE_ADMIN')]
-class DashboardController extends AbstractController
+class HomeController extends AbstractController
 {
-    #[Route('/admin', name: 'app_dashboard')]
+    #[Route('/', name: 'app_home', methods: ['GET'])]
     public function index(
         TitleRepository $titleRepository,
         AuthorRepository $authorRepository,
         PublisherRepository $publisherRepository,
-        SaleRepository $saleRepository
+        StoreRepository $storeRepository
     ): Response
     {
-        // Get statistics for dashboard
+        // Get statistics
         $totalTitles = count($titleRepository->findAll());
         $totalAuthors = count($authorRepository->findAll());
         $totalPublishers = count($publisherRepository->findAll());
-        $totalSales = count($saleRepository->findAll());
+        $totalStores = count($storeRepository->findAll());
 
-        // Get recent titles (last 6)
+        // Get recent items (limit 6)
         $recentTitles = $titleRepository->findBy([], ['pubdate' => 'DESC'], 6);
+        $recentAuthors = $authorRepository->findBy([], ['auLname' => 'ASC'], 6);
+        $featuredPublishers = $publisherRepository->findAll();
 
-        // Get all sales for recent activity
-        $recentSales = $saleRepository->findBy([], ['ordDate' => 'DESC'], 10);
-
-        return $this->render('dashboard/index.html.twig', [
+        return $this->render('home/index.html.twig', [
             'totalTitles' => $totalTitles,
             'totalAuthors' => $totalAuthors,
             'totalPublishers' => $totalPublishers,
-            'totalSales' => $totalSales,
+            'totalStores' => $totalStores,
             'recentTitles' => $recentTitles,
-            'recentSales' => $recentSales,
+            'recentAuthors' => $recentAuthors,
+            'featuredPublishers' => $featuredPublishers,
         ]);
     }
 }

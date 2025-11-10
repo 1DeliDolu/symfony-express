@@ -1,0 +1,45 @@
+{#
+    Reusable section component with modern styling
+
+    Usage:
+    {% embed 'base/section.html.twig' with {
+        'title': 'Section Title',
+        'subtitle': 'Optional subtitle',
+        'bg_color': 'bg-white', // Optional background color
+        'padding': 'py-12' // Optional padding
+    } %}
+        {% block section_content %}
+            Your content here
+        {% endblock %}
+    {% endembed %}
+#}
+
+{% set bg_color = bg_color|default('bg-white dark:bg-gray-900') %}
+{% set padding = padding|default('py-12 sm:py-16') %}
+{% set container_class = container_class|default('max-w-7xl') %}
+
+<section class="{{ bg_color }} {{ padding }}">
+    <div class="{{ container_class }} mx-auto px-4 sm:px-6 lg:px-8">
+        {% if title is defined %}
+            <div class="text-center mb-12">
+                {% if title %}
+                    <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                        {{ title }}
+                    </h2>
+                {% endif %}
+
+                {% if subtitle is defined %}
+                    <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                        {{ subtitle }}
+                    </p>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <div class="section-content">
+            {% block section_content %}
+                {# Default content or override this block #}
+            {% endblock %}
+        </div>
+    </div>
+</section>
