@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Title{% endblock %}
+
+{% block body %}
+    <h1>Title</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>TitleId</th>
+                <td>{{ title.titleId }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ title.title }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ title.type }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ title.price }}</td>
+            </tr>
+            <tr>
+                <th>Advance</th>
+                <td>{{ title.advance }}</td>
+            </tr>
+            <tr>
+                <th>Royalty</th>
+                <td>{{ title.royalty }}</td>
+            </tr>
+            <tr>
+                <th>YtdSales</th>
+                <td>{{ title.ytdSales }}</td>
+            </tr>
+            <tr>
+                <th>Notes</th>
+                <td>{{ title.notes }}</td>
+            </tr>
+            <tr>
+                <th>Pubdate</th>
+                <td>{{ title.pubdate ? title.pubdate|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_title_index') }}">back to list</a>
+
+    <a href="{{ path('app_title_edit', {'titleId': title.titleId}) }}">edit</a>
+
+    {{ include('title/_delete_form.html.twig') }}
+{% endblock %}

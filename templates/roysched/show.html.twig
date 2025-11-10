@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Roysched{% endblock %}
+
+{% block body %}
+    <h1>Roysched</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Lorange</th>
+                <td>{{ roysched.lorange }}</td>
+            </tr>
+            <tr>
+                <th>Hirange</th>
+                <td>{{ roysched.hirange }}</td>
+            </tr>
+            <tr>
+                <th>Royalty</th>
+                <td>{{ roysched.royalty }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_roysched_index') }}">back to list</a>
+
+    <a href="{{ path('app_roysched_edit', {'title': roysched.title}) }}">edit</a>
+
+    {{ include('roysched/_delete_form.html.twig') }}
+{% endblock %}

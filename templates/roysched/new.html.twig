@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Roysched{% endblock %}
+
+{% block body %}
+    <h1>Create new Roysched</h1>
+
+    {{ include('roysched/_form.html.twig') }}
+
+    <a href="{{ path('app_roysched_index') }}">back to list</a>
+{% endblock %}

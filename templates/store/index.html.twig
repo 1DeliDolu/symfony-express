@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Store index{% endblock %}
+
+{% block body %}
+    <h1>Store index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>StorId</th>
+                <th>StorName</th>
+                <th>StorAddress</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Zip</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for store in stores %}
+            <tr>
+                <td>{{ store.storId }}</td>
+                <td>{{ store.storName }}</td>
+                <td>{{ store.storAddress }}</td>
+                <td>{{ store.city }}</td>
+                <td>{{ store.state }}</td>
+                <td>{{ store.zip }}</td>
+                <td>
+                    <a href="{{ path('app_store_show', {'storId': store.storId}) }}">show</a>
+                    <a href="{{ path('app_store_edit', {'storId': store.storId}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_store_new') }}">Create new</a>
+{% endblock %}

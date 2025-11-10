@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Roysched index{% endblock %}
+
+{% block body %}
+    <h1>Roysched index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Lorange</th>
+                <th>Hirange</th>
+                <th>Royalty</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for roysched in royscheds %}
+            <tr>
+                <td>{{ roysched.lorange }}</td>
+                <td>{{ roysched.hirange }}</td>
+                <td>{{ roysched.royalty }}</td>
+                <td>
+                    <a href="{{ path('app_roysched_show', {'title': roysched.title}) }}">show</a>
+                    <a href="{{ path('app_roysched_edit', {'title': roysched.title}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_roysched_new') }}">Create new</a>
+{% endblock %}

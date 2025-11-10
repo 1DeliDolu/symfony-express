@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sale index{% endblock %}
+
+{% block body %}
+    <h1>Sale index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>OrdNum</th>
+                <th>OrdDate</th>
+                <th>Qty</th>
+                <th>Payterms</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for sale in sales %}
+            <tr>
+                <td>{{ sale.ordNum }}</td>
+                <td>{{ sale.ordDate ? sale.ordDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ sale.qty }}</td>
+                <td>{{ sale.payterms }}</td>
+                <td>
+                    <a href="{{ path('app_sale_show', {'store': sale.store}) }}">show</a>
+                    <a href="{{ path('app_sale_edit', {'store': sale.store}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_sale_new') }}">Create new</a>
+{% endblock %}

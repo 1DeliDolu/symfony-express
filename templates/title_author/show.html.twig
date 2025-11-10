@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TitleAuthor{% endblock %}
+
+{% block body %}
+    <h1>TitleAuthor</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>AuOrd</th>
+                <td>{{ title_author.auOrd }}</td>
+            </tr>
+            <tr>
+                <th>RoyaltyPer</th>
+                <td>{{ title_author.royaltyPer }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_title_author_index') }}">back to list</a>
+
+    <a href="{{ path('app_title_author_edit', {'author': title_author.author}) }}">edit</a>
+
+    {{ include('title_author/_delete_form.html.twig') }}
+{% endblock %}

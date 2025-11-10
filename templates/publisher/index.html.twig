@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Publisher index{% endblock %}
+
+{% block body %}
+    <h1>Publisher index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>PubId</th>
+                <th>PubName</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Country</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for publisher in publishers %}
+            <tr>
+                <td>{{ publisher.pubId }}</td>
+                <td>{{ publisher.pubName }}</td>
+                <td>{{ publisher.city }}</td>
+                <td>{{ publisher.state }}</td>
+                <td>{{ publisher.country }}</td>
+                <td>
+                    <a href="{{ path('app_publisher_show', {'pubId': publisher.pubId}) }}">show</a>
+                    <a href="{{ path('app_publisher_edit', {'pubId': publisher.pubId}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_publisher_new') }}">Create new</a>
+{% endblock %}

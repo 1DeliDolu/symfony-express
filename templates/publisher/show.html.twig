@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Publisher{% endblock %}
+
+{% block body %}
+    <h1>Publisher</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>PubId</th>
+                <td>{{ publisher.pubId }}</td>
+            </tr>
+            <tr>
+                <th>PubName</th>
+                <td>{{ publisher.pubName }}</td>
+            </tr>
+            <tr>
+                <th>City</th>
+                <td>{{ publisher.city }}</td>
+            </tr>
+            <tr>
+                <th>State</th>
+                <td>{{ publisher.state }}</td>
+            </tr>
+            <tr>
+                <th>Country</th>
+                <td>{{ publisher.country }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_publisher_index') }}">back to list</a>
+
+    <a href="{{ path('app_publisher_edit', {'pubId': publisher.pubId}) }}">edit</a>
+
+    {{ include('publisher/_delete_form.html.twig') }}
+{% endblock %}
