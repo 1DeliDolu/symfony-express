@@ -44,7 +44,7 @@ final class TitleAuthorController extends AbstractController
         ]);
     }
 
-    #[Route('/{author}', name: 'app_title_author_show', methods: ['GET'])]
+    #[Route('/{author}/{title}', name: 'app_title_author_show', methods: ['GET'])]
     public function show(TitleAuthor $titleAuthor): Response
     {
         return $this->render('title_author/show.html.twig', [
@@ -52,7 +52,7 @@ final class TitleAuthorController extends AbstractController
         ]);
     }
 
-    #[Route('/{author}/edit', name: 'app_title_author_edit', methods: ['GET', 'POST'])]
+    #[Route('/{author}/{title}/edit', name: 'app_title_author_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, TitleAuthor $titleAuthor, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(TitleAuthorType::class, $titleAuthor);
@@ -70,10 +70,10 @@ final class TitleAuthorController extends AbstractController
         ]);
     }
 
-    #[Route('/{author}', name: 'app_title_author_delete', methods: ['POST'])]
+    #[Route('/{author}/{title}', name: 'app_title_author_delete', methods: ['POST'])]
     public function delete(Request $request, TitleAuthor $titleAuthor, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$titleAuthor->getAuthor(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $titleAuthor->getAuthor()->getAuId() . $titleAuthor->getTitle()->getTitleId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($titleAuthor);
             $entityManager->flush();
         }

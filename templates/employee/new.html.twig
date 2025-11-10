@@ -1,11 +1,128 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}New Employee{% endblock %}
+{% block title %}Neuer Mitarbeiter{% endblock %}
+{% block page_title %}Neuen Mitarbeiter erstellen{% endblock %}
 
 {% block body %}
-    <h1>Create new Employee</h1>
+<!-- Breadcrumb -->
+<nav class="mb-6 flex" aria-label="Breadcrumb">
+    <ol class="inline-flex items-center space-x-1 md:space-x-3">
+        <li class="inline-flex items-center">
+            <a href="{{ path('app_dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                <svg class="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                </svg>
+                Dashboard
+            </a>
+        </li>
+        <li>
+            <div class="flex items-center">
+                <svg class="h-6 w-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                </svg>
+                <a href="{{ path('app_employee_index') }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white md:ml-2">
+                    Mitarbeiter
+                </a>
+            </div>
+        </li>
+        <li aria-current="page">
+            <div class="flex items-center">
+                <svg class="h-6 w-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                </svg>
+                <span class="ml-1 text-sm font-medium text-gray-500 dark:text-gray-400 md:ml-2">Neu erstellen</span>
+            </div>
+        </li>
+    </ol>
+</nav>
 
-    {{ include('employee/_form.html.twig') }}
+<!-- Form Card -->
+<div class="rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <div class="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+            Mitarbeiterinformationen
+        </h3>
+        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            Geben Sie die Details des neuen Mitarbeiters ein
+        </p>
+    </div>
 
-    <a href="{{ path('app_employee_index') }}">back to list</a>
+    <div class="p-6">
+        {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+            
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div class="lg:col-span-3">
+                    {{ form_label(form.empId, null, {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-900 dark:text-white'}}) }}
+                    {{ form_widget(form.empId, {'attr': {'class': 'block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500', 'placeholder': 'XXX-XXXXX oder 9 Ziffern'}}) }}
+                    {{ form_errors(form.empId) }}
+                    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Format: XXX-XXXXX oder 9 Ziffern</p>
+                </div>
+
+                <div>
+                    {{ form_label(form.fname, null, {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-900 dark:text-white'}}) }}
+                    {{ form_widget(form.fname, {'attr': {'class': 'block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'}}) }}
+                    {{ form_errors(form.fname) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.minit, null, {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-900 dark:text-white'}}) }}
+                    {{ form_widget(form.minit, {'attr': {'class': 'block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500', 'placeholder': 'M', 'maxlength': '1'}}) }}
+                    {{ form_errors(form.minit) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.lname, null, {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-900 dark:text-white'}}) }}
+                    {{ form_widget(form.lname, {'attr': {'class': 'block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'}}) }}
+                    {{ form_errors(form.lname) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.job, null, {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-900 dark:text-white'}}) }}
+                    {{ form_widget(form.job, {'attr': {'class': 'block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'}}) }}
+                    {{ form_errors(form.job) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.jobLvl, null, {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-900 dark:text-white'}}) }}
+                    {{ form_widget(form.jobLvl, {'attr': {'class': 'block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500', 'min': '10', 'max': '250'}}) }}
+                    {{ form_errors(form.jobLvl) }}
+                    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Level zwischen 10 und 250</p>
+                </div>
+
+                <div>
+                    {{ form_label(form.publisher, null, {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-900 dark:text-white'}}) }}
+                    {{ form_widget(form.publisher, {'attr': {'class': 'block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'}}) }}
+                    {{ form_errors(form.publisher) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.hireDate, null, {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-900 dark:text-white'}}) }}
+                    {{ form_widget(form.hireDate, {'attr': {'class': 'block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'}}) }}
+                    {{ form_errors(form.hireDate) }}
+                </div>
+            </div>
+
+            {{ form_rest(form) }}
+
+            <div class="flex items-center justify-between border-t border-gray-200 pt-6 dark:border-gray-800">
+                <a href="{{ path('app_employee_index') }}" 
+                   class="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:focus:ring-gray-700">
+                    <svg class="mr-2 inline-block h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Zurück zur Liste
+                </a>
+
+                <button type="submit" 
+                        class="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800">
+                    <svg class="mr-2 inline-block h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    Speichern
+                </button>
+            </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
 {% endblock %}

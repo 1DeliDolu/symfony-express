@@ -8,23 +8,21 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>AuId</th>
-                <th>AuLname</th>
-                <th>AuFname</th>
+                <th>Author ID</th>
+                <th>Last Name</th>
+                <th>First Name</th>
                 <th>Phone</th>
                 <th>Address</th>
                 <th>City</th>
                 <th>State</th>
                 <th>Zip</th>
                 <th>Contract</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for author in authors %}
             <tr>
-                <td>{{ author.id }}</td>
                 <td>{{ author.auId }}</td>
                 <td>{{ author.auLname }}</td>
                 <td>{{ author.auFname }}</td>
@@ -35,8 +33,8 @@
                 <td>{{ author.zip }}</td>
                 <td>{{ author.contract ? 'Yes' : 'No' }}</td>
                 <td>
-                    <a href="{{ path('app_author_show', {'id': author.id}) }}">show</a>
-                    <a href="{{ path('app_author_edit', {'id': author.id}) }}">edit</a>
+                    <a href="{{ path('app_author_show', {'id': author.auId}) }}">show</a>
+                    <a href="{{ path('app_author_edit', {'id': author.auId}) }}">edit</a>
                 </td>
             </tr>
         {% else %}

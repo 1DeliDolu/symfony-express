@@ -9,7 +9,7 @@
         <tbody>
             <tr>
                 <th>Id</th>
-                <td>{{ author.id }}</td>
+                <td>{{ author.auId }}</td>
             </tr>
             <tr>
                 <th>AuId</th>
@@ -52,7 +52,7 @@
 
     <a href="{{ path('app_author_index') }}">back to list</a>
 
-    <a href="{{ path('app_author_edit', {'id': author.id}) }}">edit</a>
+    <a href="{{ path('app_author_edit', {'id': author.auId}) }}">edit</a>
 
     {{ include('author/_delete_form.html.twig') }}
 {% endblock %}

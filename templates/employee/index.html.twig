@@ -1,43 +1,141 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}Employee index{% endblock %}
+{% block title %}Mitarbeiter{% endblock %}
+{% block page_title %}Mitarbeiter Verwaltung{% endblock %}
 
 {% block body %}
-    <h1>Employee index</h1>
+<div x-data="{
+  q:'',
+  sort:{key:'fname', dir:'asc'},
+  rows: {{ employees|json_encode|raw }},
+  get filtered(){
+    let r = this.rows.filter(x => 
+      [x.empId, x.fname, x.minit||'', x.lname, x.job?.jobDesc||'', x.publisher?.pubName||'']
+        .join(' ').toLowerCase().includes(this.q.toLowerCase())
+    );
+    r.sort((a,b)=>{
+      const k=this.sort.key, d=this.sort.dir==='asc'?1:-1;
+      let aVal = k.includes('.') ? k.split('.').reduce((o,i)=>o?.[i], a) : a[k];
+      let bVal = k.includes('.') ? k.split('.').reduce((o,i)=>o?.[i], b) : b[k];
+      return (aVal > bVal ? 1 : aVal < bVal ? -1 : 0) * d;
+    });
+    return r;
+  },
+  setSort(k){ 
+    this.sort.dir = (this.sort.key===k && this.sort.dir==='asc') ? 'desc':'asc'; 
+    this.sort.key=k; 
+  }
+}">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>EmpId</th>
-                <th>Fname</th>
-                <th>Minit</th>
-                <th>Lname</th>
-                <th>JobLvl</th>
-                <th>HireDate</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for employee in employees %}
-            <tr>
-                <td>{{ employee.empId }}</td>
-                <td>{{ employee.fname }}</td>
-                <td>{{ employee.minit }}</td>
-                <td>{{ employee.lname }}</td>
-                <td>{{ employee.jobLvl }}</td>
-                <td>{{ employee.hireDate ? employee.hireDate|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_employee_show', {'empId': employee.empId}) }}">show</a>
-                    <a href="{{ path('app_employee_edit', {'empId': employee.empId}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
+  <!-- Header with Search -->
+  <div class="mb-4 flex items-center justify-between gap-3">
+    <input x-model="q" type="text" placeholder="Mitarbeiter suchen..."
+           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"/>
+    <div class="flex items-center gap-3">
+      <span class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap" x-text="filtered.length + ' Mitarbeiter'"></span>
+      <a href="{{ path('app_employee_new') }}" 
+         class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 whitespace-nowrap">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Neu
+      </a>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <table class="min-w-full text-sm">
+      <thead class="bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+        <tr>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('empId')" class="font-semibold hover:underline">
+              ID <span x-show="sort.key==='empId'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('fname')" class="font-semibold hover:underline">
+              Vorname <span x-show="sort.key==='fname'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('lname')" class="font-semibold hover:underline">
+              Nachname <span x-show="sort.key==='lname'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('job.jobDesc')" class="font-semibold hover:underline">
+              Position <span x-show="sort.key==='job.jobDesc'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('jobLvl')" class="font-semibold hover:underline">
+              Level <span x-show="sort.key==='jobLvl'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('publisher.pubName')" class="font-semibold hover:underline">
+              Verlag <span x-show="sort.key==='publisher.pubName'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('hireDate.timestamp')" class="font-semibold hover:underline">
+              Einstellung <span x-show="sort.key==='hireDate.timestamp'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-right">Aktionen</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+        <template x-for="emp in filtered" :key="emp.empId">
+          <tr class="odd:bg-white even:bg-gray-50 hover:bg-blue-50/50 dark:odd:bg-gray-900 dark:even:bg-gray-800 dark:hover:bg-blue-900/20">
+            <td class="px-4 py-3">
+              <span class="font-mono text-xs text-gray-900 dark:text-white" x-text="emp.empId"></span>
+            </td>
+            <td class="px-4 py-3 text-gray-700 dark:text-gray-300">
+              <div class="flex items-center gap-2">
+                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" 
+                     x-text="(emp.fname?.charAt(0)||'?').toUpperCase()"></div>
+                <span x-text="emp.fname + (emp.minit ? ' ' + emp.minit + '.' : '')"></span>
+              </div>
+            </td>
+            <td class="px-4 py-3 font-medium text-gray-900 dark:text-white" x-text="emp.lname"></td>
+            <td class="px-4 py-3">
+              <span class="inline-flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-800 dark:bg-purple-900/20 dark:text-purple-400" 
+                    x-text="emp.job?.jobDesc || 'N/A'"></span>
+            </td>
+            <td class="px-4 py-3">
+              <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/20 dark:text-green-400" 
+                    x-text="'Lvl ' + (emp.jobLvl||10)"></span>
+            </td>
+            <td class="px-4 py-3 text-gray-700 dark:text-gray-300" x-text="emp.publisher?.pubName || 'N/A'"></td>
+            <td class="px-4 py-3 text-gray-700 dark:text-gray-300" 
+                x-text="emp.hireDate ? new Date(emp.hireDate.date).toLocaleDateString('de-DE') : 'N/A'"></td>
+            <td class="px-4 py-3 text-right">
+              <div class="inline-flex items-center gap-1">
+                <a :href="`{{ path('app_employee_show', {'empId': '__ID__'}) }}`.replace('__ID__', emp.empId)" 
+                   class="rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
+                  Anzeigen
+                </a>
+                <a :href="`{{ path('app_employee_edit', {'empId': '__ID__'}) }}`.replace('__ID__', emp.empId)" 
+                   class="rounded-lg bg-green-600 px-3 py-1.5 text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">
+                  Bearbeiten
+                </a>
+              </div>
+            </td>
+          </tr>
+        </template>
+        <tr x-show="filtered.length === 0">
+          <td colspan="8" class="px-6 py-12 text-center">
+            <p class="text-gray-600 dark:text-gray-400">Keine Mitarbeiter gefunden</p>
+            <button @click="q=''" class="mt-2 text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">
+              Suche zurücksetzen
+            </button>
+          </td>
+        </tr>
+      </tbody>
     </table>
+  </div>
 
-    <a href="{{ path('app_employee_new') }}">Create new</a>
+</div>
 {% endblock %}

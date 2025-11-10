@@ -1,7 +1,7 @@
 security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: "auto"
 
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
@@ -23,7 +23,7 @@ security:
             form_login:
                 login_path: app_login
                 check_path: app_login
-                username_parameter: email
+                username_parameter: _username
                 enable_csrf: true
                 default_target_path: app_store_index
                 always_use_default_target_path: false
@@ -31,8 +31,8 @@ security:
 
             # Remember me functionality
             remember_me:
-                secret: '%kernel.secret%'
-                lifetime: 604800  # 1 week in seconds
+                secret: "%kernel.secret%"
+                lifetime: 604800 # 1 week in seconds
                 path: /
                 always_remember_me: false
                 remember_me_parameter: _remember_me

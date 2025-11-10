@@ -21,14 +21,55 @@ final class EmployeeController extends AbstractController
     public function __construct(
         private readonly EmployeeRepository $employeeRepository,
         private readonly EntityManagerInterface $entityManager,
-    ) {
-    }
+    ) {}
 
     #[Route(name: 'app_employee_index', methods: ['GET'])]
     public function index(): Response
     {
+        $employees = $this->employeeRepository->findAll();
+
+        // Serialize employees for Alpine.js
+        $employeesData = array_map(function (Employee $employee) {
+            $data = [
+                'empId' => $employee->getEmpId(),
+                'fname' => $employee->getFname() ?? '',
+                'minit' => $employee->getMinit(),
+                'lname' => $employee->getLname() ?? '',
+                'jobLvl' => $employee->getJobLvl() ?? 10,
+                'hireDate' => null,
+                'job' => null,
+                'publisher' => null,
+            ];
+
+            // Safely handle hireDate
+            if ($employee->getHireDate() !== null) {
+                $data['hireDate'] = [
+                    'date' => $employee->getHireDate()->format('Y-m-d H:i:s'),
+                    'timestamp' => $employee->getHireDate()->getTimestamp(),
+                ];
+            }
+
+            // Safely handle job
+            if ($employee->getJob() !== null) {
+                $data['job'] = [
+                    'jobId' => $employee->getJob()->getJobId(),
+                    'jobDesc' => $employee->getJob()->getJobDesc(),
+                ];
+            }
+
+            // Safely handle publisher
+            if ($employee->getPublisher() !== null) {
+                $data['publisher'] = [
+                    'pubId' => $employee->getPublisher()->getPubId(),
+                    'pubName' => $employee->getPublisher()->getPubName(),
+                ];
+            }
+
+            return $data;
+        }, $employees);
+
         return $this->render('employee/index.html.twig', [
-            'employees' => $this->employeeRepository->findAll(),
+            'employees' => $employeesData,
         ]);
     }
 
@@ -83,7 +124,7 @@ final class EmployeeController extends AbstractController
     #[Route('/{empId}', name: 'app_employee_delete', methods: ['POST'])]
     public function delete(Request $request, Employee $employee): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$employee->getEmpId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $employee->getEmpId(), $request->getPayload()->getString('_token'))) {
             $this->entityManager->remove($employee);
             $this->entityManager->flush();
             $this->addFlash('success', 'Çalışan başarıyla silindi.');
