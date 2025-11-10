@@ -2,94 +2,88 @@
 
 namespace App\Entity;
 
-use App\Repository\AuthorRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: AuthorRepository::class)]
+#[ORM\Entity(repositoryClass: 'App\Repository\AuthorRepository')]
+#[ORM\Table(name: 'authors')]
 class Author
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(name: 'au_id', type: 'string', length: 11, unique: true)]
+    private string $auId;
 
-    #[ORM\Column(length: 50)]
-    private ?string $auId = null;
+    #[ORM\Column(name: 'au_lname', type: 'string', length: 40)]
+    private string $auLname;
 
-    #[ORM\Column(length: 255)]
-    private ?string $auLname = null;
+    #[ORM\Column(name: 'au_fname', type: 'string', length: 20)]
+    private string $auFname;
 
-    #[ORM\Column(length: 255)]
-    private ?string $auFname = null;
+    #[ORM\Column(
+        name: 'phone',
+        type: 'string',
+        length: 12,
+        options: ['default' => 'UNKNOWN']
+    )]
+    private string $phone = 'UNKNOWN';
 
-    #[ORM\Column(length: 255)]
-    private ?string $phone = null;
-
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(name: 'address', type: 'string', length: 40, nullable: true)]
     private ?string $address = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(name: 'city', type: 'string', length: 20, nullable: true)]
     private ?string $city = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(name: 'state', type: 'string', length: 2, nullable: true)]
     private ?string $state = null;
 
-    #[ORM\Column(length: 5, nullable: true)]
+    #[ORM\Column(name: 'zip', type: 'string', length: 5, nullable: true)]
     private ?string $zip = null;
 
-    #[ORM\Column]
-    private ?bool $contract = null;
+    #[ORM\Column(name: 'contract', type: 'boolean')]
+    private bool $contract;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    // 🧩 Getter / Setter Metodları
 
-    public function getAuId(): ?string
+    public function getAuId(): string
     {
         return $this->auId;
     }
 
-    public function setAuId(string $auId): static
+    public function setAuId(string $auId): self
     {
         $this->auId = $auId;
-
         return $this;
     }
 
-    public function getAuLname(): ?string
+    public function getAuLname(): string
     {
         return $this->auLname;
     }
 
-    public function setAuLname(string $auLname): static
+    public function setAuLname(string $auLname): self
     {
         $this->auLname = $auLname;
-
         return $this;
     }
 
-    public function getAuFname(): ?string
+    public function getAuFname(): string
     {
         return $this->auFname;
     }
 
-    public function setAuFname(string $auFname): static
+    public function setAuFname(string $auFname): self
     {
         $this->auFname = $auFname;
-
         return $this;
     }
 
-    public function getPhone(): ?string
+    public function getPhone(): string
     {
         return $this->phone;
     }
 
-    public function setPhone(string $phone): static
+    public function setPhone(string $phone): self
     {
         $this->phone = $phone;
-
         return $this;
     }
 
@@ -98,10 +92,9 @@ class Author
         return $this->address;
     }
 
-    public function setAddress(string $address): static
+    public function setAddress(?string $address): self
     {
         $this->address = $address;
-
         return $this;
     }
 
@@ -110,10 +103,9 @@ class Author
         return $this->city;
     }
 
-    public function setCity(?string $city): static
+    public function setCity(?string $city): self
     {
         $this->city = $city;
-
         return $this;
     }
 
@@ -122,10 +114,9 @@ class Author
         return $this->state;
     }
 
-    public function setState(?string $state): static
+    public function setState(?string $state): self
     {
         $this->state = $state;
-
         return $this;
     }
 
@@ -134,22 +125,20 @@ class Author
         return $this->zip;
     }
 
-    public function setZip(?string $zip): static
+    public function setZip(?string $zip): self
     {
         $this->zip = $zip;
-
         return $this;
     }
 
-    public function isContract(): ?bool
+    public function isContract(): bool
     {
         return $this->contract;
     }
 
-    public function setContract(bool $contract): static
+    public function setContract(bool $contract): self
     {
         $this->contract = $contract;
-
         return $this;
     }
 }

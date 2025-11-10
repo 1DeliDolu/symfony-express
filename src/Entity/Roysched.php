@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
+use App\Repository\RoyschedRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Title;
 
-#[ORM\Entity(repositoryClass: 'App\Repository\RoyschedRepository')]
+#[ORM\Entity(repositoryClass: RoyschedRepository::class)]
 #[ORM\Table(name: 'roysched')]
 class Roysched
 {

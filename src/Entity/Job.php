@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
+use App\Repository\JobRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: 'App\Repository\JobRepository')]
+#[ORM\Entity(repositoryClass: JobRepository::class)]
 #[ORM\Table(name: 'jobs')]
 class Job
 {

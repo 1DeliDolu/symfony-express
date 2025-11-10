@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
+use App\Repository\PubInfoRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Publisher;
 
-#[ORM\Entity(repositoryClass: 'App\Repository\PubInfoRepository')]
+#[ORM\Entity(repositoryClass: PubInfoRepository::class)]
 #[ORM\Table(name: 'pub_info')]
 class PubInfo
 {
