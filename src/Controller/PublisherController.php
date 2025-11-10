@@ -21,14 +21,26 @@ final class PublisherController extends AbstractController
     public function __construct(
         private readonly PublisherRepository $publisherRepository,
         private readonly EntityManagerInterface $entityManager,
-    ) {
-    }
+    ) {}
 
     #[Route(name: 'app_publisher_index', methods: ['GET'])]
     public function index(): Response
     {
+        $publishers = $this->publisherRepository->findAll();
+
+        // Serialize publishers for Alpine.js
+        $publishersData = array_map(function (Publisher $publisher) {
+            return [
+                'pubId' => $publisher->getPubId(),
+                'pubName' => $publisher->getPubName() ?? 'N/A',
+                'city' => $publisher->getCity() ?? 'N/A',
+                'state' => $publisher->getState() ?? 'N/A',
+                'country' => $publisher->getCountry() ?? 'USA',
+            ];
+        }, $publishers);
+
         return $this->render('publisher/index.html.twig', [
-            'publishers' => $this->publisherRepository->findAll(),
+            'publishers' => $publishersData,
         ]);
     }
 
@@ -89,7 +101,7 @@ final class PublisherController extends AbstractController
     #[Route('/{pubId}', name: 'app_publisher_delete', methods: ['POST'])]
     public function delete(Request $request, Publisher $publisher): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$publisher->getPubId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $publisher->getPubId(), $request->getPayload()->getString('_token'))) {
             $this->entityManager->remove($publisher);
             $this->entityManager->flush();
 

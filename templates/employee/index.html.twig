@@ -4,26 +4,32 @@
 {% block page_title %}Mitarbeiter Verwaltung{% endblock %}
 
 {% block body %}
+<style>
+[x-cloak] { display: none !important; }
+</style>
+
+{% set employeesJson = employees|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw %}
+
 <div x-data="{
-  q:'',
-  sort:{key:'fname', dir:'asc'},
-  rows: {{ employees|json_encode|raw }},
-  get filtered(){
-    let r = this.rows.filter(x => 
-      [x.empId, x.fname, x.minit||'', x.lname, x.job?.jobDesc||'', x.publisher?.pubName||'']
-        .join(' ').toLowerCase().includes(this.q.toLowerCase())
-    );
-    r.sort((a,b)=>{
-      const k=this.sort.key, d=this.sort.dir==='asc'?1:-1;
-      let aVal = k.includes('.') ? k.split('.').reduce((o,i)=>o?.[i], a) : a[k];
-      let bVal = k.includes('.') ? k.split('.').reduce((o,i)=>o?.[i], b) : b[k];
+  q: '',
+  sort: {key: 'fname', dir: 'asc'},
+  rows: {{ employeesJson }},
+  get filtered() {
+    let r = this.rows.filter(x => {
+      let searchStr = [x.empId, x.fname, x.minit||'', x.lname, x.job?.jobDesc||'', x.publisher?.pubName||''].join(' ').toLowerCase();
+      return searchStr.includes(this.q.toLowerCase());
+    });
+    r.sort((a,b) => {
+      const k = this.sort.key, d = this.sort.dir === 'asc' ? 1 : -1;
+      let aVal = k.includes('.') ? k.split('.').reduce((o,i) => o?.[i], a) : a[k];
+      let bVal = k.includes('.') ? k.split('.').reduce((o,i) => o?.[i], b) : b[k];
       return (aVal > bVal ? 1 : aVal < bVal ? -1 : 0) * d;
     });
     return r;
   },
-  setSort(k){ 
-    this.sort.dir = (this.sort.key===k && this.sort.dir==='asc') ? 'desc':'asc'; 
-    this.sort.key=k; 
+  setSort(k) { 
+    this.sort.dir = (this.sort.key === k && this.sort.dir === 'asc') ? 'desc' : 'asc'; 
+    this.sort.key = k; 
   }
 }">
 

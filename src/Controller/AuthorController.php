@@ -21,14 +21,30 @@ final class AuthorController extends AbstractController
     public function __construct(
         private readonly AuthorRepository $authorRepository,
         private readonly EntityManagerInterface $entityManager,
-    ) {
-    }
+    ) {}
 
     #[Route(name: 'app_author_index', methods: ['GET'])]
     public function index(): Response
     {
+        $authors = $this->authorRepository->findAll();
+
+        // Serialize authors for Alpine.js
+        $authorsData = array_map(function (Author $author) {
+            return [
+                'auId' => $author->getAuId(),
+                'auFname' => $author->getAuFname(),
+                'auLname' => $author->getAuLname(),
+                'phone' => $author->getPhone() ?? 'UNKNOWN',
+                'address' => $author->getAddress() ?? 'N/A',
+                'city' => $author->getCity() ?? 'N/A',
+                'state' => $author->getState() ?? 'N/A',
+                'zip' => $author->getZip() ?? 'N/A',
+                'contract' => $author->isContract(),
+            ];
+        }, $authors);
+
         return $this->render('author/index.html.twig', [
-            'authors' => $this->authorRepository->findAll(),
+            'authors' => $authorsData,
         ]);
     }
 
@@ -89,7 +105,7 @@ final class AuthorController extends AbstractController
     #[Route('/{id}', name: 'app_author_delete', methods: ['POST'])]
     public function delete(Request $request, Author $author): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$author->getAuId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $author->getAuId(), $request->getPayload()->getString('_token'))) {
             $this->entityManager->remove($author);
             $this->entityManager->flush();
 

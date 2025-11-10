@@ -1,41 +1,137 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}Publisher index{% endblock %}
+{% block title %}Yayıncılar{% endblock %}
+{% block page_title %}Yayıncı Yönetimi{% endblock %}
 
 {% block body %}
-    <h1>Publisher index</h1>
+<style>
+[x-cloak] { display: none !important; }
+</style>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>PubId</th>
-                <th>PubName</th>
-                <th>City</th>
-                <th>State</th>
-                <th>Country</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for publisher in publishers %}
-            <tr>
-                <td>{{ publisher.pubId }}</td>
-                <td>{{ publisher.pubName }}</td>
-                <td>{{ publisher.city }}</td>
-                <td>{{ publisher.state }}</td>
-                <td>{{ publisher.country }}</td>
-                <td>
-                    <a href="{{ path('app_publisher_show', {'pubId': publisher.pubId}) }}">show</a>
-                    <a href="{{ path('app_publisher_edit', {'pubId': publisher.pubId}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
+{% set publishersJson = publishers|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw %}
+
+<div x-data="{
+  q: '',
+  sort: {key: 'pubName', dir: 'asc'},
+  rows: {{ publishersJson }},
+  get filtered() {
+    let r = this.rows.filter(x => {
+      let searchStr = [x.pubId, x.pubName, x.city, x.state, x.country].join(' ').toLowerCase();
+      return searchStr.includes(this.q.toLowerCase());
+    });
+    r.sort((a,b) => {
+      const k = this.sort.key, d = this.sort.dir === 'asc' ? 1 : -1;
+      let aVal = a[k] || '';
+      let bVal = b[k] || '';
+      return (aVal > bVal ? 1 : aVal < bVal ? -1 : 0) * d;
+    });
+    return r;
+  },
+  setSort(k) { 
+    this.sort.dir = (this.sort.key === k && this.sort.dir === 'asc') ? 'desc' : 'asc'; 
+    this.sort.key = k; 
+  }
+}">
+
+  <!-- Header with Search -->
+  <div class="mb-4 flex items-center justify-between gap-3">
+    <input x-model="q" type="text" placeholder="Yayıncı ara..."
+           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"/>
+    <div class="flex items-center gap-3">
+      <span class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap" x-text="filtered.length + ' Yayıncı'"></span>
+      <a href="{{ path('app_publisher_new') }}" 
+         class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 whitespace-nowrap">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Yeni Yayıncı
+      </a>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <table class="min-w-full text-sm">
+      <thead class="bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+        <tr>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('pubId')" class="font-semibold hover:underline">
+              ID <span x-show="sort.key==='pubId'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('pubName')" class="font-semibold hover:underline">
+              Yayıncı Adı <span x-show="sort.key==='pubName'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('city')" class="font-semibold hover:underline">
+              Şehir <span x-show="sort.key==='city'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('state')" class="font-semibold hover:underline">
+              Eyalet <span x-show="sort.key==='state'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('country')" class="font-semibold hover:underline">
+              Ülke <span x-show="sort.key==='country'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-right">Aksiyonlar</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+        <template x-for="pub in filtered" :key="pub.pubId">
+          <tr class="odd:bg-white even:bg-gray-50 hover:bg-blue-50/50 dark:odd:bg-gray-900 dark:even:bg-gray-800 dark:hover:bg-blue-900/20">
+            <td class="px-4 py-3">
+              <span class="font-mono text-xs font-medium text-gray-900 dark:text-white" x-text="pub.pubId"></span>
+            </td>
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-2">
+                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400">
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                  </svg>
+                </div>
+                <span class="font-medium text-gray-900 dark:text-white" x-text="pub.pubName"></span>
+              </div>
+            </td>
+            <td class="px-4 py-3 text-gray-700 dark:text-gray-300" x-text="pub.city"></td>
+            <td class="px-4 py-3">
+              <span class="inline-flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-800 dark:bg-purple-900/20 dark:text-purple-400" 
+                    x-text="pub.state"></span>
+            </td>
+            <td class="px-4 py-3">
+              <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/20 dark:text-blue-400" 
+                    x-text="pub.country"></span>
+            </td>
+            <td class="px-4 py-3 text-right">
+              <div class="inline-flex items-center gap-1">
+                <a :href="`{{ path('app_publisher_show', {'pubId': '__ID__'}) }}`.replace('__ID__', pub.pubId)" 
+                   class="rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
+                  Görüntüle
+                </a>
+                <a :href="`{{ path('app_publisher_edit', {'pubId': '__ID__'}) }}`.replace('__ID__', pub.pubId)" 
+                   class="rounded-lg bg-green-600 px-3 py-1.5 text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">
+                  Düzenle
+                </a>
+              </div>
+            </td>
+          </tr>
+        </template>
+        <tr x-show="filtered.length === 0">
+          <td colspan="6" class="px-6 py-12 text-center">
+            <p class="text-gray-600 dark:text-gray-400">Yayıncı bulunamadı</p>
+            <button @click="q=''" class="mt-2 text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">
+              Aramayı temizle
+            </button>
+          </td>
+        </tr>
+      </tbody>
     </table>
+  </div>
 
-    <a href="{{ path('app_publisher_new') }}">Create new</a>
+</div>
 {% endblock %}

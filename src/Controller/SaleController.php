@@ -19,8 +19,29 @@ final class SaleController extends AbstractController
     #[Route(name: 'app_sale_index', methods: ['GET'])]
     public function index(SaleRepository $saleRepository): Response
     {
+        $sales = $saleRepository->findAll();
+
+        // Serialize sales for Alpine.js
+        $salesData = array_map(function (Sale $sale) {
+            $data = [
+                'storId' => $sale->getStore()->getStorId(),
+                'storName' => $sale->getStore()->getStorName() ?? 'N/A',
+                'ordNum' => $sale->getOrdNum(),
+                'titleId' => $sale->getTitle()->getTitleId(),
+                'titleName' => $sale->getTitle()->getTitle() ?? 'N/A',
+                'ordDate' => [
+                    'date' => $sale->getOrdDate()->format('Y-m-d H:i:s'),
+                    'timestamp' => $sale->getOrdDate()->getTimestamp(),
+                ],
+                'qty' => $sale->getQty(),
+                'payterms' => $sale->getPayterms(),
+            ];
+
+            return $data;
+        }, $sales);
+
         return $this->render('sale/index.html.twig', [
-            'sales' => $saleRepository->findAll(),
+            'sales' => $salesData,
         ]);
     }
 
@@ -73,7 +94,7 @@ final class SaleController extends AbstractController
     #[Route('/{store}', name: 'app_sale_delete', methods: ['POST'])]
     public function delete(Request $request, Sale $sale, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$sale->getStore(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $sale->getStore(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($sale);
             $entityManager->flush();
         }
