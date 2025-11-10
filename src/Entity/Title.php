@@ -1,48 +1,83 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\TitleRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Publisher;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TitleRepository::class)]
 #[ORM\Table(name: 'titles')]
 class Title
 {
     #[ORM\Id]
-    #[ORM\Column(name: 'title_id', type: 'string', length: 6, unique: true)]
+    #[ORM\Column(name: 'title_id', type: Types::STRING, length: 6, unique: true)]
+    #[Assert\NotBlank(message: 'Title ID cannot be blank.')]
+    #[Assert\Length(
+        min: 6,
+        max: 6,
+        exactMessage: 'Title ID must be exactly {{ limit }} characters.'
+    )]
+    #[Assert\Regex(
+        pattern: '/^[A-Z]{2}[0-9]{4}$/',
+        message: 'Title ID must follow the pattern: 2 uppercase letters followed by 4 digits (e.g., BU1032).'
+    )]
     private string $titleId;
 
-    #[ORM\Column(name: 'title', type: 'string', length: 80)]
+    #[ORM\Column(name: 'title', type: Types::STRING, length: 80)]
+    #[Assert\NotBlank(message: 'Title cannot be blank.')]
+    #[Assert\Length(
+        min: 1,
+        max: 80,
+        maxMessage: 'Title cannot be longer than {{ limit }} characters.'
+    )]
     private string $title;
 
-    #[ORM\Column(name: 'type', type: 'string', length: 12, options: ['default' => 'UNDECIDED'])]
+    #[ORM\Column(name: 'type', type: Types::STRING, length: 12, options: ['default' => 'UNDECIDED'])]
+    #[Assert\NotBlank]
+    #[Assert\Choice(
+        choices: ['business', 'mod_cook', 'popular_comp', 'psychology', 'trad_cook', 'UNDECIDED'],
+        message: 'Choose a valid type.'
+    )]
     private string $type = 'UNDECIDED';
 
     #[ORM\ManyToOne(targetEntity: Publisher::class)]
     #[ORM\JoinColumn(name: 'pub_id', referencedColumnName: 'pub_id', nullable: true)]
     private ?Publisher $publisher = null;
 
-    #[ORM\Column(name: 'price', type: 'decimal', precision: 19, scale: 4, nullable: true)]
+    #[ORM\Column(name: 'price', type: Types::DECIMAL, precision: 19, scale: 4, nullable: true)]
+    #[Assert\PositiveOrZero(message: 'Price must be zero or positive.')]
     private ?string $price = null;
 
-    #[ORM\Column(name: 'advance', type: 'decimal', precision: 19, scale: 4, nullable: true)]
+    #[ORM\Column(name: 'advance', type: Types::DECIMAL, precision: 19, scale: 4, nullable: true)]
+    #[Assert\PositiveOrZero(message: 'Advance must be zero or positive.')]
     private ?string $advance = null;
 
-    #[ORM\Column(name: 'royalty', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'royalty', type: Types::INTEGER, nullable: true)]
+    #[Assert\Range(
+        min: 0,
+        max: 100,
+        notInRangeMessage: 'Royalty must be between {{ min }} and {{ max }}.'
+    )]
     private ?int $royalty = null;
 
-    #[ORM\Column(name: 'ytd_sales', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'ytd_sales', type: Types::INTEGER, nullable: true)]
+    #[Assert\PositiveOrZero(message: 'Year-to-date sales must be zero or positive.')]
     private ?int $ytdSales = null;
 
-    #[ORM\Column(name: 'notes', type: 'string', length: 200, nullable: true)]
+    #[ORM\Column(name: 'notes', type: Types::STRING, length: 200, nullable: true)]
+    #[Assert\Length(
+        max: 200,
+        maxMessage: 'Notes cannot be longer than {{ limit }} characters.'
+    )]
     private ?string $notes = null;
 
-    #[ORM\Column(name: 'pubdate', type: 'datetime', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[ORM\Column(name: 'pubdate', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[Assert\NotNull]
     private \DateTimeInterface $pubdate;
-
-    // 🧩 Getter / Setter Metodları
 
     public function getTitleId(): string
     {

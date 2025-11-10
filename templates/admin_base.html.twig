@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="tr" x-data="{
+    page: '{{ page|default('dashboard') }}',
+    darkMode: false,
+    sidebarToggle: false,
+    scrollTop: false
+}"
+x-init="
+    darkMode = JSON.parse(localStorage.getItem('darkMode'));
+    $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))
+"
+:class="{'dark': darkMode === true}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard{% endblock %} - Pubs Management</title>
+
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+</head>
+<body class="bg-gray-100 dark:bg-gray-900">
+    <!-- Page Wrapper -->
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside
+            :class="sidebarToggle ? 'translate-x-0 lg:w-[90px]' : '-translate-x-full'"
+            class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overflow-y-hidden border-r border-gray-200 bg-white px-5 dark:border-gray-800 dark:bg-black lg:static lg:translate-x-0"
+        >
+            <!-- Sidebar Header -->
+            <div :class="sidebarToggle ? 'justify-center' : 'justify-between'" class="flex items-center gap-2 pt-8 sidebar-header pb-7">
+                <a href="{{ path('app_dashboard') }}" class="flex items-center gap-2">
+                    <span class="logo text-2xl font-bold text-blue-600 dark:text-blue-400" :class="sidebarToggle ? 'hidden' : ''">
+                        Pubs Admin
+                    </span>
+                    <span class="logo-icon text-xl font-bold text-blue-600 dark:text-blue-400" :class="sidebarToggle ? 'lg:block' : 'hidden'">
+                        PA
+                    </span>
+                </a>
+            </div>
+
+            <div class="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
+                <nav x-data="{selected: $persist('{{ selected_menu|default('Dashboard') }}')}">
+                    <!-- Menu Group -->
+                    <div>
+                        <h3 class="mb-4 text-xs uppercase leading-[20px] text-gray-400">
+                            <span class="menu-group-title" :class="sidebarToggle ? 'lg:hidden' : ''">MENU</span>
+                        </h3>
+
+                        <ul class="flex flex-col gap-2 mb-6">
+                            <!-- Dashboard -->
+                            <li>
+                                <a href="{{ path('app_dashboard') }}"
+                                   class="group flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium duration-300
+                                   {{ app.request.get('_route') == 'app_dashboard' ? 'bg-blue-50 text-blue-600 dark:bg-gray-800 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
+                                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M2.5 2.5h6.667v6.667H2.5V2.5zm0 8.333h6.667V17.5H2.5v-6.667zm8.333-8.333H17.5v6.667h-6.667V2.5zm0 8.333H17.5V17.5h-6.667v-6.667z"/>
+                                    </svg>
+                                    <span :class="sidebarToggle ? 'lg:hidden' : ''">Dashboard</span>
+                                </a>
+                            </li>
+
+                            <!-- Titles -->
+                            <li>
+                                <a href="{{ path('app_title_index') }}"
+                                   class="group flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium duration-300
+                                   {{ app.request.get('_route') starts with 'app_title' ? 'bg-blue-50 text-blue-600 dark:bg-gray-800 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
+                                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M4 4h12v2H4V4zm0 5h12v2H4V9zm0 5h12v2H4v-2z"/>
+                                    </svg>
+                                    <span :class="sidebarToggle ? 'lg:hidden' : ''">Kitaplar</span>
+                                </a>
+                            </li>
+
+                            <!-- Authors -->
+                            <li>
+                                <a href="{{ path('app_author_index') }}"
+                                   class="group flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium duration-300
+                                   {{ app.request.get('_route') starts with 'app_author' ? 'bg-blue-50 text-blue-600 dark:bg-gray-800 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
+                                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M10 10c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                    </svg>
+                                    <span :class="sidebarToggle ? 'lg:hidden' : ''">Yazarlar</span>
+                                </a>
+                            </li>
+
+                            <!-- Publishers -->
+                            <li>
+                                <a href="{{ path('app_publisher_index') }}"
+                                   class="group flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium duration-300
+                                   {{ app.request.get('_route') starts with 'app_publisher' ? 'bg-blue-50 text-blue-600 dark:bg-gray-800 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
+                                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm1 2v10h12V5H4z"/>
+                                    </svg>
+                                    <span :class="sidebarToggle ? 'lg:hidden' : ''">Yayıncılar</span>
+                                </a>
+                            </li>
+
+                            <!-- Stores -->
+                            <li>
+                                <a href="{{ path('app_store_index') }}"
+                                   class="group flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium duration-300
+                                   {{ app.request.get('_route') starts with 'app_store' ? 'bg-blue-50 text-blue-600 dark:bg-gray-800 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
+                                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M4 2h12l2 4v2h-1v10H3V8H2V6l2-4zm2 6v8h8V8H6zM5 6h10l-1-2H6L5 6z"/>
+                                    </svg>
+                                    <span :class="sidebarToggle ? 'lg:hidden' : ''">Mağazalar</span>
+                                </a>
+                            </li>
+
+                            <!-- Sales -->
+                            <li>
+                                <a href="{{ path('app_sale_index') }}"
+                                   class="group flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium duration-300
+                                   {{ app.request.get('_route') starts with 'app_sale' ? 'bg-blue-50 text-blue-600 dark:bg-gray-800 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
+                                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M3 3h14v2H3V3zm0 4h14v2H3V7zm0 4h14v2H3v-2zm0 4h14v2H3v-2z"/>
+                                    </svg>
+                                    <span :class="sidebarToggle ? 'lg:hidden' : ''">Satışlar</span>
+                                </a>
+                            </li>
+
+                            <!-- Employees -->
+                            <li>
+                                <a href="{{ path('app_employee_index') }}"
+                                   class="group flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium duration-300
+                                   {{ app.request.get('_route') starts with 'app_employee' ? 'bg-blue-50 text-blue-600 dark:bg-gray-800 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
+                                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M9 12c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4zm0-2c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/>
+                                    </svg>
+                                    <span :class="sidebarToggle ? 'lg:hidden' : ''">Çalışanlar</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="relative flex flex-col flex-1 overflow-x-hidden overflow-y-auto">
+            <!-- Small Device Overlay -->
+            <div
+                @click="sidebarToggle = false"
+                :class="sidebarToggle ? 'block' : 'hidden'"
+                class="fixed inset-0 z-9998 bg-black/20 lg:hidden"
+            ></div>
+
+            <!-- Header -->
+            <header class="sticky top-0 z-999 flex w-full border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+                <div class="flex grow items-center justify-between px-4 py-4 md:px-6">
+                    <div class="flex items-center gap-2 sm:gap-4">
+                        <!-- Hamburger Toggle BTN -->
+                        <button
+                            class="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 dark:border-gray-800 dark:text-gray-400"
+                            @click.stop="sidebarToggle = !sidebarToggle"
+                        >
+                            <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                <path d="M2 4h16v2H2V4zm0 5h16v2H2V9zm0 5h16v2H2v-2z"/>
+                            </svg>
+                        </button>
+
+                        <h1 class="text-xl font-semibold text-gray-800 dark:text-white">
+                            {% block page_title %}Dashboard{% endblock %}
+                        </h1>
+                    </div>
+
+                    <div class="flex items-center gap-3 sm:gap-4">
+                        <!-- Dark Mode Toggle -->
+                        <button
+                            @click="darkMode = !darkMode"
+                            class="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:text-gray-700 dark:border-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                        >
+                            <svg x-show="!darkMode" class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                <path d="M10 15a5 5 0 100-10 5 5 0 000 10zm0-2a3 3 0 110-6 3 3 0 010 6zM10 0a1 1 0 011 1v2a1 1 0 11-2 0V1a1 1 0 011-1zm0 16a1 1 0 011 1v2a1 1 0 11-2 0v-2a1 1 0 011-1zM1 10a1 1 0 011-1h2a1 1 0 110 2H2a1 1 0 01-1-1zm14 0a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1z"/>
+                            </svg>
+                            <svg x-show="darkMode" class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+                            </svg>
+                        </button>
+
+                        <!-- User Dropdown -->
+                        <div x-data="{ open: false }" class="relative">
+                            <button
+                                @click="open = !open"
+                                class="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800"
+                            >
+                                <span class="hidden text-sm font-medium text-gray-700 dark:text-gray-200 sm:block">
+                                    {{ app.user.email }}
+                                </span>
+                                <div class="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-medium">
+                                    {{ app.user.email|slice(0, 2)|upper }}
+                                </div>
+                            </button>
+
+                            <div
+                                x-show="open"
+                                @click.away="open = false"
+                                x-transition
+                                class="absolute right-0 mt-2 w-48 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900"
+                            >
+                                <a href="{{ path('app_logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800">
+                                    Çıkış Yap
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="grow">
+                <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+                    {% for message in app.flashes('success') %}
+                        <div class="mb-4 rounded-lg bg-green-50 px-4 py-3 text-sm text-green-800 dark:bg-green-900/20 dark:text-green-300">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+                    {% for message in app.flashes('error') %}
+                        <div class="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800 dark:bg-red-900/20 dark:text-red-300">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+                    {% block body %}{% endblock %}
+                </div>
+            </main>
+        </div>
+    </div>
+
+    {% block javascripts %}
+        <script src="//unpkg.com/alpinejs" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</body>
+</html>

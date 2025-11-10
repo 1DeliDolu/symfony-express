@@ -1,62 +1,184 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="tr" x-data="{ darkMode: false }"
+      x-init="darkMode = JSON.parse(localStorage.getItem('darkMode')); $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))"
+      :class="{'dark': darkMode === true}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayıt Ol - Pubs Admin</title>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+</head>
+<body class="bg-white dark:bg-gray-900">
+    <div class="flex min-h-screen">
+        <!-- Form Section -->
+        <div class="flex w-full flex-col lg:w-1/2">
+            <div class="flex flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+                <div class="mx-auto w-full max-w-md">
+                    <!-- Logo/Brand -->
+                    <div class="mb-10">
+                        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+                            Pubs Admin
+                        </h1>
+                        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                            Admin paneline hoş geldiniz
+                        </p>
+                    </div>
 
-{% block title %}Kayıt Ol{% endblock %}
+                    <!-- Sign Up Form -->
+                    <div>
+                        <div class="mb-8">
+                            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                                Kayıt Ol
+                            </h2>
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                Yeni bir admin hesabı oluşturun
+                            </p>
+                        </div>
 
-{% block body %}
-<section class="auth-card">
-    <h1>Yeni Hesap Oluştur</h1>
-    <p class="auth-card__lead">Pubs verilerini yönetmek için tek hesap yeterli.</p>
+                        {{ form_start(registrationForm, {'attr': {'class': 'space-y-5'}}) }}
+                            <!-- Email -->
+                            <div>
+                                <label for="{{ registrationForm.email.vars.id }}" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                                    {{ registrationForm.email.vars.label }}
+                                </label>
+                                {{ form_widget(registrationForm.email, {
+                                    'attr': {
+                                        'autocomplete': 'email',
+                                        'class': 'w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500',
+                                        'placeholder': 'ornek@email.com'
+                                    }
+                                }) }}
+                                {% set emailErrors = form_errors(registrationForm.email) %}
+                                {% if emailErrors %}
+                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ emailErrors }}</p>
+                                {% endif %}
+                            </div>
 
-    {{ form_start(registrationForm, {attr: {class: 'space-y-4'}}) }}
-        <div class="form-field">
-            <label class="form-label">
-                <span>{{ registrationForm.email.vars.label }}</span>
-                {{ form_widget(registrationForm.email, {'attr': {'autocomplete': 'email'}}) }}
-            </label>
-            {% set emailErrors = form_errors(registrationForm.email) %}
-            {% if emailErrors %}
-                <span class="form-error">{{ emailErrors }}</span>
-            {% endif %}
+                            <!-- Password -->
+                            <div>
+                                <label for="{{ registrationForm.plainPassword.first.vars.id }}" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                                    {{ registrationForm.plainPassword.first.vars.label }}
+                                </label>
+                                {{ form_widget(registrationForm.plainPassword.first, {
+                                    'attr': {
+                                        'autocomplete': 'new-password',
+                                        'class': 'w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500',
+                                        'placeholder': '••••••••'
+                                    }
+                                }) }}
+                                {% set passwordErrors = form_errors(registrationForm.plainPassword.first) %}
+                                {% if passwordErrors %}
+                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ passwordErrors }}</p>
+                                {% endif %}
+                            </div>
+
+                            <!-- Password Confirmation -->
+                            <div>
+                                <label for="{{ registrationForm.plainPassword.second.vars.id }}" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                                    {{ registrationForm.plainPassword.second.vars.label }}
+                                </label>
+                                {{ form_widget(registrationForm.plainPassword.second, {
+                                    'attr': {
+                                        'autocomplete': 'new-password',
+                                        'class': 'w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500',
+                                        'placeholder': '••••••••'
+                                    }
+                                }) }}
+                                {% set passwordRepeatErrors = form_errors(registrationForm.plainPassword.second) %}
+                                {% if passwordRepeatErrors %}
+                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ passwordRepeatErrors }}</p>
+                                {% endif %}
+                            </div>
+
+                            <!-- Terms Agreement -->
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    {{ form_widget(registrationForm.agreeTerms, {
+                                        'attr': {
+                                            'class': 'h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800'
+                                        }
+                                    }) }}
+                                </div>
+                                <div class="ml-3">
+                                    <label for="{{ registrationForm.agreeTerms.vars.id }}" class="text-sm text-gray-700 dark:text-gray-300">
+                                        {{ registrationForm.agreeTerms.vars.label|raw }}
+                                    </label>
+                                    {% set termsErrors = form_errors(registrationForm.agreeTerms) %}
+                                    {% if termsErrors %}
+                                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ termsErrors }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button
+                                type="submit"
+                                class="w-full rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600"
+                            >
+                                Kayıt Ol
+                            </button>
+                        {{ form_end(registrationForm) }}
+
+                        <!-- Login Link -->
+                        <div class="mt-6 text-center">
+                            <p class="text-sm text-gray-600 dark:text-gray-400">
+                                Zaten hesabınız var mı?
+                                <a href="{{ path('app_login') }}" class="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+                                    Giriş Yap
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Dark Mode Toggle -->
+                    <div class="mt-8 flex justify-center">
+                        <button
+                            @click="darkMode = !darkMode"
+                            class="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-800"
+                        >
+                            <svg x-show="!darkMode" class="h-5 w-5 fill-current" viewBox="0 0 20 20">
+                                <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
+                            </svg>
+                            <svg x-show="darkMode" class="h-5 w-5 fill-current" viewBox="0 0 20 20">
+                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="form-field">
-            <label class="form-label">
-                <span>{{ registrationForm.plainPassword.first.vars.label }}</span>
-                {{ form_widget(registrationForm.plainPassword.first, {'attr': {'autocomplete': 'new-password'}}) }}
-            </label>
-            {% set passwordErrors = form_errors(registrationForm.plainPassword.first) %}
-            {% if passwordErrors %}
-                <span class="form-error">{{ passwordErrors }}</span>
-            {% endif %}
+        <!-- Image Section -->
+        <div class="relative hidden lg:block lg:w-1/2">
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-800 dark:to-blue-950">
+                <div class="flex h-full flex-col items-center justify-center px-12 text-white">
+                    <svg class="mb-8 h-24 w-24 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                    <h2 class="mb-4 text-center text-3xl font-bold">
+                        Yönetim Sistemi
+                    </h2>
+                    <p class="text-center text-lg opacity-90">
+                        Kitap, yazar ve satış verilerinizi profesyonel şekilde yönetin
+                    </p>
+                    <div class="mt-8 grid grid-cols-2 gap-4">
+                        <div class="rounded-lg bg-white/10 p-4 backdrop-blur-sm">
+                            <p class="text-center font-semibold">Kolay Yönetim</p>
+                        </div>
+                        <div class="rounded-lg bg-white/10 p-4 backdrop-blur-sm">
+                            <p class="text-center font-semibold">Modern Arayüz</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <div class="form-field">
-            <label class="form-label">
-                <span>{{ registrationForm.plainPassword.second.vars.label }}</span>
-                {{ form_widget(registrationForm.plainPassword.second, {'attr': {'autocomplete': 'new-password'}}) }}
-            </label>
-            {% set passwordRepeatErrors = form_errors(registrationForm.plainPassword.second) %}
-            {% if passwordRepeatErrors %}
-                <span class="form-error">{{ passwordRepeatErrors }}</span>
-            {% endif %}
-        </div>
-
-        <div class="form-field">
-            <label class="form-label form-label--checkbox">
-                {{ form_widget(registrationForm.agreeTerms) }}
-                <span>{{ registrationForm.agreeTerms.vars.label }}</span>
-            </label>
-            {% set termsErrors = form_errors(registrationForm.agreeTerms) %}
-            {% if termsErrors %}
-                <span class="form-error">{{ termsErrors }}</span>
-            {% endif %}
-        </div>
-
-        <button class="btn-primary w-full" type="submit">Kayıt Ol</button>
-    {{ form_end(registrationForm) }}
-
-    <p class="auth-card__footer">
-        Zaten bir hesabın var mı? <a href="{{ path('app_login') }}">Giriş yap</a>
-    </p>
-</section>
-{% endblock %}
+    {% block javascripts %}
+        <script src="//unpkg.com/alpinejs" defer></script>
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</body>
+</html>

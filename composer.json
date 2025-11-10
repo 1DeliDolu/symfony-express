@@ -41,7 +41,6 @@
         "symfony/ux-turbo": "^2.31",
         "symfony/validator": "7.3.*",
         "symfony/web-link": "7.3.*",
-        "symfony/webpack-encore-bundle": "^2.3",
         "symfony/yaml": "7.3.*",
         "symfonycasts/tailwind-bundle": "^0.11.1",
         "twig/extra-bundle": "^2.12|^3.0",
@@ -101,11 +100,16 @@
     },
     "require-dev": {
         "doctrine/orm": "^3.5",
+        "friendsofphp/php-cs-fixer": "^3.69",
+        "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan-doctrine": "^2.0",
+        "phpstan/phpstan-symfony": "^2.0",
         "phpunit/phpunit": "^12.4",
         "symfony/browser-kit": "7.3.*",
         "symfony/css-selector": "7.3.*",
         "symfony/debug-bundle": "7.3.*",
         "symfony/maker-bundle": "^1.64",
+        "symfony/phpunit-bridge": "7.3.*",
         "symfony/stopwatch": "7.3.*",
         "symfony/web-profiler-bundle": "7.3.*"
     }

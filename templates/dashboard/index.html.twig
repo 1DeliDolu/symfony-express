@@ -1,0 +1,217 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block body %}
+<!-- Statistics Cards -->
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7 mb-6">
+    <!-- Total Titles Card -->
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between">
+            <div>
+                <h4 class="text-xl font-bold text-gray-900 dark:text-white">{{ totalTitles }}</h4>
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Toplam Kitap</span>
+            </div>
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-900/20">
+                <svg class="fill-blue-600 dark:fill-blue-400" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M6 2h12a2 2 0 012 2v16a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2zm1 2v16h10V4H7z"/>
+                </svg>
+            </div>
+        </div>
+        <div class="mt-4">
+            <a href="{{ path('app_title_index') }}" class="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+                Tümünü Görüntüle →
+            </a>
+        </div>
+    </div>
+
+    <!-- Total Authors Card -->
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between">
+            <div>
+                <h4 class="text-xl font-bold text-gray-900 dark:text-white">{{ totalAuthors }}</h4>
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Toplam Yazar</span>
+            </div>
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-green-50 dark:bg-green-900/20">
+                <svg class="fill-green-600 dark:fill-green-400" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+            </div>
+        </div>
+        <div class="mt-4">
+            <a href="{{ path('app_author_index') }}" class="text-sm font-medium text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300">
+                Tümünü Görüntüle →
+            </a>
+        </div>
+    </div>
+
+    <!-- Total Publishers Card -->
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between">
+            <div>
+                <h4 class="text-xl font-bold text-gray-900 dark:text-white">{{ totalPublishers }}</h4>
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Toplam Yayıncı</span>
+            </div>
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-purple-50 dark:bg-purple-900/20">
+                <svg class="fill-purple-600 dark:fill-purple-400" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M5 5h14a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1zm1 2v10h12V7H6z"/>
+                </svg>
+            </div>
+        </div>
+        <div class="mt-4">
+            <a href="{{ path('app_publisher_index') }}" class="text-sm font-medium text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300">
+                Tümünü Görüntüle →
+            </a>
+        </div>
+    </div>
+
+    <!-- Total Sales Card -->
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between">
+            <div>
+                <h4 class="text-xl font-bold text-gray-900 dark:text-white">{{ totalSales }}</h4>
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Toplam Satış</span>
+            </div>
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-orange-50 dark:bg-orange-900/20">
+                <svg class="fill-orange-600 dark:fill-orange-400" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M7 4h10l2 4v2h-1v10H6V10H5V8l2-4zm1 6v8h8v-8H8zm-1-4h10l-1-2H8l-1 2z"/>
+                </svg>
+            </div>
+        </div>
+        <div class="mt-4">
+            <a href="{{ path('app_sale_index') }}" class="text-sm font-medium text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300">
+                Tümünü Görüntüle →
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Items Section -->
+<div class="grid grid-cols-1 gap-4 md:gap-6 xl:grid-cols-2 2xl:gap-7">
+    <!-- Recent Titles -->
+    <div class="rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Son Eklenen Kitaplar</h3>
+        </div>
+        <div class="p-6">
+            <div class="space-y-4">
+                {% for title in recentTitles %}
+                    <div class="flex items-start justify-between border-b border-gray-100 pb-4 last:border-0 last:pb-0 dark:border-gray-800">
+                        <div class="flex-1">
+                            <h4 class="font-medium text-gray-900 dark:text-white">{{ title.title }}</h4>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                Tür: {{ title.type }}
+                                {% if title.publisher %}
+                                    • {{ title.publisher.pubName }}
+                                {% endif %}
+                            </p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500">
+                                {{ title.pubdate|date('d.m.Y') }}
+                            </p>
+                        </div>
+                        {% if title.price %}
+                            <span class="text-sm font-semibold text-blue-600 dark:text-blue-400">
+                                ${{ title.price }}
+                            </span>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <p class="text-center text-gray-500 dark:text-gray-400">Henüz kitap eklenmemiş</p>
+                {% endfor %}
+            </div>
+            {% if recentTitles|length > 0 %}
+                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800">
+                    <a href="{{ path('app_title_index') }}" class="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+                        Tüm Kitapları Görüntüle →
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Recent Sales -->
+    <div class="rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Son Satışlar</h3>
+        </div>
+        <div class="p-6">
+            <div class="space-y-4">
+                {% for sale in recentSales %}
+                    <div class="flex items-start justify-between border-b border-gray-100 pb-4 last:border-0 last:pb-0 dark:border-gray-800">
+                        <div class="flex-1">
+                            <h4 class="font-medium text-gray-900 dark:text-white">Sipariş #{{ sale.ordNum }}</h4>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                Miktar: {{ sale.qty }} adet
+                            </p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500">
+                                {{ sale.ordDate|date('d.m.Y') }}
+                            </p>
+                        </div>
+                        <span class="text-xs rounded-full bg-green-100 px-2 py-1 font-medium text-green-800 dark:bg-green-900/20 dark:text-green-400">
+                            {{ sale.payterms }}
+                        </span>
+                    </div>
+                {% else %}
+                    <p class="text-center text-gray-500 dark:text-gray-400">Henüz satış kaydı yok</p>
+                {% endfor %}
+            </div>
+            {% if recentSales|length > 0 %}
+                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800">
+                    <a href="{{ path('app_sale_index') }}" class="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+                        Tüm Satışları Görüntüle →
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="mt-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Hızlı İşlemler</h3>
+    <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+        <a href="{{ path('app_title_new') }}" class="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-4 transition hover:border-blue-500 hover:bg-blue-50 dark:border-gray-700 dark:hover:border-blue-500 dark:hover:bg-blue-900/10">
+            <svg class="mb-2 h-8 w-8 fill-gray-400" viewBox="0 0 24 24">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Yeni Kitap</span>
+        </a>
+
+        <a href="{{ path('app_author_new') }}" class="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-4 transition hover:border-green-500 hover:bg-green-50 dark:border-gray-700 dark:hover:border-green-500 dark:hover:bg-green-900/10">
+            <svg class="mb-2 h-8 w-8 fill-gray-400" viewBox="0 0 24 24">
+                <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Yeni Yazar</span>
+        </a>
+
+        <a href="{{ path('app_publisher_new') }}" class="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-4 transition hover:border-purple-500 hover:bg-purple-50 dark:border-gray-700 dark:hover:border-purple-500 dark:hover:bg-purple-900/10">
+            <svg class="mb-2 h-8 w-8 fill-gray-400" viewBox="0 0 24 24">
+                <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+            </svg>
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Yeni Yayıncı</span>
+        </a>
+
+        <a href="{{ path('app_store_index') }}" class="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-4 transition hover:border-orange-500 hover:bg-orange-50 dark:border-gray-700 dark:hover:border-orange-500 dark:hover:bg-orange-900/10">
+            <svg class="mb-2 h-8 w-8 fill-gray-400" viewBox="0 0 24 24">
+                <path d="M20 4H4v2h16V4zm1 10v-2l-1-5H4l-1 5v2h1v6h10v-6h4v6h2v-6h1zm-9 4H6v-4h6v4z"/>
+            </svg>
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Mağazalar</span>
+        </a>
+
+        <a href="{{ path('app_employee_index') }}" class="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-4 transition hover:border-indigo-500 hover:bg-indigo-50 dark:border-gray-700 dark:hover:border-indigo-500 dark:hover:bg-indigo-900/10">
+            <svg class="mb-2 h-8 w-8 fill-gray-400" viewBox="0 0 24 24">
+                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+            </svg>
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Çalışanlar</span>
+        </a>
+
+        <a href="{{ path('app_sale_index') }}" class="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-4 transition hover:border-pink-500 hover:bg-pink-50 dark:border-gray-700 dark:hover:border-pink-500 dark:hover:bg-pink-900/10">
+            <svg class="mb-2 h-8 w-8 fill-gray-400" viewBox="0 0 24 24">
+                <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+            </svg>
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Satış Listesi</span>
+        </a>
+    </div>
+</div>
+{% endblock %}
