@@ -1,0 +1,153 @@
+### 🧩 **Symfony Contracts Bileşeni**
+
+Symfony **Contracts** bileşeni, Symfony çekirdek bileşenlerinden **soyutlamaları (abstractions)** ayırarak tek başına kullanılabilir hale getirir.
+Bu sayede, Symfony bileşenlerinin kanıtlanmış (battle-tested) mantıklarını yeniden kullanmak ve **gevşek bağlı (loosely coupled)** uygulamalar geliştirmek mümkün olur.
+
+---
+
+### ⚙️ **Kurulum (Installation)**
+
+Contracts bileşenleri ayrı ayrı paketler halinde dağıtılır.
+Projeniz için yalnızca ihtiyacınız olanları yükleyebilirsiniz:
+
+```bash
+composer require symfony/cache-contracts
+composer require symfony/event-dispatcher-contracts
+composer require symfony/deprecation-contracts
+composer require symfony/http-client-contracts
+composer require symfony/service-contracts
+composer require symfony/translation-contracts
+```
+
+> Eğer Symfony dışında bağımsız bir PHP projesinde kullanıyorsanız,
+> `vendor/autoload.php` dosyasını **require** ederek Composer’ın otomatik yükleme (autoloading) sistemini etkinleştirmelisiniz.
+
+---
+
+### 🧠 **Kullanım (Usage)**
+
+Contracts bileşeni, **gevşek bağımlılık (loose coupling)** ve **birlikte çalışabilirlik (interoperability)** sağlamak için tasarlanmıştır.
+
+* Bu paketteki **arayüzleri (interfaces)** type-hint olarak kullanarak,
+  farklı bileşenlerin veya kütüphanelerin implementasyonlarını rahatça değiştirebilirsiniz.
+* Yani, `LoggerInterface` ya da `CacheInterface` gibi bir contract kullandığınızda,
+  Symfony bileşenini veya tamamen başka bir PHP paketini kullanabilirsiniz.
+
+Bazı arayüzler, **autowiring** ile doğrudan servislerinize enjekte edilebilir:
+Symfony, bu arayüzleri otomatik olarak doğru implementasyonlarla eşleştirir.
+
+Bazı arayüzler ise “**etiketleyici (marker interface)**” olarak kullanılır.
+Bu tür arayüzler, autoconfiguration veya manuel **service tagging** işlemlerinde
+özel davranışları etkinleştirmek için kullanılır.
+
+---
+
+### 🧩 **Tasarım İlkeleri (Design Principles)**
+
+Contracts bileşeni şu prensiplerle geliştirilmiştir:
+
+1. **Kapsamına göre bölünmüştür**
+   Her domain (alan) kendi alt namespace’i altında bulunur.
+   Örneğin: `Symfony\Contracts\EventDispatcher\Event` veya `Symfony\Contracts\Service\ServiceSubscriberInterface`.
+
+2. **Küçük ve tutarlı** bir yapıya sahiptir.
+   Yalnızca gerekli PHP arayüzleri, trait’ler, dokümantasyon açıklamaları ve test referansları bulunur.
+
+3. **Kanıtlanmış (proven)** implementasyonu olmayan hiçbir contract eklenmez.
+   Her arayüzün en az bir çalışan örneği Symfony bileşenlerinde bulunmalıdır.
+
+4. Symfony bileşenleriyle **geri uyumlu (backward compatible)** olmalıdır.
+
+---
+
+### 🧾 **Composer ile Contract Bildirimi**
+
+Bir paket belirli bir contract’ı uyguluyorsa, bunu `composer.json` dosyasındaki
+`provide` bölümünde belirtmelidir:
+
+```json
+{
+    "provide": {
+        "symfony/cache-implementation": "3.0"
+    }
+}
+```
+
+Bu, paketin `symfony/cache-contracts` arayüzlerini implemente ettiğini gösterir.
+Bu sayede Composer, bağımlılıkları doğru şekilde eşleştirir.
+
+---
+
+### ❓ **Sık Sorulan Soru: PHP-FIG PSR’lardan Farkı Ne?**
+
+Symfony Contracts, **PHP-FIG PSR standartlarını tamamlayıcı** bir yapıdır.
+Uygun olduğu durumlarda PSR arayüzlerini temel alır veya onların üzerine inşa edilir.
+
+Fakat aralarındaki farklar şunlardır:
+
+| Özellik  | PSR (PHP-FIG)                                     | Symfony Contracts                                             |
+| -------- | ------------------------------------------------- | ------------------------------------------------------------- |
+| **Amaç** | PHP topluluğu genelinde ortak standart oluşturmak | Symfony bileşenlerinin ihtiyaç duyduğu soyutlamaları sağlamak |
+| **Yapı** | PSR standardizasyon süreciyle belirlenir          | Symfony bileşenlerinden türetilmiş pratik arayüzler içerir    |
+| **Odak** | Genel PHP ekosistemi                              | Symfony’nin iç bileşenleriyle doğrudan uyum                   |
+
+Symfony Contracts, PSR standartlarıyla **uyumlu**,
+ama Symfony uygulamalarına **özgü semantik soyutlamalar** içerir.
+
+---
+
+### 🧭 **Özet**
+
+| Başlık               | Açıklama                                                                                     |
+| -------------------- | -------------------------------------------------------------------------------------------- |
+| **Amaç**             | Symfony bileşenlerinden türetilmiş soyutlamaları bağımsız olarak sunmak                      |
+| **Faydası**          | Gevşek bağlılık, test edilebilirlik, yeniden kullanılabilirlik                               |
+| **Kurulum**          | `composer require symfony/*-contracts`                                                       |
+| **Kullanım**         | Arayüzleri type-hint olarak kullanarak farklı implementasyonları kolayca değiştirebilirsiniz |
+| **Tasarım İlkeleri** | Küçük, modüler, tutarlı, geri uyumlu                                                         |
+| **PSR Farkı**        | PSR’ları tamamlayıcı, Symfony odaklı soyutlama yapısı                                        |
+
+---
+
+### 💡 Örnek Kullanım
+
+```php
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
+use Symfony\Contracts\Service\ServiceSubscriberTrait;
+
+class MyService implements ServiceSubscriberInterface
+{
+    use ServiceSubscriberTrait;
+
+    public function __construct(private \Psr\Log\LoggerInterface $logger) {}
+
+    public static function getSubscribedServices(): array
+    {
+        return [
+            'logger' => \Psr\Log\LoggerInterface::class,
+        ];
+    }
+
+    public function doSomething(): void
+    {
+        $this->logger->info('Contracts are working!');
+    }
+}
+```
+
+Bu örnekte, `ServiceSubscriberInterface` bir **contract**tır.
+Sınıf, Symfony’nin **service container** sistemiyle gevşek bağlı bir şekilde entegre olur.
+
+---
+
+### 🔚 Sonuç
+
+Symfony Contracts, **bağımlılıklarınızı soyutlamanın en iyi yolu**dur.
+
+* Bileşenler arası **bağımsızlığı** artırır,
+* **test edilebilirliği** kolaylaştırır,
+* PSR standartlarıyla **uyumlu** ama Symfony’ye özgü semantik sağlar.
+
+Kısaca:
+
+> Contracts, Symfony’nin kalbinde yatan “temiz mimari” felsefesini PHP ekosistemine taşır.
