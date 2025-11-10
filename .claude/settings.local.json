@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(php bin/console make:migration:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

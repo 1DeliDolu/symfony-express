@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
+use App\Repository\TitleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Publisher;
 
-#[ORM\Entity(repositoryClass: 'App\Repository\TitleRepository')]
+#[ORM\Entity(repositoryClass: TitleRepository::class)]
 #[ORM\Table(name: 'titles')]
 class Title
 {
