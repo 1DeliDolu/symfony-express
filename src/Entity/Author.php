@@ -102,6 +102,7 @@ class Author
     public function setAuId(string $auId): self
     {
         $this->auId = $auId;
+
         return $this;
     }
 
@@ -113,6 +114,7 @@ class Author
     public function setAuLname(string $auLname): self
     {
         $this->auLname = $auLname;
+
         return $this;
     }
 
@@ -124,6 +126,7 @@ class Author
     public function setAuFname(string $auFname): self
     {
         $this->auFname = $auFname;
+
         return $this;
     }
 
@@ -135,6 +138,7 @@ class Author
     public function setPhone(string $phone): self
     {
         $this->phone = $phone;
+
         return $this;
     }
 
@@ -146,6 +150,7 @@ class Author
     public function setAddress(?string $address): self
     {
         $this->address = $address;
+
         return $this;
     }
 
@@ -157,6 +162,7 @@ class Author
     public function setCity(?string $city): self
     {
         $this->city = $city;
+
         return $this;
     }
 
@@ -168,6 +174,7 @@ class Author
     public function setState(?string $state): self
     {
         $this->state = $state;
+
         return $this;
     }
 
@@ -179,6 +186,7 @@ class Author
     public function setZip(?string $zip): self
     {
         $this->zip = $zip;
+
         return $this;
     }
 
@@ -190,6 +198,7 @@ class Author
     public function setContract(bool $contract): self
     {
         $this->contract = $contract;
+
         return $this;
     }
 }

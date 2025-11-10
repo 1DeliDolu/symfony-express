@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
-use App\Repository\TitleRepository;
 use App\Repository\AuthorRepository;
 use App\Repository\PublisherRepository;
 use App\Repository\SaleRepository;
+use App\Repository\TitleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,25 +16,28 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class DashboardController extends AbstractController
 {
+    public function __construct(
+        private readonly TitleRepository $titleRepository,
+        private readonly AuthorRepository $authorRepository,
+        private readonly PublisherRepository $publisherRepository,
+        private readonly SaleRepository $saleRepository,
+    ) {
+    }
+
     #[Route('/admin', name: 'app_dashboard')]
-    public function index(
-        TitleRepository $titleRepository,
-        AuthorRepository $authorRepository,
-        PublisherRepository $publisherRepository,
-        SaleRepository $saleRepository
-    ): Response
+    public function index(): Response
     {
         // Get statistics for dashboard
-        $totalTitles = count($titleRepository->findAll());
-        $totalAuthors = count($authorRepository->findAll());
-        $totalPublishers = count($publisherRepository->findAll());
-        $totalSales = count($saleRepository->findAll());
+        $totalTitles = count($this->titleRepository->findAll());
+        $totalAuthors = count($this->authorRepository->findAll());
+        $totalPublishers = count($this->publisherRepository->findAll());
+        $totalSales = count($this->saleRepository->findAll());
 
         // Get recent titles (last 6)
-        $recentTitles = $titleRepository->findBy([], ['pubdate' => 'DESC'], 6);
+        $recentTitles = $this->titleRepository->findBy([], ['pubdate' => 'DESC'], 6);
 
         // Get all sales for recent activity
-        $recentSales = $saleRepository->findBy([], ['ordDate' => 'DESC'], 10);
+        $recentSales = $this->saleRepository->findBy([], ['ordDate' => 'DESC'], 10);
 
         return $this->render('dashboard/index.html.twig', [
             'totalTitles' => $totalTitles,

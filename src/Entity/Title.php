@@ -87,6 +87,7 @@ class Title
     public function setTitleId(string $titleId): self
     {
         $this->titleId = $titleId;
+
         return $this;
     }
 
@@ -98,6 +99,7 @@ class Title
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -109,6 +111,7 @@ class Title
     public function setType(string $type): self
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -120,6 +123,7 @@ class Title
     public function setPublisher(?Publisher $publisher): self
     {
         $this->publisher = $publisher;
+
         return $this;
     }
 
@@ -131,6 +135,7 @@ class Title
     public function setPrice(?string $price): self
     {
         $this->price = $price;
+
         return $this;
     }
 
@@ -142,6 +147,7 @@ class Title
     public function setAdvance(?string $advance): self
     {
         $this->advance = $advance;
+
         return $this;
     }
 
@@ -153,6 +159,7 @@ class Title
     public function setRoyalty(?int $royalty): self
     {
         $this->royalty = $royalty;
+
         return $this;
     }
 
@@ -164,6 +171,7 @@ class Title
     public function setYtdSales(?int $ytdSales): self
     {
         $this->ytdSales = $ytdSales;
+
         return $this;
     }
 
@@ -175,6 +183,7 @@ class Title
     public function setNotes(?string $notes): self
     {
         $this->notes = $notes;
+
         return $this;
     }
 
@@ -186,6 +195,7 @@ class Title
     public function setPubdate(\DateTimeInterface $pubdate): self
     {
         $this->pubdate = $pubdate;
+
         return $this;
     }
 }

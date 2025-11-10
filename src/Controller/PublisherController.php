@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Publisher;
@@ -10,28 +12,40 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/publisher')]
+#[IsGranted('ROLE_USER')]
 final class PublisherController extends AbstractController
 {
+    public function __construct(
+        private readonly PublisherRepository $publisherRepository,
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+    }
+
     #[Route(name: 'app_publisher_index', methods: ['GET'])]
-    public function index(PublisherRepository $publisherRepository): Response
+    public function index(): Response
     {
         return $this->render('publisher/index.html.twig', [
-            'publishers' => $publisherRepository->findAll(),
+            'publishers' => $this->publisherRepository->findAll(),
         ]);
     }
 
     #[Route('/new', name: 'app_publisher_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request): Response
     {
         $publisher = new Publisher();
-        $form = $this->createForm(PublisherType::class, $publisher);
+        $form = $this->createForm(PublisherType::class, $publisher, [
+            'is_new' => true,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($publisher);
-            $entityManager->flush();
+            $this->entityManager->persist($publisher);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Yayıncı başarıyla oluşturuldu.');
 
             return $this->redirectToRoute('app_publisher_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -51,13 +65,17 @@ final class PublisherController extends AbstractController
     }
 
     #[Route('/{pubId}/edit', name: 'app_publisher_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Publisher $publisher, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Publisher $publisher): Response
     {
-        $form = $this->createForm(PublisherType::class, $publisher);
+        $form = $this->createForm(PublisherType::class, $publisher, [
+            'is_new' => false,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Yayıncı başarıyla güncellendi.');
 
             return $this->redirectToRoute('app_publisher_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -69,11 +87,13 @@ final class PublisherController extends AbstractController
     }
 
     #[Route('/{pubId}', name: 'app_publisher_delete', methods: ['POST'])]
-    public function delete(Request $request, Publisher $publisher, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Publisher $publisher): Response
     {
         if ($this->isCsrfTokenValid('delete'.$publisher->getPubId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($publisher);
-            $entityManager->flush();
+            $this->entityManager->remove($publisher);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Yayıncı başarıyla silindi.');
         }
 
         return $this->redirectToRoute('app_publisher_index', [], Response::HTTP_SEE_OTHER);

@@ -51,6 +51,7 @@ class Publisher
     public function setPubId(string $pubId): self
     {
         $this->pubId = $pubId;
+
         return $this;
     }
 
@@ -62,6 +63,7 @@ class Publisher
     public function setPubName(?string $pubName): self
     {
         $this->pubName = $pubName;
+
         return $this;
     }
 
@@ -73,6 +75,7 @@ class Publisher
     public function setCity(?string $city): self
     {
         $this->city = $city;
+
         return $this;
     }
 
@@ -84,6 +87,7 @@ class Publisher
     public function setState(?string $state): self
     {
         $this->state = $state;
+
         return $this;
     }
 
@@ -95,6 +99,7 @@ class Publisher
     public function setCountry(?string $country): self
     {
         $this->country = $country;
+
         return $this;
     }
 

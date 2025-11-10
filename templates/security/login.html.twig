@@ -9,16 +9,39 @@
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .animate-pulse-slow {
+            animation: pulse-slow 4s ease-in-out infinite;
+        }
+    </style>
 </head>
-<body class="bg-white dark:bg-gray-900">
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
     <div class="flex min-h-screen">
         <!-- Form Section -->
         <div class="flex w-full flex-col lg:w-1/2">
             <div class="flex flex-1 flex-col justify-center px-6 py-12 lg:px-8">
                 <div class="mx-auto w-full max-w-md">
                     <!-- Logo/Brand -->
-                    <div class="mb-10">
-                        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+                    <div class="mb-10 text-center lg:text-left">
+                        <div class="mb-4 flex justify-center lg:justify-start">
+                            <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/30">
+                                <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <h1 class="bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-3xl font-bold text-transparent dark:from-blue-400 dark:to-blue-600">
                             Pubs Admin
                         </h1>
                         <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
@@ -27,51 +50,71 @@
                     </div>
 
                     <!-- Sign In Form -->
-                    <div>
+                    <div class="rounded-2xl bg-white p-8 shadow-xl shadow-gray-200/50 dark:bg-gray-800 dark:shadow-gray-900/50">
                         <div class="mb-8">
-                            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
                                 Giriş Yap
                             </h2>
                             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                Hesabınıza erişmek için e-posta ve şifrenizi girin
+                                Hesabınıza erişmek için bilgilerinizi girin
                             </p>
                         </div>
 
                         {% if error %}
-                            <div class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/20 dark:text-red-400">
-                                {{ error.messageKey|trans(error.messageData, 'security') }}
+                            <div class="mb-4 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
+                                <svg class="h-5 w-5 flex-shrink-0 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                </svg>
+                                <span class="text-sm text-red-800 dark:text-red-400">
+                                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                                </span>
                             </div>
                         {% endif %}
 
                         {% if app.user %}
-                            <div class="mb-4 rounded-lg bg-blue-50 p-4 text-sm text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
-                                {{ app.user.userIdentifier }} olarak giriş yaptınız, <a href="{{ path('app_logout') }}" class="font-medium underline">Çıkış Yap</a>
+                            <div class="mb-4 flex items-start gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
+                                <svg class="h-5 w-5 flex-shrink-0 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                </svg>
+                                <span class="text-sm text-blue-800 dark:text-blue-400">
+                                    {{ app.user.userIdentifier }} olarak giriş yaptınız, <a href="{{ path('app_logout') }}" class="font-semibold underline hover:no-underline">Çıkış Yap</a>
+                                </span>
                             </div>
                         {% endif %}
 
                         <form method="post" class="space-y-5">
                             <!-- Email -->
-                            <div>
-                                <label for="email" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                                    E-posta
+                            <div class="group">
+                                <label for="username" class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                    <span class="flex items-center gap-2">
+                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+                                        </svg>
+                                        E-posta Adresi
+                                    </span>
                                 </label>
                                 <input
                                     type="email"
-                                    id="email"
-                                    name="email"
+                                    id="username"
+                                    name="_username"
                                     value="{{ last_username }}"
                                     required
                                     autofocus
                                     autocomplete="email"
-                                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+                                    class="w-full rounded-xl border-2 border-gray-200 bg-gray-50 px-4 py-3.5 text-gray-900 placeholder-gray-400 outline-none transition-all duration-200 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-900/50 dark:text-white dark:placeholder-gray-500 dark:focus:border-blue-500 dark:focus:bg-gray-900"
                                     placeholder="ornek@email.com"
                                 />
                             </div>
 
                             <!-- Password -->
-                            <div>
-                                <label for="password" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                                    Şifre
+                            <div class="group">
+                                <label for="password" class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                    <span class="flex items-center gap-2">
+                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                        </svg>
+                                        Şifre
+                                    </span>
                                 </label>
                                 <input
                                     type="password"
@@ -79,7 +122,7 @@
                                     name="_password"
                                     required
                                     autocomplete="current-password"
-                                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+                                    class="w-full rounded-xl border-2 border-gray-200 bg-gray-50 px-4 py-3.5 text-gray-900 placeholder-gray-400 outline-none transition-all duration-200 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-900/50 dark:text-white dark:placeholder-gray-500 dark:focus:border-blue-500 dark:focus:bg-gray-900"
                                     placeholder="••••••••"
                                 />
                             </div>
@@ -91,9 +134,9 @@
                                         type="checkbox"
                                         id="remember_me"
                                         name="_remember_me"
-                                        class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800"
+                                        class="h-4 w-4 rounded border-gray-300 text-blue-600 transition focus:ring-2 focus:ring-blue-500/30 dark:border-gray-600 dark:bg-gray-700"
                                     />
-                                    <label for="remember_me" class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                                    <label for="remember_me" class="ml-2.5 cursor-pointer text-sm font-medium text-gray-700 dark:text-gray-300">
                                         Beni Hatırla
                                     </label>
                                 </div>
@@ -104,18 +147,24 @@
                             <!-- Submit Button -->
                             <button
                                 type="submit"
-                                class="w-full rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600"
+                                class="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/40 focus:outline-none focus:ring-4 focus:ring-blue-500/30 active:scale-[0.98] dark:from-blue-500 dark:to-blue-600"
                             >
-                                Giriş Yap
+                                <span class="relative z-10 flex items-center justify-center gap-2">
+                                    <svg class="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                                    </svg>
+                                    Giriş Yap
+                                </span>
+                                <span class="absolute inset-0 -z-10 bg-gradient-to-r from-blue-700 to-blue-800 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></span>
                             </button>
                         </form>
 
                         <!-- Register Link -->
-                        <div class="mt-6 text-center">
+                        <div class="mt-8 text-center">
                             <p class="text-sm text-gray-600 dark:text-gray-400">
                                 Hesabınız yok mu?
-                                <a href="{{ path('app_register') }}" class="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
-                                    Kayıt Ol
+                                <a href="{{ path('app_register') }}" class="font-bold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+                                    Hemen Kayıt Ol →
                                 </a>
                             </p>
                         </div>
@@ -125,12 +174,12 @@
                     <div class="mt-8 flex justify-center">
                         <button
                             @click="darkMode = !darkMode"
-                            class="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-800"
+                            class="group flex h-12 w-12 items-center justify-center rounded-xl border-2 border-gray-200 bg-white text-gray-600 shadow-md transition-all duration-300 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:border-blue-600 dark:hover:bg-gray-700 dark:hover:text-blue-400"
                         >
-                            <svg x-show="!darkMode" class="h-5 w-5 fill-current" viewBox="0 0 20 20">
+                            <svg x-show="!darkMode" class="h-5 w-5 fill-current transition-transform duration-300 group-hover:rotate-180" viewBox="0 0 20 20">
                                 <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
                             </svg>
-                            <svg x-show="darkMode" class="h-5 w-5 fill-current" viewBox="0 0 20 20">
+                            <svg x-show="darkMode" class="h-5 w-5 fill-current transition-transform duration-300 group-hover:-rotate-12" viewBox="0 0 20 20">
                                 <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
                             </svg>
                         </button>
@@ -140,18 +189,59 @@
         </div>
 
         <!-- Image Section -->
-        <div class="relative hidden lg:block lg:w-1/2">
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-800 dark:to-blue-950">
+        <div class="relative hidden overflow-hidden lg:block lg:w-1/2">
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-950">
+                <!-- Animated Background Shapes -->
+                <div class="absolute -right-20 -top-20 h-80 w-80 animate-pulse-slow rounded-full bg-blue-500/20"></div>
+                <div class="absolute -bottom-20 -left-20 h-80 w-80 animate-pulse-slow rounded-full bg-indigo-500/20" style="animation-delay: 2s;"></div>
+                
                 <div class="flex h-full flex-col items-center justify-center px-12 text-white">
-                    <svg class="mb-8 h-24 w-24 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                    </svg>
-                    <h2 class="mb-4 text-center text-3xl font-bold">
-                        Yayıncılık Yönetim Sistemi
-                    </h2>
-                    <p class="text-center text-lg opacity-90">
-                        Kitaplarınızı, yazarlarınızı ve satışlarınızı tek bir yerden yönetin
-                    </p>
+                    <!-- Animated Icon -->
+                    <div class="animate-float mb-12">
+                        <div class="rounded-3xl bg-white/10 p-8 shadow-2xl backdrop-blur-sm">
+                            <svg class="h-24 w-24 text-white drop-shadow-lg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="max-w-md text-center">
+                        <h2 class="mb-4 text-4xl font-bold leading-tight">
+                            Yayıncılık Yönetim<br/>
+                            <span class="bg-gradient-to-r from-blue-200 to-indigo-200 bg-clip-text text-transparent">Sistemi</span>
+                        </h2>
+                        <p class="text-lg leading-relaxed text-blue-100">
+                            Kitaplarınızı, yazarlarınızı ve satışlarınızı tek bir yerden profesyonelce yönetin
+                        </p>
+                        
+                        <!-- Feature List -->
+                        <div class="mt-10 space-y-4 text-left">
+                            <div class="flex items-center gap-3">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                </div>
+                                <span class="text-blue-100">Kapsamlı kitap kataloğu</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                </div>
+                                <span class="text-blue-100">Yazar ve yayıncı yönetimi</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                </div>
+                                <span class="text-blue-100">Satış takibi ve raporlama</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

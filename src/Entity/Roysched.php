@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\RoyschedRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Title;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RoyschedRepository::class)]
 #[ORM\Table(name: 'roysched')]
@@ -13,15 +16,19 @@ class Roysched
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: Title::class)]
     #[ORM\JoinColumn(name: 'title_id', referencedColumnName: 'title_id', nullable: false)]
+    #[Assert\NotNull(message: 'Kitap seçilmelidir')]
     private Title $title;
 
-    #[ORM\Column(name: 'lorange', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'lorange', type: Types::INTEGER, nullable: true)]
+    #[Assert\PositiveOrZero(message: 'Alt aralık 0 veya daha büyük olmalıdır')]
     private ?int $lorange = null;
 
-    #[ORM\Column(name: 'hirange', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'hirange', type: Types::INTEGER, nullable: true)]
+    #[Assert\PositiveOrZero(message: 'Üst aralık 0 veya daha büyük olmalıdır')]
     private ?int $hirange = null;
 
-    #[ORM\Column(name: 'royalty', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'royalty', type: Types::INTEGER, nullable: true)]
+    #[Assert\Range(min: 0, max: 100, notInRangeMessage: 'Telif hakkı oranı {{ min }} ile {{ max }} arasında olmalıdır')]
     private ?int $royalty = null;
 
     // 🧩 Getter / Setter Metodları
@@ -34,6 +41,7 @@ class Roysched
     public function setTitle(Title $title): self
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -45,6 +53,7 @@ class Roysched
     public function setLorange(?int $lorange): self
     {
         $this->lorange = $lorange;
+
         return $this;
     }
 
@@ -56,6 +65,7 @@ class Roysched
     public function setHirange(?int $hirange): self
     {
         $this->hirange = $hirange;
+
         return $this;
     }
 
@@ -67,6 +77,7 @@ class Roysched
     public function setRoyalty(?int $royalty): self
     {
         $this->royalty = $royalty;
+
         return $this;
     }
 }

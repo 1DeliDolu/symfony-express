@@ -42,7 +42,6 @@ security:
                 path: app_logout
                 target: app_store_index
                 invalidate_session: true
-                clear_session_cookies: true
 
             # User impersonation (useful for admin testing)
             switch_user: { role: ROLE_ADMIN, parameter: _switch_user }

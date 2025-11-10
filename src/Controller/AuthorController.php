@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Author;
@@ -10,28 +12,40 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/author')]
+#[IsGranted('ROLE_USER')]
 final class AuthorController extends AbstractController
 {
+    public function __construct(
+        private readonly AuthorRepository $authorRepository,
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+    }
+
     #[Route(name: 'app_author_index', methods: ['GET'])]
-    public function index(AuthorRepository $authorRepository): Response
+    public function index(): Response
     {
         return $this->render('author/index.html.twig', [
-            'authors' => $authorRepository->findAll(),
+            'authors' => $this->authorRepository->findAll(),
         ]);
     }
 
     #[Route('/new', name: 'app_author_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request): Response
     {
         $author = new Author();
-        $form = $this->createForm(AuthorType::class, $author);
+        $form = $this->createForm(AuthorType::class, $author, [
+            'is_new' => true,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($author);
-            $entityManager->flush();
+            $this->entityManager->persist($author);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Yazar başarıyla oluşturuldu.');
 
             return $this->redirectToRoute('app_author_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -51,13 +65,17 @@ final class AuthorController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_author_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Author $author, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Author $author): Response
     {
-        $form = $this->createForm(AuthorType::class, $author);
+        $form = $this->createForm(AuthorType::class, $author, [
+            'is_new' => false,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Yazar başarıyla güncellendi.');
 
             return $this->redirectToRoute('app_author_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -69,11 +87,13 @@ final class AuthorController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_author_delete', methods: ['POST'])]
-    public function delete(Request $request, Author $author, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Author $author): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$author->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($author);
-            $entityManager->flush();
+        if ($this->isCsrfTokenValid('delete'.$author->getAuId(), $request->getPayload()->getString('_token'))) {
+            $this->entityManager->remove($author);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Yazar başarıyla silindi.');
         }
 
         return $this->redirectToRoute('app_author_index', [], Response::HTTP_SEE_OTHER);

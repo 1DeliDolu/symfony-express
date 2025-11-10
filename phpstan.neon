@@ -15,5 +15,3 @@ parameters:
     ignoreErrors:
         # SQL Server uses string IDs, which is intentional
         - '#Property App\\Entity\\.*::\$.*Id \(string\) does not accept#'
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\TitleAuthorRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Author;
-use App\Entity\Title;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TitleAuthorRepository::class)]
 #[ORM\Table(name: 'titleauthor')]
@@ -14,17 +16,21 @@ class TitleAuthor
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: Author::class)]
     #[ORM\JoinColumn(name: 'au_id', referencedColumnName: 'au_id')]
+    #[Assert\NotNull(message: 'Yazar seçilmelidir')]
     private Author $author;
 
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: Title::class)]
     #[ORM\JoinColumn(name: 'title_id', referencedColumnName: 'title_id')]
+    #[Assert\NotNull(message: 'Kitap seçilmelidir')]
     private Title $title;
 
-    #[ORM\Column(name: 'au_ord', type: 'smallint', nullable: true)]
+    #[ORM\Column(name: 'au_ord', type: Types::SMALLINT, nullable: true)]
+    #[Assert\Positive(message: 'Yazar sırası pozitif olmalıdır')]
     private ?int $auOrd = null;
 
-    #[ORM\Column(name: 'royaltyper', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'royaltyper', type: Types::INTEGER, nullable: true)]
+    #[Assert\Range(min: 0, max: 100, notInRangeMessage: 'Telif hakkı yüzdesi {{ min }} ile {{ max }} arasında olmalıdır')]
     private ?int $royaltyPer = null;
 
     // 🧩 Getter / Setter Metodları
@@ -37,6 +43,7 @@ class TitleAuthor
     public function setAuthor(Author $author): self
     {
         $this->author = $author;
+
         return $this;
     }
 
@@ -48,6 +55,7 @@ class TitleAuthor
     public function setTitle(Title $title): self
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -59,6 +67,7 @@ class TitleAuthor
     public function setAuOrd(?int $auOrd): self
     {
         $this->auOrd = $auOrd;
+
         return $this;
     }
 
@@ -70,6 +79,7 @@ class TitleAuthor
     public function setRoyaltyPer(?int $royaltyPer): self
     {
         $this->royaltyPer = $royaltyPer;
+
         return $this;
     }
 }

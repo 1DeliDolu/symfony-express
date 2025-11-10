@@ -57,7 +57,7 @@ class TitleType extends AbstractType
                 'class' => Publisher::class,
                 'label' => 'Publisher',
                 'help' => 'Select the publisher for this title',
-                'choice_label' => fn(Publisher $publisher): string => sprintf(
+                'choice_label' => fn (Publisher $publisher): string => sprintf(
                     '%s (%s)',
                     $publisher->getPubName() ?? 'Unknown',
                     $publisher->getPubId()
