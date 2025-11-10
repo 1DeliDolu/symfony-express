@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Title;
@@ -10,28 +12,38 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/title')]
+#[IsGranted('ROLE_USER')]
 final class TitleController extends AbstractController
 {
+    public function __construct(
+        private readonly TitleRepository $titleRepository,
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+    }
+
     #[Route(name: 'app_title_index', methods: ['GET'])]
-    public function index(TitleRepository $titleRepository): Response
+    public function index(): Response
     {
         return $this->render('title/index.html.twig', [
-            'titles' => $titleRepository->findAll(),
+            'titles' => $this->titleRepository->findAll(),
         ]);
     }
 
     #[Route('/new', name: 'app_title_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request): Response
     {
         $title = new Title();
         $form = $this->createForm(TitleType::class, $title);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($title);
-            $entityManager->flush();
+            $this->entityManager->persist($title);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Title created successfully.');
 
             return $this->redirectToRoute('app_title_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -51,13 +63,15 @@ final class TitleController extends AbstractController
     }
 
     #[Route('/{titleId}/edit', name: 'app_title_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Title $title, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Title $title): Response
     {
         $form = $this->createForm(TitleType::class, $title);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Title updated successfully.');
 
             return $this->redirectToRoute('app_title_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -69,11 +83,13 @@ final class TitleController extends AbstractController
     }
 
     #[Route('/{titleId}', name: 'app_title_delete', methods: ['POST'])]
-    public function delete(Request $request, Title $title, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Title $title): Response
     {
         if ($this->isCsrfTokenValid('delete'.$title->getTitleId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($title);
-            $entityManager->flush();
+            $this->entityManager->remove($title);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Title deleted successfully.');
         }
 
         return $this->redirectToRoute('app_title_index', [], Response::HTTP_SEE_OTHER);

@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 final class SecurityController extends AbstractController
@@ -12,19 +15,28 @@ final class SecurityController extends AbstractController
     #[Route('/login', name: 'app_login', methods: ['GET', 'POST'])]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+        // Redirect if already authenticated
         if ($this->getUser()) {
             return $this->redirectToRoute('app_store_index');
         }
 
+        // Get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+
+        // Last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
         return $this->render('security/login.html.twig', [
-            'last_username' => $authenticationUtils->getLastUsername(),
-            'error' => $authenticationUtils->getLastAuthenticationError(),
+            'last_username' => $lastUsername,
+            'error' => $error,
         ]);
     }
 
-    #[Route('/logout', name: 'app_logout')]
-    public function logout(): void
+    #[Route('/logout', name: 'app_logout', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
+    public function logout(): never
     {
-        throw new \LogicException('Logout is handled by Symfony security.');
+        // This method can be blank - it will be intercepted by the logout key on your firewall
+        throw new \LogicException('This method should never be reached. Check your security.yaml configuration.');
     }
 }
