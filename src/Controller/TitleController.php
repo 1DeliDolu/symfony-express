@@ -65,7 +65,7 @@ final class TitleController extends AbstractController
     #[Route('/{titleId}/edit', name: 'app_title_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Title $title): Response
     {
-        $form = $this->createForm(TitleType::class, $title);
+        $form = $this->createForm(TitleType::class, $title, ['is_new' => false]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
