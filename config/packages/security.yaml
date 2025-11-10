@@ -2,40 +2,61 @@ security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         app_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
         main:
             lazy: true
             provider: app_user_provider
+
+            # Form login configuration
             form_login:
                 login_path: app_login
                 check_path: app_login
                 username_parameter: email
                 enable_csrf: true
+                default_target_path: app_store_index
+                always_use_default_target_path: false
+                use_referer: true
+
+            # Remember me functionality
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800  # 1 week in seconds
+                path: /
+                always_remember_me: false
+                remember_me_parameter: _remember_me
+
+            # Logout configuration
             logout:
                 path: app_logout
                 target: app_store_index
+                invalidate_session: true
+                clear_session_cookies: true
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
+            # User impersonation (useful for admin testing)
+            switch_user: { role: ROLE_ADMIN, parameter: _switch_user }
 
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+    # Role hierarchy - admins automatically have user permissions
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_USER]
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/(login|register)$, roles: PUBLIC_ACCESS }
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/, roles: ROLE_USER }
 
 when@test:
     security:

@@ -1,31 +1,47 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\PublisherRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PublisherRepository::class)]
 #[ORM\Table(name: 'publishers')]
 class Publisher
 {
     #[ORM\Id]
-    #[ORM\Column(name: 'pub_id', type: 'string', length: 4, unique: true)]
+    #[ORM\Column(name: 'pub_id', type: Types::STRING, length: 4, unique: true)]
+    #[Assert\NotBlank(message: 'Publisher ID cannot be blank.')]
+    #[Assert\Length(
+        min: 4,
+        max: 4,
+        exactMessage: 'Publisher ID must be exactly {{ limit }} characters.'
+    )]
     private string $pubId;
 
-    #[ORM\Column(name: 'pub_name', type: 'string', length: 40, nullable: true)]
+    #[ORM\Column(name: 'pub_name', type: Types::STRING, length: 40, nullable: true)]
+    #[Assert\Length(max: 40)]
     private ?string $pubName = null;
 
-    #[ORM\Column(name: 'city', type: 'string', length: 20, nullable: true)]
+    #[ORM\Column(name: 'city', type: Types::STRING, length: 20, nullable: true)]
+    #[Assert\Length(max: 20)]
     private ?string $city = null;
 
-    #[ORM\Column(name: 'state', type: 'string', length: 2, nullable: true)]
+    #[ORM\Column(name: 'state', type: Types::STRING, length: 2, nullable: true)]
+    #[Assert\Length(
+        min: 2,
+        max: 2,
+        exactMessage: 'State must be exactly {{ limit }} characters.'
+    )]
     private ?string $state = null;
 
-    #[ORM\Column(name: 'country', type: 'string', length: 30, nullable: true, options: ['default' => 'USA'])]
+    #[ORM\Column(name: 'country', type: Types::STRING, length: 30, nullable: true, options: ['default' => 'USA'])]
+    #[Assert\Length(max: 30)]
     private ?string $country = 'USA';
-
-    // 🧩 Getter / Setter Metodları
 
     public function getPubId(): string
     {
@@ -80,5 +96,10 @@ class Publisher
     {
         $this->country = $country;
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->pubName ?? $this->pubId;
     }
 }

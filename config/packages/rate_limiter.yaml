@@ -1,0 +1,19 @@
+framework:
+    rate_limiter:
+        # Login rate limiter - prevent brute force attacks
+        login:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '15 minutes'
+
+        # Registration rate limiter - prevent spam
+        registration:
+            policy: 'fixed_window'
+            limit: 3
+            interval: '1 hour'
+
+        # API rate limiter (if you add API endpoints)
+        api:
+            policy: 'token_bucket'
+            limit: 100
+            rate: { interval: '1 minute', amount: 10 }
