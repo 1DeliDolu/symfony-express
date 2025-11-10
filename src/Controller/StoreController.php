@@ -21,14 +21,27 @@ final class StoreController extends AbstractController
     public function __construct(
         private readonly StoreRepository $storeRepository,
         private readonly EntityManagerInterface $entityManager,
-    ) {
-    }
+    ) {}
 
     #[Route(name: 'app_store_index', methods: ['GET'])]
     public function index(): Response
     {
+        $stores = $this->storeRepository->findAll();
+
+        // Serialize stores for Alpine.js
+        $storesData = array_map(function (Store $store) {
+            return [
+                'storId' => $store->getStorId(),
+                'storName' => $store->getStorName() ?? 'N/A',
+                'storAddress' => $store->getStorAddress() ?? 'N/A',
+                'city' => $store->getCity() ?? 'N/A',
+                'state' => $store->getState() ?? 'N/A',
+                'zip' => $store->getZip() ?? 'N/A',
+            ];
+        }, $stores);
+
         return $this->render('store/index.html.twig', [
-            'stores' => $this->storeRepository->findAll(),
+            'stores' => $storesData,
         ]);
     }
 
@@ -83,7 +96,7 @@ final class StoreController extends AbstractController
     #[Route('/{storId}', name: 'app_store_delete', methods: ['POST'])]
     public function delete(Request $request, Store $store): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$store->getStorId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $store->getStorId(), $request->getPayload()->getString('_token'))) {
             $this->entityManager->remove($store);
             $this->entityManager->flush();
             $this->addFlash('success', 'Mağaza başarıyla silindi.');

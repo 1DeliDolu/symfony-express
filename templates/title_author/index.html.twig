@@ -4,6 +4,8 @@
 {% block page_title %}Buch-Autoren Verwaltung{% endblock %}
 
 {% block body %}
+{% set titleAuthorsJson = title_authors|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw %}
+
 <!-- Header with Action Button -->
 <div class="mb-6 flex items-center justify-between">
     <div>
@@ -20,6 +22,55 @@
     </a>
 </div>
 
+<!-- Alpine.js Data Container -->
+<div x-data="{
+    q: '',
+    sort: { key: 'titleName', dir: 'asc' },
+    rows: {{ titleAuthorsJson }},
+    get filtered() {
+        const lq = this.q.toLowerCase();
+        let arr = this.rows.filter(r => {
+            return (r.titleName || '').toLowerCase().includes(lq) ||
+                   (r.authorName || '').toLowerCase().includes(lq) ||
+                   String(r.auOrd || '').toLowerCase().includes(lq) ||
+                   String(r.royaltyPer || '').toLowerCase().includes(lq);
+        });
+        const k = this.sort.key;
+        const d = this.sort.dir;
+        arr.sort((a, b) => {
+            const av = a[k] ?? '';
+            const bv = b[k] ?? '';
+            if (av < bv) return d === 'asc' ? -1 : 1;
+            if (av > bv) return d === 'asc' ? 1 : -1;
+            return 0;
+        });
+        return arr;
+    },
+    setSort(k) {
+        if (this.sort.key === k) {
+            this.sort.dir = this.sort.dir === 'asc' ? 'desc' : 'asc';
+        } else {
+            this.sort.key = k;
+            this.sort.dir = 'asc';
+        }
+    }
+}">
+
+<!-- Search Bar -->
+<div class="mb-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <div class="relative">
+        <input 
+            type="text" 
+            x-model="q"
+            placeholder="Suchen nach Buch, Autor, Reihenfolge, Tantiemen..."
+            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400"
+        >
+        <svg class="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+    </div>
+</div>
+
 <!-- Table Card -->
 <div class="rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
     <!-- Table Header -->
@@ -34,39 +85,68 @@
         <table class="w-full text-left text-sm">
             <thead class="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-700 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400">
                 <tr>
-                    <th scope="col" class="px-6 py-3">Buch Titel</th>
-                    <th scope="col" class="px-6 py-3">Autor Name</th>
-                    <th scope="col" class="px-6 py-3">Reihenfolge</th>
-                    <th scope="col" class="px-6 py-3">Tantiemen %</th>
+                    <th scope="col" class="cursor-pointer px-6 py-3 hover:bg-gray-100 dark:hover:bg-gray-700" @click="setSort('titleName')">
+                        <div class="flex items-center gap-1">
+                            Buch Titel
+                            <svg class="h-4 w-4" :class="sort.key === 'titleName' && sort.dir === 'asc' ? 'text-blue-600' : 'text-gray-400'" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M5 10l5-5 5 5H5z"/>
+                            </svg>
+                            <svg class="h-4 w-4 -ml-3" :class="sort.key === 'titleName' && sort.dir === 'desc' ? 'text-blue-600' : 'text-gray-400'" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M15 10l-5 5-5-5h10z"/>
+                            </svg>
+                        </div>
+                    </th>
+                    <th scope="col" class="cursor-pointer px-6 py-3 hover:bg-gray-100 dark:hover:bg-gray-700" @click="setSort('authorName')">
+                        <div class="flex items-center gap-1">
+                            Autor Name
+                            <svg class="h-4 w-4" :class="sort.key === 'authorName' && sort.dir === 'asc' ? 'text-blue-600' : 'text-gray-400'" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M5 10l5-5 5 5H5z"/>
+                            </svg>
+                            <svg class="h-4 w-4 -ml-3" :class="sort.key === 'authorName' && sort.dir === 'desc' ? 'text-blue-600' : 'text-gray-400'" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M15 10l-5 5-5-5h10z"/>
+                            </svg>
+                        </div>
+                    </th>
+                    <th scope="col" class="cursor-pointer px-6 py-3 hover:bg-gray-100 dark:hover:bg-gray-700" @click="setSort('auOrd')">
+                        <div class="flex items-center gap-1">
+                            Reihenfolge
+                            <svg class="h-4 w-4" :class="sort.key === 'auOrd' && sort.dir === 'asc' ? 'text-blue-600' : 'text-gray-400'" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M5 10l5-5 5 5H5z"/>
+                            </svg>
+                            <svg class="h-4 w-4 -ml-3" :class="sort.key === 'auOrd' && sort.dir === 'desc' ? 'text-blue-600' : 'text-gray-400'" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M15 10l-5 5-5-5h10z"/>
+                            </svg>
+                        </div>
+                    </th>
+                    <th scope="col" class="cursor-pointer px-6 py-3 hover:bg-gray-100 dark:hover:bg-gray-700" @click="setSort('royaltyPer')">
+                        <div class="flex items-center gap-1">
+                            Tantiemen %
+                            <svg class="h-4 w-4" :class="sort.key === 'royaltyPer' && sort.dir === 'asc' ? 'text-blue-600' : 'text-gray-400'" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M5 10l5-5 5 5H5z"/>
+                            </svg>
+                            <svg class="h-4 w-4 -ml-3" :class="sort.key === 'royaltyPer' && sort.dir === 'desc' ? 'text-blue-600' : 'text-gray-400'" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M15 10l-5 5-5-5h10z"/>
+                            </svg>
+                        </div>
+                    </th>
                     <th scope="col" class="px-6 py-3 text-right">Aktionen</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 dark:divide-gray-800">
-                {% for title_author in title_authors %}
+                <template x-for="item in filtered" :key="item.titleId + '-' + item.authorId">
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
-                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                            {{ title_author.title.title }}
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white" x-text="item.titleName"></td>
+                        <td class="px-6 py-4 text-gray-700 dark:text-gray-300" x-text="item.authorName"></td>
+                        <td class="px-6 py-4 text-gray-700 dark:text-gray-300">
+                            <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/20 dark:text-blue-400" x-text="'#' + (item.auOrd || 'N/A')"></span>
                         </td>
                         <td class="px-6 py-4 text-gray-700 dark:text-gray-300">
-                            {{ title_author.author.auFname }} {{ title_author.author.auLname }}
-                        </td>
-                        <td class="px-6 py-4 text-gray-700 dark:text-gray-300">
-                            <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
-                                #{{ title_author.auOrd ?? 'N/A' }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700 dark:text-gray-300">
-                            {% if title_author.royaltyPer %}
-                                <span class="font-semibold text-green-600 dark:text-green-400">
-                                    {{ title_author.royaltyPer }}%
-                                </span>
-                            {% else %}
-                                <span class="text-gray-400">-</span>
-                            {% endif %}
+                            <span x-show="item.royaltyPer !== null" class="font-semibold text-green-600 dark:text-green-400" x-text="item.royaltyPer + '%'"></span>
+                            <span x-show="item.royaltyPer === null" class="text-gray-400">-</span>
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center justify-end gap-2">
-                                <a href="{{ path('app_title_author_show', {'author': title_author.author.auId, 'title': title_author.title.titleId}) }}" 
+                                <a :href="'{{ path('app_title_author_show', {'author': '__AUTHOR__', 'title': '__TITLE__'}) }}'.replace('__AUTHOR__', item.authorId).replace('__TITLE__', item.titleId)" 
                                    class="rounded-lg p-2 text-blue-600 transition hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20"
                                    title="Anzeigen">
                                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,7 +154,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                     </svg>
                                 </a>
-                                <a href="{{ path('app_title_author_edit', {'author': title_author.author.auId, 'title': title_author.title.titleId}) }}" 
+                                <a :href="'{{ path('app_title_author_edit', {'author': '__AUTHOR__', 'title': '__TITLE__'}) }}'.replace('__AUTHOR__', item.authorId).replace('__TITLE__', item.titleId)" 
                                    class="rounded-lg p-2 text-green-600 transition hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/20"
                                    title="Bearbeiten">
                                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,7 +164,8 @@
                             </div>
                         </td>
                     </tr>
-                {% else %}
+                </template>
+                <template x-if="filtered.length === 0">
                     <tr>
                         <td colspan="5" class="px-6 py-12 text-center">
                             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -97,18 +178,18 @@
                             </a>
                         </td>
                     </tr>
-                {% endfor %}
+                </template>
             </tbody>
         </table>
     </div>
 
     <!-- Table Footer -->
-    {% if title_authors|length > 0 %}
-        <div class="border-t border-gray-200 px-6 py-4 dark:border-gray-800">
-            <p class="text-sm text-gray-600 dark:text-gray-400">
-                Insgesamt <span class="font-semibold text-gray-900 dark:text-white">{{ title_authors|length }}</span> Zuordnung(en)
-            </p>
-        </div>
-    {% endif %}
+    <div class="border-t border-gray-200 px-6 py-4 dark:border-gray-800">
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+            Insgesamt <span class="font-semibold text-gray-900 dark:text-white" x-text="filtered.length"></span> von <span class="font-semibold text-gray-900 dark:text-white" x-text="rows.length"></span> Zuordnung(en)
+        </p>
+    </div>
+</div>
+
 </div>
 {% endblock %}

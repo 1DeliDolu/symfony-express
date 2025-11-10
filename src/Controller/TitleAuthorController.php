@@ -19,8 +19,22 @@ final class TitleAuthorController extends AbstractController
     #[Route(name: 'app_title_author_index', methods: ['GET'])]
     public function index(TitleAuthorRepository $titleAuthorRepository): Response
     {
+        $titleAuthors = $titleAuthorRepository->findAll();
+
+        // Serialize title_authors for Alpine.js
+        $titleAuthorsData = array_map(function (TitleAuthor $titleAuthor) {
+            return [
+                'titleId' => $titleAuthor->getTitle()->getTitleId(),
+                'titleName' => $titleAuthor->getTitle()->getTitle(),
+                'authorId' => $titleAuthor->getAuthor()->getAuId(),
+                'authorName' => $titleAuthor->getAuthor()->getAuFname() . ' ' . $titleAuthor->getAuthor()->getAuLname(),
+                'auOrd' => $titleAuthor->getAuOrd(),
+                'royaltyPer' => $titleAuthor->getRoyaltyPer(),
+            ];
+        }, $titleAuthors);
+
         return $this->render('title_author/index.html.twig', [
-            'title_authors' => $titleAuthorRepository->findAll(),
+            'title_authors' => $titleAuthorsData,
         ]);
     }
 

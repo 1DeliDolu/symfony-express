@@ -1,49 +1,163 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}Title index{% endblock %}
+{% block title %}Kitaplar{% endblock %}
+{% block page_title %}Kitap Yönetimi{% endblock %}
 
 {% block body %}
-    <h1>Title index</h1>
+<style>
+[x-cloak] { display: none !important; }
+</style>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>TitleId</th>
-                <th>Title</th>
-                <th>Type</th>
-                <th>Price</th>
-                <th>Advance</th>
-                <th>Royalty</th>
-                <th>YtdSales</th>
-                <th>Notes</th>
-                <th>Pubdate</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for title in titles %}
-            <tr>
-                <td>{{ title.titleId }}</td>
-                <td>{{ title.title }}</td>
-                <td>{{ title.type }}</td>
-                <td>{{ title.price }}</td>
-                <td>{{ title.advance }}</td>
-                <td>{{ title.royalty }}</td>
-                <td>{{ title.ytdSales }}</td>
-                <td>{{ title.notes }}</td>
-                <td>{{ title.pubdate ? title.pubdate|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_title_show', {'titleId': title.titleId}) }}">show</a>
-                    <a href="{{ path('app_title_edit', {'titleId': title.titleId}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="10">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
+{% set titlesJson = titles|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw %}
+
+<div x-data="{
+  q: '',
+  sort: {key: 'title', dir: 'asc'},
+  rows: {{ titlesJson }},
+  get filtered() {
+    let r = this.rows.filter(x => {
+      let searchStr = [x.titleId, x.title, x.type, x.publisher?.pubName||''].join(' ').toLowerCase();
+      return searchStr.includes(this.q.toLowerCase());
+    });
+    r.sort((a,b) => {
+      const k = this.sort.key, d = this.sort.dir === 'asc' ? 1 : -1;
+      let aVal = k.includes('.') ? k.split('.').reduce((o,i) => o?.[i], a) : a[k];
+      let bVal = k.includes('.') ? k.split('.').reduce((o,i) => o?.[i], b) : b[k];
+      if (aVal === null || aVal === undefined) aVal = '';
+      if (bVal === null || bVal === undefined) bVal = '';
+      return (aVal > bVal ? 1 : aVal < bVal ? -1 : 0) * d;
+    });
+    return r;
+  },
+  setSort(k) { 
+    this.sort.dir = (this.sort.key === k && this.sort.dir === 'asc') ? 'desc' : 'asc'; 
+    this.sort.key = k; 
+  }
+}">
+
+  <!-- Header with Search -->
+  <div class="mb-4 flex items-center justify-between gap-3">
+    <input x-model="q" type="text" placeholder="Kitap ara..."
+           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"/>
+    <div class="flex items-center gap-3">
+      <span class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap" x-text="filtered.length + ' Kitap'"></span>
+      <a href="{{ path('app_title_new') }}" 
+         class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 whitespace-nowrap">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Yeni Kitap
+      </a>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <table class="min-w-full text-sm">
+      <thead class="bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+        <tr>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('titleId')" class="font-semibold hover:underline">
+              ID <span x-show="sort.key==='titleId'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('title')" class="font-semibold hover:underline">
+              Kitap Adı <span x-show="sort.key==='title'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('type')" class="font-semibold hover:underline">
+              Tür <span x-show="sort.key==='type'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('publisher.pubName')" class="font-semibold hover:underline">
+              Yayıncı <span x-show="sort.key==='publisher.pubName'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('price')" class="font-semibold hover:underline">
+              Fiyat <span x-show="sort.key==='price'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('ytdSales')" class="font-semibold hover:underline">
+              Satış <span x-show="sort.key==='ytdSales'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('pubdate.timestamp')" class="font-semibold hover:underline">
+              Yayın Tarihi <span x-show="sort.key==='pubdate.timestamp'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-right">Aksiyonlar</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+        <template x-for="book in filtered" :key="book.titleId">
+          <tr class="odd:bg-white even:bg-gray-50 hover:bg-blue-50/50 dark:odd:bg-gray-900 dark:even:bg-gray-800 dark:hover:bg-blue-900/20">
+            <td class="px-4 py-3">
+              <span class="font-mono text-xs font-medium text-gray-900 dark:text-white" x-text="book.titleId"></span>
+            </td>
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-2">
+                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400">
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                  </svg>
+                </div>
+                <div class="max-w-xs">
+                  <div class="font-medium text-gray-900 dark:text-white truncate" x-text="book.title"></div>
+                </div>
+              </div>
+            </td>
+            <td class="px-4 py-3">
+              <span :class="{
+                'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400': book.type === 'business',
+                'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400': book.type === 'popular_comp',
+                'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400': book.type === 'psychology',
+                'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400': book.type === 'mod_cook' || book.type === 'trad_cook',
+                'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400': book.type === 'UNDECIDED'
+              }" class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium" 
+                    x-text="book.type"></span>
+            </td>
+            <td class="px-4 py-3 text-gray-700 dark:text-gray-300" x-text="book.publisher?.pubName || 'N/A'"></td>
+            <td class="px-4 py-3">
+              <span class="font-medium text-gray-900 dark:text-white" 
+                    x-text="book.price ? '$' + parseFloat(book.price).toFixed(2) : 'N/A'"></span>
+            </td>
+            <td class="px-4 py-3">
+              <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/20 dark:text-green-400" 
+                    x-text="book.ytdSales ? book.ytdSales.toLocaleString() : '0'"></span>
+            </td>
+            <td class="px-4 py-3 text-gray-700 dark:text-gray-300" 
+                x-text="book.pubdate ? new Date(book.pubdate.date).toLocaleDateString('tr-TR') : 'N/A'"></td>
+            <td class="px-4 py-3 text-right">
+              <div class="inline-flex items-center gap-1">
+                <a :href="`{{ path('app_title_show', {'titleId': '__ID__'}) }}`.replace('__ID__', book.titleId)" 
+                   class="rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
+                  Görüntüle
+                </a>
+                <a :href="`{{ path('app_title_edit', {'titleId': '__ID__'}) }}`.replace('__ID__', book.titleId)" 
+                   class="rounded-lg bg-green-600 px-3 py-1.5 text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">
+                  Düzenle
+                </a>
+              </div>
+            </td>
+          </tr>
+        </template>
+        <tr x-show="filtered.length === 0">
+          <td colspan="8" class="px-6 py-12 text-center">
+            <p class="text-gray-600 dark:text-gray-400">Kitap bulunamadı</p>
+            <button @click="q=''" class="mt-2 text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">
+              Aramayı temizle
+            </button>
+          </td>
+        </tr>
+      </tbody>
     </table>
+  </div>
 
-    <a href="{{ path('app_title_new') }}">Create new</a>
+</div>
 {% endblock %}

@@ -21,14 +21,34 @@ final class TitleController extends AbstractController
     public function __construct(
         private readonly TitleRepository $titleRepository,
         private readonly EntityManagerInterface $entityManager,
-    ) {
-    }
+    ) {}
 
     #[Route(name: 'app_title_index', methods: ['GET'])]
     public function index(): Response
     {
+        $titles = $this->titleRepository->findAll();
+
+        // Serialize titles for Alpine.js
+        $titlesData = array_map(function (Title $title) {
+            return [
+                'titleId' => $title->getTitleId(),
+                'title' => $title->getTitle(),
+                'type' => $title->getType(),
+                'price' => $title->getPrice() ? (float)$title->getPrice() : null,
+                'ytdSales' => $title->getYtdSales(),
+                'pubdate' => $title->getPubdate() ? [
+                    'date' => $title->getPubdate()->format('Y-m-d'),
+                    'timestamp' => $title->getPubdate()->getTimestamp(),
+                ] : null,
+                'publisher' => $title->getPublisher() ? [
+                    'pubId' => $title->getPublisher()->getPubId(),
+                    'pubName' => $title->getPublisher()->getPubName(),
+                ] : null,
+            ];
+        }, $titles);
+
         return $this->render('title/index.html.twig', [
-            'titles' => $this->titleRepository->findAll(),
+            'titles' => $titlesData,
         ]);
     }
 
@@ -85,7 +105,7 @@ final class TitleController extends AbstractController
     #[Route('/{titleId}', name: 'app_title_delete', methods: ['POST'])]
     public function delete(Request $request, Title $title): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$title->getTitleId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $title->getTitleId(), $request->getPayload()->getString('_token'))) {
             $this->entityManager->remove($title);
             $this->entityManager->flush();
 

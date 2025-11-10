@@ -1,49 +1,150 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}Author index{% endblock %}
+{% block title %}Yazarlar{% endblock %}
+{% block page_title %}Yazar Yönetimi{% endblock %}
 
 {% block body %}
-    <h1>Author index</h1>
+<style>
+[x-cloak] { display: none !important; }
+</style>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Author ID</th>
-                <th>Last Name</th>
-                <th>First Name</th>
-                <th>Phone</th>
-                <th>Address</th>
-                <th>City</th>
-                <th>State</th>
-                <th>Zip</th>
-                <th>Contract</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for author in authors %}
-            <tr>
-                <td>{{ author.auId }}</td>
-                <td>{{ author.auLname }}</td>
-                <td>{{ author.auFname }}</td>
-                <td>{{ author.phone }}</td>
-                <td>{{ author.address }}</td>
-                <td>{{ author.city }}</td>
-                <td>{{ author.state }}</td>
-                <td>{{ author.zip }}</td>
-                <td>{{ author.contract ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('app_author_show', {'id': author.auId}) }}">show</a>
-                    <a href="{{ path('app_author_edit', {'id': author.auId}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="11">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
+{% set authorsJson = authors|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw %}
+
+<div x-data="{
+  q: '',
+  sort: {key: 'auLname', dir: 'asc'},
+  rows: {{ authorsJson }},
+  get filtered() {
+    let r = this.rows.filter(x => {
+      let searchStr = [x.auId, x.auFname, x.auLname, x.phone, x.city, x.state].join(' ').toLowerCase();
+      return searchStr.includes(this.q.toLowerCase());
+    });
+    r.sort((a,b) => {
+      const k = this.sort.key, d = this.sort.dir === 'asc' ? 1 : -1;
+      let aVal = a[k] || '';
+      let bVal = b[k] || '';
+      return (aVal > bVal ? 1 : aVal < bVal ? -1 : 0) * d;
+    });
+    return r;
+  },
+  setSort(k) { 
+    this.sort.dir = (this.sort.key === k && this.sort.dir === 'asc') ? 'desc' : 'asc'; 
+    this.sort.key = k; 
+  }
+}">
+
+  <!-- Header with Search -->
+  <div class="mb-4 flex items-center justify-between gap-3">
+    <input x-model="q" type="text" placeholder="Yazar ara..."
+           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"/>
+    <div class="flex items-center gap-3">
+      <span class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap" x-text="filtered.length + ' Yazar'"></span>
+      <a href="{{ path('app_author_new') }}" 
+         class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 whitespace-nowrap">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Yeni Yazar
+      </a>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <table class="min-w-full text-sm">
+      <thead class="bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+        <tr>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('auId')" class="font-semibold hover:underline">
+              ID <span x-show="sort.key==='auId'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('auLname')" class="font-semibold hover:underline">
+              Soyad <span x-show="sort.key==='auLname'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('auFname')" class="font-semibold hover:underline">
+              Ad <span x-show="sort.key==='auFname'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('phone')" class="font-semibold hover:underline">
+              Telefon <span x-show="sort.key==='phone'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('city')" class="font-semibold hover:underline">
+              Şehir <span x-show="sort.key==='city'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('state')" class="font-semibold hover:underline">
+              Eyalet <span x-show="sort.key==='state'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('contract')" class="font-semibold hover:underline">
+              Sözleşme <span x-show="sort.key==='contract'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-right">Aksiyonlar</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+        <template x-for="author in filtered" :key="author.auId">
+          <tr class="odd:bg-white even:bg-gray-50 hover:bg-blue-50/50 dark:odd:bg-gray-900 dark:even:bg-gray-800 dark:hover:bg-blue-900/20">
+            <td class="px-4 py-3">
+              <span class="font-mono text-xs text-gray-900 dark:text-white" x-text="author.auId"></span>
+            </td>
+            <td class="px-4 py-3 font-medium text-gray-900 dark:text-white" x-text="author.auLname"></td>
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-2">
+                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" 
+                     x-text="(author.auFname?.charAt(0)||'?').toUpperCase()"></div>
+                <span class="text-gray-700 dark:text-gray-300" x-text="author.auFname"></span>
+              </div>
+            </td>
+            <td class="px-4 py-3">
+              <span class="font-mono text-xs text-gray-600 dark:text-gray-400" x-text="author.phone"></span>
+            </td>
+            <td class="px-4 py-3 text-gray-700 dark:text-gray-300" x-text="author.city"></td>
+            <td class="px-4 py-3">
+              <span class="inline-flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-800 dark:bg-purple-900/20 dark:text-purple-400" 
+                    x-text="author.state"></span>
+            </td>
+            <td class="px-4 py-3">
+              <span :class="author.contract ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'"
+                    class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium">
+                <span x-text="author.contract ? 'Evet' : 'Hayır'"></span>
+              </span>
+            </td>
+            <td class="px-4 py-3 text-right">
+              <div class="inline-flex items-center gap-1">
+                <a :href="`{{ path('app_author_show', {'id': '__ID__'}) }}`.replace('__ID__', author.auId)" 
+                   class="rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
+                  Görüntüle
+                </a>
+                <a :href="`{{ path('app_author_edit', {'id': '__ID__'}) }}`.replace('__ID__', author.auId)" 
+                   class="rounded-lg bg-green-600 px-3 py-1.5 text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">
+                  Düzenle
+                </a>
+              </div>
+            </td>
+          </tr>
+        </template>
+        <tr x-show="filtered.length === 0">
+          <td colspan="8" class="px-6 py-12 text-center">
+            <p class="text-gray-600 dark:text-gray-400">Yazar bulunamadı</p>
+            <button @click="q=''" class="mt-2 text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">
+              Aramayı temizle
+            </button>
+          </td>
+        </tr>
+      </tbody>
     </table>
+  </div>
 
-    <a href="{{ path('app_author_new') }}">Create new</a>
+</div>
 {% endblock %}
