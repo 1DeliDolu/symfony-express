@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Kayıt Ol{% endblock %}
+
+{% block body %}
+<section class="auth-card">
+    <h1>Yeni Hesap Oluştur</h1>
+    <p class="auth-card__lead">Pubs verilerini yönetmek için tek hesap yeterli.</p>
+
+    {{ form_start(registrationForm, {attr: {class: 'space-y-4'}}) }}
+        <div class="form-field">
+            <label class="form-label">
+                <span>{{ registrationForm.email.vars.label }}</span>
+                {{ form_widget(registrationForm.email, {'attr': {'autocomplete': 'email'}}) }}
+            </label>
+            {% set emailErrors = form_errors(registrationForm.email) %}
+            {% if emailErrors %}
+                <span class="form-error">{{ emailErrors }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-field">
+            <label class="form-label">
+                <span>{{ registrationForm.plainPassword.first.vars.label }}</span>
+                {{ form_widget(registrationForm.plainPassword.first, {'attr': {'autocomplete': 'new-password'}}) }}
+            </label>
+            {% set passwordErrors = form_errors(registrationForm.plainPassword.first) %}
+            {% if passwordErrors %}
+                <span class="form-error">{{ passwordErrors }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-field">
+            <label class="form-label">
+                <span>{{ registrationForm.plainPassword.second.vars.label }}</span>
+                {{ form_widget(registrationForm.plainPassword.second, {'attr': {'autocomplete': 'new-password'}}) }}
+            </label>
+            {% set passwordRepeatErrors = form_errors(registrationForm.plainPassword.second) %}
+            {% if passwordRepeatErrors %}
+                <span class="form-error">{{ passwordRepeatErrors }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-field">
+            <label class="form-label form-label--checkbox">
+                {{ form_widget(registrationForm.agreeTerms) }}
+                <span>{{ registrationForm.agreeTerms.vars.label }}</span>
+            </label>
+            {% set termsErrors = form_errors(registrationForm.agreeTerms) %}
+            {% if termsErrors %}
+                <span class="form-error">{{ termsErrors }}</span>
+            {% endif %}
+        </div>
+
+        <button class="btn-primary w-full" type="submit">Kayıt Ol</button>
+    {{ form_end(registrationForm) }}
+
+    <p class="auth-card__footer">
+        Zaten bir hesabın var mı? <a href="{{ path('app_login') }}">Giriş yap</a>
+    </p>
+</section>
+{% endblock %}

@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
+use App\Repository\SaleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Store;
 use App\Entity\Title;
 
-#[ORM\Entity(repositoryClass: 'App\Repository\SaleRepository')]
+#[ORM\Entity(repositoryClass: SaleRepository::class)]
 #[ORM\Table(name: 'sales')]
 class Sale
 {

@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Giriş Yap{% endblock %}
+
+{% block body %}
+<section class="auth-card">
+    <h1>Hoş geldin 👋</h1>
+    <p class="auth-card__lead">Devam etmek için hesabınla giriş yap.</p>
+
+    {% if error %}
+        <p class="alert alert-error">{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+    {% endif %}
+
+    <form method="post" class="space-y-4">
+        <div class="form-field">
+            <label class="form-label">
+                <span>E-posta</span>
+                <input type="email" name="email" value="{{ last_username }}" autocomplete="email" required autofocus>
+            </label>
+        </div>
+
+        <div class="form-field">
+            <label class="form-label">
+                <span>Parola</span>
+                <input type="password" name="_password" autocomplete="current-password" required>
+            </label>
+        </div>
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+        <button class="btn-primary w-full" type="submit">Giriş Yap</button>
+    </form>
+
+    <p class="auth-card__footer">
+        Hesabın yok mu? <a href="{{ path('app_register') }}">Kayıt ol</a>
+    </p>
+</section>
+{% endblock %}
