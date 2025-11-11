@@ -1,58 +1,220 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}Author{% endblock %}
+{% block title %}Yazar Detayı{% endblock %}
+{% block page_title %}Yazar Detayı{% endblock %}
 
 {% block body %}
-    <h1>Author</h1>
+<!-- Header with Action Buttons -->
+<div class="mb-6 flex items-center justify-between">
+    <a href="{{ path('app_author_index') }}" 
+       class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Listeye Dön
+    </a>
+    
+    <div class="flex items-center gap-2">
+        <a href="{{ path('app_author_edit', {'auId': author.auId}) }}" 
+           class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+            Düzenle
+        </a>
+        
+        <form method="post" action="{{ path('app_author_delete', {'auId': author.auId}) }}" 
+              onsubmit="return confirm('Bu yazarı silmek istediğinizden emin misiniz?');"
+              class="inline">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ author.auId) }}">
+            <button type="submit" 
+                    class="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                Sil
+            </button>
+        </form>
+    </div>
+</div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ author.auId }}</td>
-            </tr>
-            <tr>
-                <th>AuId</th>
-                <td>{{ author.auId }}</td>
-            </tr>
-            <tr>
-                <th>AuLname</th>
-                <td>{{ author.auLname }}</td>
-            </tr>
-            <tr>
-                <th>AuFname</th>
-                <td>{{ author.auFname }}</td>
-            </tr>
-            <tr>
-                <th>Phone</th>
-                <td>{{ author.phone }}</td>
-            </tr>
-            <tr>
-                <th>Address</th>
-                <td>{{ author.address }}</td>
-            </tr>
-            <tr>
-                <th>City</th>
-                <td>{{ author.city }}</td>
-            </tr>
-            <tr>
-                <th>State</th>
-                <td>{{ author.state }}</td>
-            </tr>
-            <tr>
-                <th>Zip</th>
-                <td>{{ author.zip }}</td>
-            </tr>
-            <tr>
-                <th>Contract</th>
-                <td>{{ author.contract ? 'Yes' : 'No' }}</td>
-            </tr>
-        </tbody>
-    </table>
+<!-- Author Info Card -->
+<div class="rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <!-- Header -->
+    <div class="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
+        <div class="flex items-center gap-4">
+            <div class="flex h-16 w-16 items-center justify-center rounded-full bg-purple-100 text-2xl font-bold text-purple-600 dark:bg-purple-900/20 dark:text-purple-400">
+                {{ author.auFname|first }}{{ author.auLname|first }}
+            </div>
+            <div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    {{ author.auFname }} {{ author.auLname }}
+                </h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    {{ author.contract ? '✓ Sözleşmeli Yazar' : '✗ Sözleşmesiz' }}
+                </p>
+            </div>
+        </div>
+    </div>
 
-    <a href="{{ path('app_author_index') }}">back to list</a>
+    <!-- Details Grid -->
+    <div class="p-6">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <!-- Yazar ID -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Yazar ID
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 font-mono text-sm font-semibold text-gray-900 dark:bg-gray-800 dark:text-white">
+                    {{ author.auId }}
+                </div>
+            </div>
 
-    <a href="{{ path('app_author_edit', {'id': author.auId}) }}">edit</a>
+            <!-- Ad -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Ad
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:bg-gray-800 dark:text-white">
+                    {{ author.auFname }}
+                </div>
+            </div>
 
-    {{ include('author/_delete_form.html.twig') }}
+            <!-- Soyad -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Soyad
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:bg-gray-800 dark:text-white">
+                    {{ author.auLname }}
+                </div>
+            </div>
+
+            <!-- Telefon -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Telefon
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
+                    <div class="flex items-center gap-2 text-sm text-gray-900 dark:text-white">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                        </svg>
+                        <span class="font-mono">{{ author.phone }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Adres -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Adres
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:bg-gray-800 dark:text-white">
+                    {{ author.address|default('N/A') }}
+                </div>
+            </div>
+
+            <!-- Şehir -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Şehir
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:bg-gray-800 dark:text-white">
+                    {{ author.city|default('N/A') }}
+                </div>
+            </div>
+
+            <!-- Eyalet -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Eyalet
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
+                    {% if author.state %}
+                        <span class="inline-flex items-center rounded-full bg-purple-100 px-3 py-1 text-sm font-semibold text-purple-800 dark:bg-purple-900/20 dark:text-purple-400">
+                            {{ author.state }}
+                        </span>
+                    {% else %}
+                        <span class="text-sm text-gray-400">N/A</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Posta Kodu -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Posta Kodu
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
+                    <span class="font-mono text-sm text-gray-900 dark:text-white">{{ author.zip|default('N/A') }}</span>
+                </div>
+            </div>
+
+            <!-- Sözleşme Durumu -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Sözleşme Durumu
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
+                    <span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold {{ author.contract ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400' }}">
+                        {{ author.contract ? '✓ Aktif Sözleşme' : '✗ Sözleşmesiz' }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Additional Stats Card -->
+<div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Sözleşme</p>
+                <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
+                    {{ author.contract ? 'Aktif' : 'Yok' }}
+                </p>
+            </div>
+            <div class="rounded-full {{ author.contract ? 'bg-green-100 dark:bg-green-900/20' : 'bg-gray-100 dark:bg-gray-800' }} p-3">
+                <svg class="h-6 w-6 {{ author.contract ? 'text-green-600 dark:text-green-400' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Konum</p>
+                <p class="mt-2 text-lg font-bold text-gray-900 dark:text-white">
+                    {{ author.city|default('N/A') }}
+                </p>
+            </div>
+            <div class="rounded-full bg-blue-100 p-3 dark:bg-blue-900/20">
+                <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">İletişim</p>
+                <p class="mt-2 text-sm font-bold text-gray-900 dark:text-white">
+                    {{ author.phone != 'UNKNOWN' ? author.phone : 'Yok' }}
+                </p>
+            </div>
+            <div class="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
+                <svg class="h-6 w-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

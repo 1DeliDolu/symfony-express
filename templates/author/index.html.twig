@@ -1,7 +1,7 @@
 {% extends 'admin_base.html.twig' %}
 
-{% block title %}Yazarlar{% endblock %}
-{% block page_title %}Yazar Yönetimi{% endblock %}
+{% block title %}Autoren{% endblock %}
+{% block page_title %}Autorenverwaltung{% endblock %}
 
 {% block body %}
 <style>
@@ -35,16 +35,16 @@
 
   <!-- Header with Search -->
   <div class="mb-4 flex items-center justify-between gap-3">
-    <input x-model="q" type="text" placeholder="Yazar ara..."
+    <input x-model="q" type="text" placeholder="Autor suchen..."
            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"/>
     <div class="flex items-center gap-3">
-      <span class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap" x-text="filtered.length + ' Yazar'"></span>
+      <span class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap" x-text="filtered.length + ' Autoren'"></span>
       <a href="{{ path('app_author_new') }}" 
          class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 whitespace-nowrap">
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
-        Yeni Yazar
+        Neuer Autor
       </a>
     </div>
   </div>
@@ -61,12 +61,12 @@
           </th>
           <th class="px-4 py-3 text-left">
             <button @click="setSort('auLname')" class="font-semibold hover:underline">
-              Soyad <span x-show="sort.key==='auLname'">(<span x-text="sort.dir"></span>)</span>
+              Nachname <span x-show="sort.key==='auLname'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
           <th class="px-4 py-3 text-left">
             <button @click="setSort('auFname')" class="font-semibold hover:underline">
-              Ad <span x-show="sort.key==='auFname'">(<span x-text="sort.dir"></span>)</span>
+              Vorname <span x-show="sort.key==='auFname'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
           <th class="px-4 py-3 text-left">
@@ -76,20 +76,20 @@
           </th>
           <th class="px-4 py-3 text-left">
             <button @click="setSort('city')" class="font-semibold hover:underline">
-              Şehir <span x-show="sort.key==='city'">(<span x-text="sort.dir"></span>)</span>
+              Stadt <span x-show="sort.key==='city'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
           <th class="px-4 py-3 text-left">
             <button @click="setSort('state')" class="font-semibold hover:underline">
-              Eyalet <span x-show="sort.key==='state'">(<span x-text="sort.dir"></span>)</span>
+              Bundesland <span x-show="sort.key==='state'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
           <th class="px-4 py-3 text-left">
             <button @click="setSort('contract')" class="font-semibold hover:underline">
-              Sözleşme <span x-show="sort.key==='contract'">(<span x-text="sort.dir"></span>)</span>
+              Vertrag <span x-show="sort.key==='contract'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
-          <th class="px-4 py-3 text-right">Aksiyonlar</th>
+          <th class="px-4 py-3 text-right">Aktionen</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
@@ -117,18 +117,18 @@
             <td class="px-4 py-3">
               <span :class="author.contract ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'"
                     class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium">
-                <span x-text="author.contract ? 'Evet' : 'Hayır'"></span>
+                <span x-text="author.contract ? 'Ja' : 'Nein'"></span>
               </span>
             </td>
             <td class="px-4 py-3 text-right">
               <div class="inline-flex items-center gap-1">
                 <a :href="`{{ path('app_author_show', {'auId': '__ID__'}) }}`.replace('__ID__', author.auId)" 
                    class="rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                  Görüntüle
+                  Anzeigen
                 </a>
                 <a :href="`{{ path('app_author_edit', {'auId': '__ID__'}) }}`.replace('__ID__', author.auId)" 
                    class="rounded-lg bg-green-600 px-3 py-1.5 text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">
-                  Düzenle
+                  Bearbeiten
                 </a>
               </div>
             </td>
@@ -136,9 +136,9 @@
         </template>
         <tr x-show="filtered.length === 0">
           <td colspan="8" class="px-6 py-12 text-center">
-            <p class="text-gray-600 dark:text-gray-400">Yazar bulunamadı</p>
+            <p class="text-gray-600 dark:text-gray-400">Keine Autoren gefunden</p>
             <button @click="q=''" class="mt-2 text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">
-              Aramayı temizle
+              Suche löschen
             </button>
           </td>
         </tr>

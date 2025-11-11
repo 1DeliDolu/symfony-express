@@ -1,7 +1,7 @@
 {% extends 'admin_base.html.twig' %}
 
-{% block title %}Yayıncı Detayı{% endblock %}
-{% block page_title %}Yayıncı Detayı{% endblock %}
+{% block title %}Verlagsdetails{% endblock %}
+{% block page_title %}Verlagsdetails{% endblock %}
 
 {% block body %}
 <!-- Header with Action Buttons -->
@@ -11,7 +11,7 @@
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
         </svg>
-        Listeye Dön
+        Zur Liste
     </a>
     
     <div class="flex items-center gap-2">
@@ -20,11 +20,11 @@
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
             </svg>
-            Düzenle
+            Bearbeiten
         </a>
         
         <form method="post" action="{{ path('app_publisher_delete', {'pubId': publisher.pubId}) }}" 
-              onsubmit="return confirm('Bu yayıncıyı silmek istediğinizden emin misiniz?');"
+              onsubmit="return confirm('Sind Sie sicher, dass Sie diesen Verlag löschen möchten?');"
               class="inline">
             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ publisher.pubId) }}">
             <button type="submit" 
@@ -32,7 +32,7 @@
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                 </svg>
-                Sil
+                Löschen
             </button>
         </form>
     </div>
@@ -53,7 +53,7 @@
                     {{ publisher.pubName|default('N/A') }}
                 </h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                    Yayıncı ID: {{ publisher.pubId }}
+                    Verlags-ID: {{ publisher.pubId }}
                 </p>
             </div>
         </div>
@@ -62,30 +62,30 @@
     <!-- Details Grid -->
     <div class="p-6">
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <!-- Yayıncı ID -->
+            <!-- Verlags-ID -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Yayıncı ID
+                    Verlags-ID
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 font-mono text-sm font-semibold text-gray-900 dark:bg-gray-800 dark:text-white">
                     {{ publisher.pubId }}
                 </div>
             </div>
 
-            <!-- Yayıncı Adı -->
+            <!-- Verlagsname -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Yayıncı Adı
+                    Verlagsname
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:bg-gray-800 dark:text-white">
                     {{ publisher.pubName|default('-') }}
                 </div>
             </div>
 
-            <!-- Şehir -->
+            <!-- Stadt -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Şehir
+                    Stadt
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
                     <span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
@@ -94,10 +94,10 @@
                 </div>
             </div>
 
-            <!-- Eyalet -->
+            <!-- Bundesland -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Eyalet
+                    Bundesland
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
                     <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800 dark:bg-green-900/20 dark:text-green-400">
@@ -106,10 +106,10 @@
                 </div>
             </div>
 
-            <!-- Ülke -->
+            <!-- Land -->
             <div class="md:col-span-2">
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Ülke
+                    Land
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
                     <div class="flex items-center gap-2">
@@ -131,7 +131,7 @@
     <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Şehir</p>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Stadt</p>
                 <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
                     {{ publisher.city|default('-') }}
                 </p>
@@ -147,13 +147,13 @@
     <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Eyalet</p>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Bundesland</p>
                 <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
                     {{ publisher.state|default('-') }}
                 </p>
             </div>
             <div class="rounded-full bg-green-100 p-3 dark:bg-green-900/20">
-                <svg class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="h-6 w-6 text.green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
                 </svg>
             </div>
@@ -163,7 +163,7 @@
     <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Ülke</p>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Land</p>
                 <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
                     {{ publisher.country|default('USA') }}
                 </p>

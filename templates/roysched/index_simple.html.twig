@@ -1,0 +1,77 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}Tantiemenpläne{% endblock %}
+{% block page_title %}Tantiemenpläne Verwaltung{% endblock %}
+
+{% block body %}
+<div class="mb-4 flex items-center justify-between gap-3">
+    <h2 class="text-xl font-semibold">{{ royscheds|length }} Tantiemenpläne</h2>
+    <a href="{{ path('app_roysched_new') }}" 
+       class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Neu
+    </a>
+</div>
+
+<div class="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <table class="min-w-full text-sm">
+        <thead class="bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+            <tr>
+                <th class="px-4 py-3 text-left font-semibold">Titel-ID</th>
+                <th class="px-4 py-3 text-left font-semibold">Buchtitel</th>
+                <th class="px-4 py-3 text-left font-semibold">Von</th>
+                <th class="px-4 py-3 text-left font-semibold">Bis</th>
+                <th class="px-4 py-3 text-left font-semibold">Tantiemen %</th>
+                <th class="px-4 py-3 text-right font-semibold">Aktionen</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            {% for item in royscheds %}
+            <tr class="odd:bg-white even:bg-gray-50 hover:bg-blue-50/50 dark:odd:bg-gray-900 dark:even:bg-gray-800 dark:hover:bg-blue-900/20">
+                <td class="px-4 py-3">
+                    <span class="font-mono text-xs text-gray-900 dark:text-white">{{ item.title.titleId }}</span>
+                </td>
+                <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">
+                    {{ item.title.title }}
+                </td>
+                <td class="px-4 py-3">
+                    <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
+                        {{ item.lorange is not null ? item.lorange|number_format(0, ',', '.') : '-' }}
+                    </span>
+                </td>
+                <td class="px-4 py-3">
+                    <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/20 dark:text-green-400">
+                        {{ item.hirange is not null ? item.hirange|number_format(0, ',', '.') : '-' }}
+                    </span>
+                </td>
+                <td class="px-4 py-3">
+                    <span class="inline-flex items-center rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-semibold text-orange-800 dark:bg-orange-900/20 dark:text-orange-400">
+                        {{ item.royalty is not null ? item.royalty ~ '%' : '-' }}
+                    </span>
+                </td>
+                <td class="px-4 py-3 text-right">
+                    <div class="inline-flex items-center gap-1">
+                        <a href="{{ path('app_roysched_show', {'title': item.title.titleId}) }}" 
+                           class="rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700">
+                            Anzeigen
+                        </a>
+                        <a href="{{ path('app_roysched_edit', {'title': item.title.titleId}) }}" 
+                           class="rounded-lg bg-green-600 px-3 py-1.5 text-white hover:bg-green-700">
+                            Bearbeiten
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="px-6 py-12 text-center">
+                    <p class="text-gray-600 dark:text-gray-400">Keine Tantiemenpläne gefunden</p>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

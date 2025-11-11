@@ -59,16 +59,28 @@ final class TitleAuthorController extends AbstractController
     }
 
     #[Route('/{author}/{title}', name: 'app_title_author_show', methods: ['GET'])]
-    public function show(TitleAuthor $titleAuthor): Response
+    public function show(string $author, string $title, TitleAuthorRepository $titleAuthorRepository): Response
     {
+        $titleAuthor = $titleAuthorRepository->findOneByAuthorAndTitle($author, $title);
+
+        if (!$titleAuthor) {
+            throw $this->createNotFoundException('Die Buch-Autor Zuordnung wurde nicht gefunden.');
+        }
+
         return $this->render('title_author/show.html.twig', [
             'title_author' => $titleAuthor,
         ]);
     }
 
     #[Route('/{author}/{title}/edit', name: 'app_title_author_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, TitleAuthor $titleAuthor, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, string $author, string $title, TitleAuthorRepository $titleAuthorRepository, EntityManagerInterface $entityManager): Response
     {
+        $titleAuthor = $titleAuthorRepository->findOneByAuthorAndTitle($author, $title);
+
+        if (!$titleAuthor) {
+            throw $this->createNotFoundException('Die Buch-Autor Zuordnung wurde nicht gefunden.');
+        }
+
         $form = $this->createForm(TitleAuthorType::class, $titleAuthor);
         $form->handleRequest($request);
 
@@ -85,8 +97,14 @@ final class TitleAuthorController extends AbstractController
     }
 
     #[Route('/{author}/{title}', name: 'app_title_author_delete', methods: ['POST'])]
-    public function delete(Request $request, TitleAuthor $titleAuthor, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, string $author, string $title, TitleAuthorRepository $titleAuthorRepository, EntityManagerInterface $entityManager): Response
     {
+        $titleAuthor = $titleAuthorRepository->findOneByAuthorAndTitle($author, $title);
+
+        if (!$titleAuthor) {
+            throw $this->createNotFoundException('Die Buch-Autor Zuordnung wurde nicht gefunden.');
+        }
+
         if ($this->isCsrfTokenValid('delete' . $titleAuthor->getAuthor()->getAuId() . $titleAuthor->getTitle()->getTitleId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($titleAuthor);
             $entityManager->flush();

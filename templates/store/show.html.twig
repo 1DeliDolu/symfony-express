@@ -1,7 +1,7 @@
 {% extends 'admin_base.html.twig' %}
 
-{% block title %}Mağaza Detayı{% endblock %}
-{% block page_title %}Mağaza Detayı{% endblock %}
+{% block title %}Filialdetails{% endblock %}
+{% block page_title %}Filialdetails{% endblock %}
 
 {% block body %}
 <!-- Header with Action Buttons -->
@@ -11,7 +11,7 @@
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
         </svg>
-        Listeye Dön
+        Zurück zur Liste
     </a>
     
     <div class="flex items-center gap-2">
@@ -20,11 +20,11 @@
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
             </svg>
-            Düzenle
+            Bearbeiten
         </a>
         
         <form method="post" action="{{ path('app_store_delete', {'storId': store.storId}) }}" 
-              onsubmit="return confirm('Bu mağazayı silmek istediğinizden emin misiniz?');"
+              onsubmit="return confirm('Sind Sie sicher, dass Sie dieses Geschäft löschen möchten?');"
               class="inline">
             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ store.storId) }}">
             <button type="submit" 
@@ -32,7 +32,7 @@
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                 </svg>
-                Sil
+                Löschen
             </button>
         </form>
     </div>
@@ -53,7 +53,7 @@
                     {{ store.storName|default('N/A') }}
                 </h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                    Mağaza ID: {{ store.storId }}
+                    Filial-ID: {{ store.storId }}
                 </p>
             </div>
         </div>
@@ -65,7 +65,7 @@
             <!-- Mağaza ID -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Mağaza ID
+                    Filial-ID
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 font-mono text-sm font-semibold text-gray-900 dark:bg-gray-800 dark:text-white">
                     {{ store.storId }}
@@ -75,7 +75,7 @@
             <!-- Mağaza Adı -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Mağaza Adı
+                    Name des Geschäfts
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:bg-gray-800 dark:text-white">
                     {{ store.storName|default('-') }}
@@ -85,7 +85,7 @@
             <!-- Adres -->
             <div class="md:col-span-2">
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Adres
+                    Adresse
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
                     <div class="flex items-start gap-2 text-sm text-gray-900 dark:text-white">
@@ -101,7 +101,7 @@
             <!-- Şehir -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Şehir
+                    Stadt
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
                     <span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
@@ -113,7 +113,7 @@
             <!-- Eyalet -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Eyalet
+                    Bundesland
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
                     <span class="inline-flex items-center rounded-full bg-purple-100 px-3 py-1 text-sm font-medium text-purple-800 dark:bg-purple-900/20 dark:text-purple-400">
@@ -125,7 +125,7 @@
             <!-- Posta Kodu -->
             <div class="md:col-span-2">
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Posta Kodu
+                    Postleitzahl
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
                     <span class="inline-flex items-center gap-2 text-sm text-gray-900 dark:text-white">
@@ -142,12 +142,12 @@
 
 <!-- Location Summary Card -->
 <div class="mt-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-    <h4 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Konum Özeti</h4>
+    <h4 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Standortübersicht</h4>
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div class="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/10">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-blue-900 dark:text-blue-300">Şehir</p>
+                    <p class="text-sm font-medium text-blue-900 dark:text-blue-300">Stadt</p>
                     <p class="mt-1 text-xl font-bold text-blue-600 dark:text-blue-400">
                         {{ store.city|default('-') }}
                     </p>
@@ -161,7 +161,7 @@
         <div class="rounded-lg bg-purple-50 p-4 dark:bg-purple-900/10">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-purple-900 dark:text-purple-300">Eyalet</p>
+                    <p class="text-sm font-medium text-purple-900 dark:text-purple-300">Bundesland</p>
                     <p class="mt-1 text-xl font-bold text-purple-600 dark:text-purple-400">
                         {{ store.state|default('-') }}
                     </p>
@@ -175,7 +175,7 @@
         <div class="rounded-lg bg-green-50 p-4 dark:bg-green-900/10">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-green-900 dark:text-green-300">Posta Kodu</p>
+                    <p class="text-sm font-medium text-green-900 dark:text-green-300">Postleitzahl</p>
                     <p class="mt-1 text-xl font-bold text-green-600 dark:text-green-400">
                         {{ store.zip|default('-') }}
                     </p>

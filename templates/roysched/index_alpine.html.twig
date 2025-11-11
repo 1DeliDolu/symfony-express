@@ -1,28 +1,46 @@
 {% extends 'admin_base.html.twig' %}
 
-{% block title %}Verleger{% endblock %}
-{% block page_title %}Verlegerverwaltung{% endblock %}
+{% block title %}Tantiemenpläne{% endblock %}
+{% block page_title %}Tantiemenpläne Verwaltung{% endblock %}
 
 {% block body %}
+<!-- Debug: Total records -->
+<div class="mb-4 rounded-lg bg-yellow-100 p-4 text-sm dark:bg-yellow-900/20">
+    <strong>Debug:</strong> {{ royscheds|length }} Tantiemenpläne gefunden
+</div>
+
 <style>
 [x-cloak] { display: none !important; }
 </style>
 
-{% set publishersJson = publishers|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw %}
-
 <div x-data="{
   q: '',
-  sort: {key: 'pubName', dir: 'asc'},
-  rows: {{ publishersJson }},
+  sort: {key: 'titleName', dir: 'asc'}, 
+  rows: [
+    {% for r in royscheds %}
+    {
+        titleId: '{{ r.title.titleId|e('js') }}',
+        titleName: {{ r.title.title|json_encode|raw }},
+        lorange: {{ r.lorange ?? 'null' }},
+        hirange: {{ r.hirange ?? 'null' }},
+        royalty: {{ r.royalty ?? 'null' }}
+    }{{ loop.last ? '' : ',' }}
+    {% endfor %}
+  ],
+  init() {
+    console.log('Alpine.js initialized');
+    console.log('Total rows:', this.rows.length);
+    console.log('Sample row:', this.rows[0]);
+  },
   get filtered() {
     let r = this.rows.filter(x => {
-      let searchStr = [x.pubId, x.pubName, x.city, x.state, x.country].join(' ').toLowerCase();
+      let searchStr = [x.titleId, x.titleName, x.lorange||'', x.hirange||'', x.royalty||''].join(' ').toLowerCase();
       return searchStr.includes(this.q.toLowerCase());
     });
     r.sort((a,b) => {
       const k = this.sort.key, d = this.sort.dir === 'asc' ? 1 : -1;
-      let aVal = a[k] || '';
-      let bVal = b[k] || '';
+      let aVal = a[k];
+      let bVal = b[k];
       return (aVal > bVal ? 1 : aVal < bVal ? -1 : 0) * d;
     });
     return r;
@@ -35,16 +53,16 @@
 
   <!-- Header with Search -->
   <div class="mb-4 flex items-center justify-between gap-3">
-    <input x-model="q" type="text" placeholder="Verleger suchen..."
+    <input x-model="q" type="text" placeholder="Tantiemenplan suchen..."
            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"/>
     <div class="flex items-center gap-3">
-      <span class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap" x-text="filtered.length + ' Verleger'"></span>
-      <a href="{{ path('app_publisher_new') }}" 
+      <span class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap" x-text="filtered.length + ' Pläne'"></span>
+      <a href="{{ path('app_roysched_new') }}" 
          class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 whitespace-nowrap">
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
-        Neuen Verleger
+        Neu
       </a>
     </div>
   </div>
@@ -55,65 +73,68 @@
       <thead class="bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
         <tr>
           <th class="px-4 py-3 text-left">
-            <button @click="setSort('pubId')" class="font-semibold hover:underline">
-              ID <span x-show="sort.key==='pubId'">(<span x-text="sort.dir === 'asc' ? 'auf' : 'ab'"></span>)</span>
+            <button @click="setSort('titleId')" class="font-semibold hover:underline">
+              Titel-ID <span x-show="sort.key==='titleId'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
           <th class="px-4 py-3 text-left">
-            <button @click="setSort('pubName')" class="font-semibold hover:underline">
-              Name <span x-show="sort.key==='pubName'">(<span x-text="sort.dir === 'asc' ? 'auf' : 'ab'"></span>)</span>
+            <button @click="setSort('titleName')" class="font-semibold hover:underline">
+              Buchtitel <span x-show="sort.key==='titleName'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
           <th class="px-4 py-3 text-left">
-            <button @click="setSort('city')" class="font-semibold hover:underline">
-              Stadt <span x-show="sort.key==='city'">(<span x-text="sort.dir === 'asc' ? 'auf' : 'ab'"></span>)</span>
+            <button @click="setSort('lorange')" class="font-semibold hover:underline">
+              Von <span x-show="sort.key==='lorange'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
           <th class="px-4 py-3 text-left">
-            <button @click="setSort('state')" class="font-semibold hover:underline">
-              Bundesland <span x-show="sort.key==='state'">(<span x-text="sort.dir === 'asc' ? 'auf' : 'ab'"></span>)</span>
+            <button @click="setSort('hirange')" class="font-semibold hover:underline">
+              Bis <span x-show="sort.key==='hirange'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
           <th class="px-4 py-3 text-left">
-            <button @click="setSort('country')" class="font-semibold hover:underline">
-              Land <span x-show="sort.key==='country'">(<span x-text="sort.dir === 'asc' ? 'auf' : 'ab'"></span>)</span>
+            <button @click="setSort('royalty')" class="font-semibold hover:underline">
+              Tantiemen % <span x-show="sort.key==='royalty'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
           <th class="px-4 py-3 text-right">Aktionen</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-        <template x-for="pub in filtered" :key="pub.pubId">
+        <template x-for="item in filtered" :key="item.titleId">
           <tr class="odd:bg-white even:bg-gray-50 hover:bg-blue-50/50 dark:odd:bg-gray-900 dark:even:bg-gray-800 dark:hover:bg-blue-900/20">
             <td class="px-4 py-3">
-              <span class="font-mono text-xs font-medium text-gray-900 dark:text-white" x-text="pub.pubId"></span>
+              <span class="font-mono text-xs text-gray-900 dark:text-white" x-text="item.titleId"></span>
             </td>
-            <td class="px-4 py-3">
+            <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">
               <div class="flex items-center gap-2">
-                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400">
+                <div class="flex h-8 w-8 items-center justify-center rounded bg-purple-100 text-sm font-semibold text-purple-700 dark:bg-purple-900/30 dark:text-purple-400">
                   <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                   </svg>
                 </div>
-                <span class="font-medium text-gray-900 dark:text-white" x-text="pub.pubName"></span>
+                <span x-text="item.titleName"></span>
               </div>
-            </td>
-            <td class="px-4 py-3 text-gray-700 dark:text-gray-300" x-text="pub.city"></td>
-            <td class="px-4 py-3">
-              <span class="inline-flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-800 dark:bg-purple-900/20 dark:text-purple-400" 
-                    x-text="pub.state"></span>
             </td>
             <td class="px-4 py-3">
               <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/20 dark:text-blue-400" 
-                    x-text="pub.country"></span>
+                    x-text="item.lorange !== null ? item.lorange.toLocaleString() : '-'"></span>
+            </td>
+            <td class="px-4 py-3">
+              <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/20 dark:text-green-400" 
+                    x-text="item.hirange !== null ? item.hirange.toLocaleString() : '-'"></span>
+            </td>
+            <td class="px-4 py-3">
+              <span class="inline-flex items-center rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-semibold text-orange-800 dark:bg-orange-900/20 dark:text-orange-400" 
+                    x-text="item.royalty !== null ? item.royalty + '%' : '-'"></span>
             </td>
             <td class="px-4 py-3 text-right">
               <div class="inline-flex items-center gap-1">
-                <a :href="`{{ path('app_publisher_show', {'pubId': '__ID__'}) }}`.replace('__ID__', pub.pubId)" 
+                <a :href="`{{ path('app_roysched_show', {'title': '__ID__'}) }}`.replace('__ID__', item.titleId)" 
                    class="rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
                   Anzeigen
                 </a>
-                <a :href="`{{ path('app_publisher_edit', {'pubId': '__ID__'}) }}`.replace('__ID__', pub.pubId)" 
+                <a :href="`{{ path('app_roysched_edit', {'title': '__ID__'}) }}`.replace('__ID__', item.titleId)" 
                    class="rounded-lg bg-green-600 px-3 py-1.5 text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">
                   Bearbeiten
                 </a>
@@ -123,7 +144,7 @@
         </template>
         <tr x-show="filtered.length === 0">
           <td colspan="6" class="px-6 py-12 text-center">
-            <p class="text-gray-600 dark:text-gray-400">Keine Verleger gefunden</p>
+            <p class="text-gray-600 dark:text-gray-400">Keine Tantiemenpläne gefunden</p>
             <button @click="q=''" class="mt-2 text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">
               Suche zurücksetzen
             </button>

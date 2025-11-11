@@ -19,8 +19,23 @@ final class RoyschedController extends AbstractController
     #[Route(name: 'app_roysched_index', methods: ['GET'])]
     public function index(RoyschedRepository $royschedRepository): Response
     {
+        $royscheds = $royschedRepository->findAll();
+
+        // Prepare data for JSON serialization
+        $royschedsData = array_map(function ($roysched) {
+            return [
+                'title' => [
+                    'titleId' => $roysched->getTitle()->getTitleId(),
+                    'title' => $roysched->getTitle()->getTitle(),
+                ],
+                'lorange' => $roysched->getLorange(),
+                'hirange' => $roysched->getHirange(),
+                'royalty' => $roysched->getRoyalty(),
+            ];
+        }, $royscheds);
+
         return $this->render('roysched/index.html.twig', [
-            'royscheds' => $royschedRepository->findAll(),
+            'royscheds' => $royschedsData,
         ]);
     }
 
@@ -45,16 +60,28 @@ final class RoyschedController extends AbstractController
     }
 
     #[Route('/{title}', name: 'app_roysched_show', methods: ['GET'])]
-    public function show(Roysched $roysched): Response
+    public function show(string $title, RoyschedRepository $royschedRepository): Response
     {
+        $roysched = $royschedRepository->findOneByTitleId($title);
+
+        if (!$roysched) {
+            throw $this->createNotFoundException('Der Tantiemenplan wurde nicht gefunden.');
+        }
+
         return $this->render('roysched/show.html.twig', [
             'roysched' => $roysched,
         ]);
     }
 
     #[Route('/{title}/edit', name: 'app_roysched_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Roysched $roysched, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, string $title, RoyschedRepository $royschedRepository, EntityManagerInterface $entityManager): Response
     {
+        $roysched = $royschedRepository->findOneByTitleId($title);
+
+        if (!$roysched) {
+            throw $this->createNotFoundException('Der Tantiemenplan wurde nicht gefunden.');
+        }
+
         $form = $this->createForm(RoyschedType::class, $roysched);
         $form->handleRequest($request);
 
@@ -71,9 +98,15 @@ final class RoyschedController extends AbstractController
     }
 
     #[Route('/{title}', name: 'app_roysched_delete', methods: ['POST'])]
-    public function delete(Request $request, Roysched $roysched, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, string $title, RoyschedRepository $royschedRepository, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$roysched->getTitle(), $request->getPayload()->getString('_token'))) {
+        $roysched = $royschedRepository->findOneByTitleId($title);
+
+        if (!$roysched) {
+            throw $this->createNotFoundException('Der Tantiemenplan wurde nicht gefunden.');
+        }
+
+        if ($this->isCsrfTokenValid('delete' . $roysched->getTitle()->getTitleId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($roysched);
             $entityManager->flush();
         }

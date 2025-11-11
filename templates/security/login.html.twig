@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
-<html lang="tr" x-data="{ darkMode: false }" x-init="darkMode = JSON.parse(localStorage.getItem('darkMode')) || false; `$watch('darkMode', val => localStorage.setItem('darkMode', JSON.stringify(val)))" :class="{ 'dark': darkMode }">
+<html lang="de" x-data="{ darkMode: false }" x-init="darkMode = JSON.parse(localStorage.getItem('darkMode')) || false; `$watch('darkMode', val => localStorage.setItem('darkMode', JSON.stringify(val)))" :class="{ 'dark': darkMode }">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giriş Yap - Pubs Admin</title>
+    <title>Anmelden - Pubs Admin</title>
     <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
 </head>
 <body class="min-h-screen flex bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
@@ -16,7 +16,7 @@
                     </svg>
                 </div>
                 <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-indigo-400">Pubs Admin</h1>
-                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Sisteme giriş yapın</p>
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Bitte melden Sie sich an</p>
             </div>
             {% if error %}
             <div class="mb-4 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400">
@@ -26,21 +26,21 @@
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
                 <form method="post" class="space-y-5">
                     <div>
-                        <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">E-posta</label>
-                        <input type="email" id="username" name="_username" value="{{ last_username|default('') }}" required autofocus autocomplete="email" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100" placeholder="ornek@email.com">
+                        <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">E-Mail</label>
+                        <input type="email" id="username" name="_username" value="{{ last_username|default('') }}" required autofocus autocomplete="email" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100" placeholder="beispiel@email.de">
                     </div>
                     <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Şifre</label>
+                        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Passwort</label>
                         <input type="password" id="password" name="_password" required autocomplete="current-password" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100" placeholder="">
                     </div>
                     <div class="flex items-center">
                         <input type="checkbox" name="_remember_me" id="remember" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                        <label for="remember" class="ml-2 text-sm text-gray-700 dark:text-gray-300">Beni hatırla</label>
+                        <label for="remember" class="ml-2 text-sm text-gray-700 dark:text-gray-300">Angemeldet bleiben</label>
                     </div>
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                    <button type="submit" class="w-full rounded-lg bg-gradient-to-r from-blue-600 to-indigo-700 py-3 text-white font-semibold shadow-lg hover:from-blue-700 hover:to-indigo-800 transition">Giriş Yap</button>
+                    <button type="submit" class="w-full rounded-lg bg-gradient-to-r from-blue-600 to-indigo-700 py-3 text-white font-semibold shadow-lg hover:from-blue-700 hover:to-indigo-800 transition">Anmelden</button>
                 </form>
-                <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">Henüz hesabınız yok mu? <a href="{{ path('app_register') }}" class="font-semibold text-blue-600 hover:text-indigo-600">Kayıt Ol</a></p>
+                <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">Noch kein Konto? <a href="{{ path('app_register') }}" class="font-semibold text-blue-600 hover:text-indigo-600">Registrieren</a></p>
             </div>
             <div class="mt-6 flex justify-center">
                 <button @click="darkMode = !darkMode" class="rounded-full p-3 text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800">
@@ -55,8 +55,8 @@
             <svg class="h-24 w-24 mx-auto mb-8 text-white/90" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
             </svg>
-            <h2 class="text-4xl font-bold mb-4">Pubs Yayıncılık Yönetim Sistemi</h2>
-            <p class="text-blue-100 text-lg">Kitaplarınızı, yazarlarınızı ve satışlarınızı tek yerden yönetin.</p>
+            <h2 class="text-4xl font-bold mb-4">Pubs Verlagsverwaltungssystem</h2>
+            <p class="text-blue-100 text-lg">Verwalten Sie Ihre Bücher, Autoren und Verkäufe an einem Ort.</p>
         </div>
     </div>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>

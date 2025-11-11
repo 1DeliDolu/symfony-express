@@ -1,34 +1,162 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}Job{% endblock %}
+{% block title %}Position Details{% endblock %}
+{% block page_title %}Position Details{% endblock %}
 
 {% block body %}
-    <h1>Job</h1>
+<!-- Header with Action Buttons -->
+<div class="mb-6 flex items-center justify-between">
+    <a href="{{ path('app_job_index') }}" 
+       class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Zurück zur Liste
+    </a>
+    
+    <div class="flex items-center gap-2">
+        <a href="{{ path('app_job_edit', {'jobId': job.jobId}) }}" 
+           class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+            Bearbeiten
+        </a>
+        
+        <form method="post" action="{{ path('app_job_delete', {'jobId': job.jobId}) }}" 
+              onsubmit="return confirm('Möchten Sie diese Position wirklich löschen?');"
+              class="inline">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ job.jobId) }}">
+            <button type="submit" 
+                    class="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                Löschen
+            </button>
+        </form>
+    </div>
+</div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>JobId</th>
-                <td>{{ job.jobId }}</td>
-            </tr>
-            <tr>
-                <th>JobDesc</th>
-                <td>{{ job.jobDesc }}</td>
-            </tr>
-            <tr>
-                <th>MinLvl</th>
-                <td>{{ job.minLvl }}</td>
-            </tr>
-            <tr>
-                <th>MaxLvl</th>
-                <td>{{ job.maxLvl }}</td>
-            </tr>
-        </tbody>
-    </table>
+<!-- Job Info Card -->
+<div class="rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <!-- Header -->
+    <div class="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
+        <div class="flex items-center gap-4">
+            <div class="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/20">
+                <svg class="h-8 w-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    {{ job.jobDesc }}
+                </h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    Position ID: {{ job.jobId }}
+                </p>
+            </div>
+        </div>
+    </div>
 
-    <a href="{{ path('app_job_index') }}">back to list</a>
+    <!-- Details Grid -->
+    <div class="p-6">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <!-- Position ID -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Position ID
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 font-mono text-sm font-semibold text-gray-900 dark:bg-gray-800 dark:text-white">
+                    {{ job.jobId }}
+                </div>
+            </div>
 
-    <a href="{{ path('app_job_edit', {'jobId': job.jobId}) }}">edit</a>
+            <!-- Bezeichnung -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Bezeichnung
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:bg-gray-800 dark:text-white">
+                    {{ job.jobDesc }}
+                </div>
+            </div>
 
-    {{ include('job/_delete_form.html.twig') }}
+            <!-- Minimum Level -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Minimum Level
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
+                    <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-800 dark:bg-green-900/20 dark:text-green-400">
+                        Level {{ job.minLvl }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Maximum Level -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Maximum Level
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
+                    <span class="inline-flex items-center rounded-full bg-purple-100 px-3 py-1 text-sm font-semibold text-purple-800 dark:bg-purple-900/20 dark:text-purple-400">
+                        Level {{ job.maxLvl }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Additional Stats Card -->
+<div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Minimum Level</p>
+                <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
+                    {{ job.minLvl }}
+                </p>
+            </div>
+            <div class="rounded-full bg-green-100 p-3 dark:bg-green-900/20">
+                <svg class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Maximum Level</p>
+                <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
+                    {{ job.maxLvl }}
+                </p>
+            </div>
+            <div class="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
+                <svg class="h-6 w-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Level-Bereich</p>
+                <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
+                    {{ job.maxLvl - job.minLvl }}
+                </p>
+            </div>
+            <div class="rounded-full bg-blue-100 p-3 dark:bg-blue-900/20">
+                <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,11 +1,155 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}New Store{% endblock %}
+{% block title %}Yeni Mağaza{% endblock %}
+{% block page_title %}Yeni Mağaza{% endblock %}
 
 {% block body %}
-    <h1>Create new Store</h1>
+<!-- Header with Navigation -->
+<div class="mb-6 flex items-center justify-between">
+    <a href="{{ path('app_store_index') }}" 
+       class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Listeye Dön
+    </a>
+</div>
 
-    {{ include('store/_form.html.twig') }}
+<!-- Form Card -->
+<div class="rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <!-- Card Header -->
+    <div class="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
+        <div class="flex items-center gap-4">
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/20">
+                <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Mağaza Oluştur
+                </h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    Yeni mağaza ekleyin
+                </p>
+            </div>
+        </div>
+    </div>
 
-    <a href="{{ path('app_store_index') }}">back to list</a>
+    <!-- Form Content -->
+    <div class="p-6">
+        {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <!-- Mağaza ID -->
+                <div class="md:col-span-2">
+                    {{ form_row(form.storId, {
+                        'label': 'Mağaza ID',
+                        'attr': {
+                            'class': 'mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-500',
+                            'placeholder': 'Benzersiz mağaza ID girin (örn: 7066, 8042)'
+                        },
+                        'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}
+                    }) }}
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        4 haneli benzersiz bir numara olmalıdır
+                    </p>
+                </div>
+
+                <!-- Mağaza Adı -->
+                <div class="md:col-span-2">
+                    {{ form_row(form.storName, {
+                        'label': 'Mağaza Adı',
+                        'attr': {
+                            'class': 'mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-500',
+                            'placeholder': 'Mağaza adını girin'
+                        },
+                        'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}
+                    }) }}
+                </div>
+
+                <!-- Adres -->
+                <div class="md:col-span-2">
+                    {{ form_row(form.storAddress, {
+                        'label': 'Adres',
+                        'attr': {
+                            'class': 'mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-500',
+                            'placeholder': 'Mağaza adresini girin (örn: 567 Pasadena Ave.)'
+                        },
+                        'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}
+                    }) }}
+                </div>
+
+                <!-- Şehir -->
+                <div>
+                    {{ form_row(form.city, {
+                        'label': 'Şehir',
+                        'attr': {
+                            'class': 'mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-500',
+                            'placeholder': 'Şehir adını girin'
+                        },
+                        'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}
+                    }) }}
+                </div>
+
+                <!-- Eyalet -->
+                <div>
+                    {{ form_row(form.state, {
+                        'label': 'Eyalet',
+                        'attr': {
+                            'class': 'mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-500',
+                            'placeholder': 'Eyalet kodu (örn: CA, TX, NY)',
+                            'maxlength': '2'
+                        },
+                        'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}
+                    }) }}
+                </div>
+
+                <!-- Posta Kodu -->
+                <div class="md:col-span-2">
+                    {{ form_row(form.zip, {
+                        'label': 'Posta Kodu',
+                        'attr': {
+                            'class': 'mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-500',
+                            'placeholder': 'Posta kodunu girin (örn: 92789, 98076)'
+                        },
+                        'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}
+                    }) }}
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex items-center justify-end gap-3 border-t border-gray-200 pt-6 dark:border-gray-800">
+                <a href="{{ path('app_store_index') }}" 
+                   class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700">
+                    İptal
+                </a>
+                <button type="submit" 
+                        class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    Mağaza Oluştur
+                </button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+
+<!-- Help Card -->
+<div class="mt-6 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-900/50 dark:bg-blue-900/10">
+    <div class="flex gap-3">
+        <svg class="h-5 w-5 flex-shrink-0 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <div class="text-sm text-blue-800 dark:text-blue-300">
+            <p class="font-semibold">Bilgi:</p>
+            <ul class="mt-2 list-inside list-disc space-y-1">
+                <li>Mağaza ID sistemde benzersiz olmalıdır</li>
+                <li>Eyalet kodu 2 karakter olmalıdır (örn: CA, TX, NY)</li>
+                <li>Tüm alanlar zorunludur</li>
+                <li>Posta kodu sayısal olmalıdır</li>
+            </ul>
+        </div>
+    </div>
+</div>
 {% endblock %}

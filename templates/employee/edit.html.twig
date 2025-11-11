@@ -1,7 +1,7 @@
 {% extends 'admin_base.html.twig' %}
 
-{% block title %}Çalışan Düzenle{% endblock %}
-{% block page_title %}Çalışan Düzenle{% endblock %}
+{% block title %}Mitarbeiter bearbeiten{% endblock %}
+{% block page_title %}Mitarbeiter bearbeiten{% endblock %}
 
 {% block body %}
 <!-- Header with Navigation -->
@@ -11,11 +11,11 @@
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
         </svg>
-        Geri Dön
+        Zurück
     </a>
     
     <form method="post" action="{{ path('app_employee_delete', {'empId': employee.empId}) }}" 
-          onsubmit="return confirm('Bu çalışanı silmek istediğinizden emin misiniz?');"
+          onsubmit="return confirm('Sind Sie sicher, dass Sie diesen Mitarbeiter löschen möchten?');"
           class="inline">
         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ employee.empId) }}">
         <button type="submit" 
@@ -23,7 +23,7 @@
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
             </svg>
-            Çalışanı Sil
+            Mitarbeiter löschen
         </button>
     </form>
 </div>
@@ -40,10 +40,10 @@
             </div>
             <div>
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    {{ employee.fname }} {{ employee.lname }} - Düzenle
+                    {{ employee.fname }} {{ employee.lname }} - Bearbeiten
                 </h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                    Çalışan bilgilerini güncelleyin
+                    Mitarbeiterinformationen aktualisieren
                 </p>
             </div>
         </div>
@@ -56,23 +56,23 @@
                 <!-- Çalışan ID - Read Only -->
                 <div class="md:col-span-2">
                     <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Çalışan ID
+                        Mitarbeiter-ID
                     </label>
                     <div class="rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 font-mono text-sm font-semibold text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
                         {{ employee.empId }}
                     </div>
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                        Çalışan ID değiştirilemez
+                        Mitarbeiter-ID kann nicht geändert werden
                     </p>
                 </div>
 
                 <!-- Form Fields -->
                 <div class="md:col-span-2">
                     {{ form_row(form.fname, {
-                        'label': 'Ad',
+                        'label': 'Vorname',
                         'attr': {
                             'class': 'mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-500',
-                            'placeholder': 'Çalışanın adını girin'
+                            'placeholder': 'Vorname eingeben'
                         },
                         'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}
                     }) }}
@@ -80,7 +80,7 @@
 
                 <div>
                     {{ form_row(form.minit, {
-                        'label': 'Orta İsim',
+                        'label': 'Zweiter Vorname',
                         'attr': {
                             'class': 'mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-500',
                             'placeholder': 'A',
@@ -92,10 +92,10 @@
 
                 <div>
                     {{ form_row(form.lname, {
-                        'label': 'Soyad',
+                        'label': 'Nachname',
                         'attr': {
                             'class': 'mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-500',
-                            'placeholder': 'Çalışanın soyadını girin'
+                            'placeholder': 'Nachname eingeben'
                         },
                         'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}
                     }) }}
@@ -103,7 +103,7 @@
 
                 <div>
                     {{ form_row(form.job, {
-                        'label': 'İş Pozisyonu',
+                        'label': 'Position',
                         'attr': {
                             'class': 'mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-500'
                         },
@@ -113,7 +113,7 @@
 
                 <div>
                     {{ form_row(form.jobLvl, {
-                        'label': 'İş Seviyesi (10-250)',
+                        'label': 'Berufsstufe (10-250)',
                         'attr': {
                             'class': 'mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-500',
                             'min': '10',
@@ -126,7 +126,7 @@
 
                 <div>
                     {{ form_row(form.publisher, {
-                        'label': 'Yayıncı',
+                        'label': 'Verlag',
                         'attr': {
                             'class': 'mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-500'
                         },
@@ -136,7 +136,7 @@
 
                 <div>
                     {{ form_row(form.hireDate, {
-                        'label': 'İşe Alım Tarihi',
+                        'label': 'Einstellungsdatum',
                         'attr': {
                             'class': 'mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-500'
                         },
@@ -149,14 +149,14 @@
             <div class="flex items-center justify-end gap-3 border-t border-gray-200 pt-6 dark:border-gray-800">
                 <a href="{{ path('app_employee_show', {'empId': employee.empId}) }}" 
                    class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700">
-                    İptal
+                    Abbrechen
                 </a>
                 <button type="submit" 
                         class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
-                    Değişiklikleri Kaydet
+                    Änderungen speichern
                 </button>
             </div>
         {{ form_end(form) }}
@@ -170,11 +170,11 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
         <div class="text-sm text-blue-800 dark:text-blue-300">
-            <p class="font-semibold">Bilgi:</p>
+            <p class="font-semibold">Hinweis:</p>
             <ul class="mt-2 list-inside list-disc space-y-1">
-                <li>Çalışan ID değiştirilemez</li>
-                <li>İş seviyesi 10 ile 250 arasında olmalıdır</li>
-                <li>Tüm zorunlu alanları doldurunuz</li>
+                <li>Mitarbeiter-ID kann nicht geändert werden</li>
+                <li>Berufsstufe muss zwischen 10 und 250 liegen</li>
+                <li>Bitte füllen Sie alle Pflichtfelder aus</li>
             </ul>
         </div>
     </div>

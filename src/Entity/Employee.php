@@ -15,43 +15,43 @@ class Employee
 {
     #[ORM\Id]
     #[ORM\Column(name: 'emp_id', type: Types::STRING, length: 9, unique: true)]
-    #[Assert\NotBlank(message: 'Çalışan ID boş olamaz')]
+    #[Assert\NotBlank(message: 'Mitarbeiter-ID darf nicht leer sein')]
     #[Assert\Regex(
         pattern: '/^[A-Z]{3}-[A-Z]{1}\d{4}$|^\d{9}$/',
-        message: 'Çalışan ID formatı XXX-XXXXX veya 9 rakam olmalıdır'
+        message: 'Die Mitarbeiter-ID muss das Format XXX-XXXXX oder 9 Ziffern haben'
     )]
     private string $empId;
 
     #[ORM\Column(name: 'fname', type: Types::STRING, length: 20)]
-    #[Assert\NotBlank(message: 'Ad boş olamaz')]
-    #[Assert\Length(max: 20, maxMessage: 'Ad en fazla {{ limit }} karakter olabilir')]
+    #[Assert\NotBlank(message: 'Vorname darf nicht leer sein')]
+    #[Assert\Length(max: 20, maxMessage: 'Der Vorname darf höchstens {{ limit }} Zeichen lang sein')]
     private string $fname;
 
     #[ORM\Column(name: 'minit', type: Types::STRING, length: 1, nullable: true)]
-    #[Assert\Length(max: 1, maxMessage: 'Orta isim en fazla {{ limit }} karakter olabilir')]
+    #[Assert\Length(max: 1, maxMessage: 'Der zweite Vorname darf höchstens {{ limit }} Zeichen lang sein')]
     private ?string $minit = null;
 
     #[ORM\Column(name: 'lname', type: Types::STRING, length: 30)]
-    #[Assert\NotBlank(message: 'Soyad boş olamaz')]
-    #[Assert\Length(max: 30, maxMessage: 'Soyad en fazla {{ limit }} karakter olabilir')]
+    #[Assert\NotBlank(message: 'Nachname darf nicht leer sein')]
+    #[Assert\Length(max: 30, maxMessage: 'Der Nachname darf höchstens {{ limit }} Zeichen lang sein')]
     private string $lname;
 
     #[ORM\ManyToOne(targetEntity: Job::class)]
     #[ORM\JoinColumn(name: 'job_id', referencedColumnName: 'job_id', nullable: false, options: ['default' => 1])]
-    #[Assert\NotNull(message: 'İş pozisyonu seçilmelidir')]
+    #[Assert\NotNull(message: 'Die Stellenbezeichnung muss ausgewählt werden')]
     private Job $job;
 
     #[ORM\Column(name: 'job_lvl', type: Types::SMALLINT, nullable: true, options: ['default' => 10])]
-    #[Assert\Range(min: 10, max: 250, notInRangeMessage: 'İş seviyesi {{ min }} ile {{ max }} arasında olmalıdır')]
+    #[Assert\Range(min: 10, max: 250, notInRangeMessage: 'Die Berufsebene muss zwischen {{ min }} und {{ max }} liegen')]
     private ?int $jobLvl = 10;
 
     #[ORM\ManyToOne(targetEntity: Publisher::class)]
     #[ORM\JoinColumn(name: 'pub_id', referencedColumnName: 'pub_id', nullable: false, options: ['default' => '9952'])]
-    #[Assert\NotNull(message: 'Yayıncı seçilmelidir')]
+    #[Assert\NotNull(message: 'Der Verlag muss ausgewählt werden')]
     private Publisher $publisher;
 
     #[ORM\Column(name: 'hire_date', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    #[Assert\NotNull(message: 'İşe başlama tarihi boş olamaz')]
+    #[Assert\NotNull(message: 'Das Einstellungsdatum darf nicht leer sein')]
     private \DateTimeInterface $hireDate;
 
     // 🧩 Getter / Setter Metodları

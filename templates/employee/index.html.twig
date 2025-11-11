@@ -12,7 +12,7 @@
 
 <div x-data="{
   q: '',
-  sort: {key: 'fname', dir: 'asc'},
+  sort: {key: 'fname', dir: 'asc'}, 
   rows: {{ employeesJson }},
   get filtered() {
     let r = this.rows.filter(x => {

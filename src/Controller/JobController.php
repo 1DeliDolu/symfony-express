@@ -21,14 +21,25 @@ final class JobController extends AbstractController
     public function __construct(
         private readonly JobRepository $jobRepository,
         private readonly EntityManagerInterface $entityManager,
-    ) {
-    }
+    ) {}
 
     #[Route(name: 'app_job_index', methods: ['GET'])]
     public function index(): Response
     {
+        $jobs = $this->jobRepository->findAll();
+
+        // Serialize jobs for Alpine.js
+        $jobsData = array_map(function (Job $job) {
+            return [
+                'jobId' => $job->getJobId(),
+                'jobDesc' => $job->getJobDesc(),
+                'minLvl' => $job->getMinLvl(),
+                'maxLvl' => $job->getMaxLvl(),
+            ];
+        }, $jobs);
+
         return $this->render('job/index.html.twig', [
-            'jobs' => $this->jobRepository->findAll(),
+            'jobs' => $jobsData,
         ]);
     }
 
@@ -54,16 +65,28 @@ final class JobController extends AbstractController
     }
 
     #[Route('/{jobId}', name: 'app_job_show', methods: ['GET'])]
-    public function show(Job $job): Response
+    public function show(int $jobId): Response
     {
+        $job = $this->jobRepository->find($jobId);
+
+        if (!$job) {
+            throw $this->createNotFoundException('Die Position wurde nicht gefunden.');
+        }
+
         return $this->render('job/show.html.twig', [
             'job' => $job,
         ]);
     }
 
     #[Route('/{jobId}/edit', name: 'app_job_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Job $job): Response
+    public function edit(Request $request, int $jobId): Response
     {
+        $job = $this->jobRepository->find($jobId);
+
+        if (!$job) {
+            throw $this->createNotFoundException('Die Position wurde nicht gefunden.');
+        }
+
         $form = $this->createForm(JobType::class, $job);
         $form->handleRequest($request);
 
@@ -81,9 +104,15 @@ final class JobController extends AbstractController
     }
 
     #[Route('/{jobId}', name: 'app_job_delete', methods: ['POST'])]
-    public function delete(Request $request, Job $job): Response
+    public function delete(Request $request, int $jobId): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$job->getJobId(), $request->getPayload()->getString('_token'))) {
+        $job = $this->jobRepository->find($jobId);
+
+        if (!$job) {
+            throw $this->createNotFoundException('Die Position wurde nicht gefunden.');
+        }
+
+        if ($this->isCsrfTokenValid('delete' . $job->getJobId(), $request->getPayload()->getString('_token'))) {
             $this->entityManager->remove($job);
             $this->entityManager->flush();
             $this->addFlash('success', 'İş pozisyonu başarıyla silindi.');

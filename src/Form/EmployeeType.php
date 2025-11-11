@@ -23,8 +23,8 @@ class EmployeeType extends AbstractType
 
         $builder
             ->add('empId', TextType::class, [
-                'label' => 'Çalışan ID',
-                'help' => 'Format: XXX-XXXXX veya 9 rakam',
+                'label' => 'Mitarbeiter-ID',
+                'help' => 'Format: XXX-XXXXX oder 9 Ziffern',
                 'attr' => [
                     'placeholder' => 'ABC-M1234',
                     'maxlength' => 9,
@@ -32,14 +32,14 @@ class EmployeeType extends AbstractType
                 'disabled' => !$isNew,
             ])
             ->add('fname', TextType::class, [
-                'label' => 'Ad',
+                'label' => 'Vorname',
                 'attr' => [
-                    'placeholder' => 'Ad',
+                    'placeholder' => 'Vorname',
                     'maxlength' => 20,
                 ],
             ])
             ->add('minit', TextType::class, [
-                'label' => 'Orta İsim',
+                'label' => 'Zweiter Vorname',
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'M',
@@ -47,21 +47,21 @@ class EmployeeType extends AbstractType
                 ],
             ])
             ->add('lname', TextType::class, [
-                'label' => 'Soyad',
+                'label' => 'Nachname',
                 'attr' => [
-                    'placeholder' => 'Soyad',
+                    'placeholder' => 'Nachname',
                     'maxlength' => 30,
                 ],
             ])
             ->add('job', EntityType::class, [
                 'class' => Job::class,
                 'choice_label' => 'jobDesc',
-                'label' => 'İş Pozisyonu',
-                'placeholder' => 'Bir pozisyon seçin',
+                'label' => 'Berufsbezeichnung',
+                'placeholder' => 'Wählen Sie eine Position',
             ])
             ->add('jobLvl', IntegerType::class, [
-                'label' => 'İş Seviyesi',
-                'help' => '10 ile 250 arasında olmalıdır',
+                'label' => 'Berufsebene',
+                'help' => 'Muss zwischen 10 und 250 liegen',
                 'required' => false,
                 'attr' => [
                     'min' => 10,
@@ -71,11 +71,11 @@ class EmployeeType extends AbstractType
             ->add('publisher', EntityType::class, [
                 'class' => Publisher::class,
                 'choice_label' => fn (Publisher $pub) => $pub->getPubName().' ('.$pub->getPubId().')',
-                'label' => 'Yayıncı',
-                'placeholder' => 'Bir yayıncı seçin',
+                'label' => 'Verlag',
+                'placeholder' => 'Wählen Sie einen Verlag',
             ])
             ->add('hireDate', DateTimeType::class, [
-                'label' => 'İşe Başlama Tarihi',
+                'label' => 'Einstellungsdatum',
                 'widget' => 'single_text',
                 'html5' => true,
             ])

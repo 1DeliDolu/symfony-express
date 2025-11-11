@@ -1,7 +1,7 @@
 {% extends 'admin_base.html.twig' %}
 
-{% block title %}Çalışan Detayı{% endblock %}
-{% block page_title %}Çalışan Detayı{% endblock %}
+{% block title %}Employee Details{% endblock %}
+{% block page_title %}Employee Details{% endblock %}
 
 {% block body %}
 <!-- Header with Action Buttons -->
@@ -11,7 +11,7 @@
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
         </svg>
-        Listeye Dön
+        Back to List
     </a>
     
     <div class="flex items-center gap-2">
@@ -20,11 +20,11 @@
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
             </svg>
-            Düzenle
+            Edit
         </a>
         
         <form method="post" action="{{ path('app_employee_delete', {'empId': employee.empId}) }}" 
-              onsubmit="return confirm('Bu çalışanı silmek istediğinizden emin misiniz?');"
+              onsubmit="return confirm('Are you sure you want to delete this employee?');"
               class="inline">
             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ employee.empId) }}">
             <button type="submit" 
@@ -32,7 +32,7 @@
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                 </svg>
-                Sil
+                Delete
             </button>
         </form>
     </div>
@@ -51,7 +51,7 @@
                     {{ employee.fname }} {% if employee.minit %}{{ employee.minit }}. {% endif %}{{ employee.lname }}
                 </h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                    {{ employee.job ? employee.job.jobDesc : 'Pozisyon belirtilmemiş' }}
+                    {{ employee.job ? employee.job.jobDesc : 'No position assigned' }}
                 </p>
             </div>
         </div>
@@ -60,50 +60,50 @@
     <!-- Details Grid -->
     <div class="p-6">
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <!-- Çalışan ID -->
+            <!-- Employee ID -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Çalışan ID
+                    Employee ID
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 font-mono text-sm font-semibold text-gray-900 dark:bg-gray-800 dark:text-white">
                     {{ employee.empId }}
                 </div>
             </div>
 
-            <!-- Ad -->
+            <!-- First Name -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Ad
+                    First Name
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:bg-gray-800 dark:text-white">
                     {{ employee.fname }}
                 </div>
             </div>
 
-            <!-- Orta İsim -->
+            <!-- Middle Initial -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Orta İsim
+                    Middle Initial
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:bg-gray-800 dark:text-white">
                     {{ employee.minit|default('-') }}
                 </div>
             </div>
 
-            <!-- Soyad -->
+            <!-- Last Name -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Soyad
+                    Last Name
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:bg-gray-800 dark:text-white">
                     {{ employee.lname }}
                 </div>
             </div>
 
-            <!-- İş Pozisyonu -->
+            <!-- Job Position -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    İş Pozisyonu
+                    Job Position
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
                     {% if employee.job %}
@@ -119,10 +119,10 @@
                 </div>
             </div>
 
-            <!-- İş Seviyesi -->
+            <!-- Job Level -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    İş Seviyesi
+                    Job Level
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
                     <span class="inline-flex items-center rounded-full bg-purple-100 px-3 py-1 text-sm font-semibold text-purple-800 dark:bg-purple-900/20 dark:text-purple-400">
@@ -131,10 +131,10 @@
                 </div>
             </div>
 
-            <!-- Yayıncı -->
+            <!-- Publisher -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Yayıncı
+                    Publisher
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
                     {% if employee.publisher %}
@@ -150,10 +150,10 @@
                 </div>
             </div>
 
-            <!-- İşe Alım Tarihi -->
+            <!-- Hire Date -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    İşe Alım Tarihi
+                    Hire Date
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
                     {% if employee.hireDate %}
@@ -177,10 +177,10 @@
     <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Çalışma Süresi</p>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Employment Duration</p>
                 <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
                     {% if employee.hireDate %}
-                        {{ 'now'|date('Y') - employee.hireDate|date('Y') }} yıl
+                        {{ 'now'|date('Y') - employee.hireDate|date('Y') }} years
                     {% else %}
                         -
                     {% endif %}
@@ -197,7 +197,7 @@
     <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Pozisyon Seviyesi</p>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Position Level</p>
                 <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
                     {{ employee.jobLvl|default(10) }}/250
                 </p>
@@ -213,7 +213,7 @@
     <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Departman</p>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Department</p>
                 <p class="mt-2 text-lg font-bold text-gray-900 dark:text-white">
                     {% if employee.publisher %}
                         {{ employee.publisher.pubName|length > 15 ? employee.publisher.pubName|slice(0, 15) ~ '...' : employee.publisher.pubName }}

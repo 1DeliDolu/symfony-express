@@ -22,7 +22,9 @@ class DiscountType extends AbstractType
             ->add('discount')
             ->add('store', EntityType::class, [
                 'class' => Store::class,
-                'choice_label' => 'id',
+                'choice_label' => 'storName',
+                'required' => false,
+                'placeholder' => 'Geschäft auswählen...',
             ])
         ;
     }

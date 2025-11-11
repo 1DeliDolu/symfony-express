@@ -18,6 +18,22 @@ class TitleAuthorRepository extends ServiceEntityRepository
         parent::__construct($registry, TitleAuthor::class);
     }
 
+    /**
+     * Find a TitleAuthor by author ID and title ID
+     */
+    public function findOneByAuthorAndTitle(string $authorId, string $titleId): ?TitleAuthor
+    {
+        return $this->createQueryBuilder('ta')
+            ->innerJoin('ta.author', 'a')
+            ->innerJoin('ta.title', 't')
+            ->where('a.auId = :authorId')
+            ->andWhere('t.titleId = :titleId')
+            ->setParameter('authorId', $authorId)
+            ->setParameter('titleId', $titleId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     //    /**
     //     * @return TitleAuthor[] Returns an array of TitleAuthor objects
     //     */

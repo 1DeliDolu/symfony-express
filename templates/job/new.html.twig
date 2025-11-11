@@ -1,11 +1,105 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}New Job{% endblock %}
+{% block title %}Neue Position{% endblock %}
+{% block page_title %}Neue Position erstellen{% endblock %}
 
 {% block body %}
-    <h1>Create new Job</h1>
+<!-- Breadcrumb -->
+<nav class="mb-6 flex" aria-label="Breadcrumb">
+    <ol class="inline-flex items-center space-x-1 md:space-x-3">
+        <li class="inline-flex items-center">
+            <a href="{{ path('app_dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                <svg class="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                </svg>
+                Dashboard
+            </a>
+        </li>
+        <li>
+            <div class="flex items-center">
+                <svg class="h-6 w-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                </svg>
+                <a href="{{ path('app_job_index') }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white md:ml-2">
+                    Positionen
+                </a>
+            </div>
+        </li>
+        <li aria-current="page">
+            <div class="flex items-center">
+                <svg class="h-6 w-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                </svg>
+                <span class="ml-1 text-sm font-medium text-gray-500 dark:text-gray-400 md:ml-2">Neu erstellen</span>
+            </div>
+        </li>
+    </ol>
+</nav>
 
-    {{ include('job/_form.html.twig') }}
+<!-- Form Card -->
+<div class="rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <div class="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+            Positionsinformationen
+        </h3>
+        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            Geben Sie die Details der neuen Position ein
+        </p>
+    </div>
 
-    <a href="{{ path('app_job_index') }}">back to list</a>
+    <div class="p-6">
+        {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+            
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div>
+                    {{ form_label(form.jobId, 'Position ID', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-900 dark:text-white'}}) }}
+                    {{ form_widget(form.jobId, {'attr': {'class': 'block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500', 'placeholder': '1, 2, 3...'}}) }}
+                    {{ form_errors(form.jobId) }}
+                    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Eindeutige numerische ID</p>
+                </div>
+
+                <div>
+                    {{ form_label(form.jobDesc, 'Bezeichnung', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-900 dark:text-white'}}) }}
+                    {{ form_widget(form.jobDesc, {'attr': {'class': 'block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500', 'placeholder': 'z.B. Chief Executive Officer'}}) }}
+                    {{ form_errors(form.jobDesc) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.minLvl, 'Minimum Level', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-900 dark:text-white'}}) }}
+                    {{ form_widget(form.minLvl, {'attr': {'class': 'block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500', 'min': '10', 'max': '250', 'placeholder': '10'}}) }}
+                    {{ form_errors(form.minLvl) }}
+                    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Zwischen 10 und 250</p>
+                </div>
+
+                <div>
+                    {{ form_label(form.maxLvl, 'Maximum Level', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-900 dark:text-white'}}) }}
+                    {{ form_widget(form.maxLvl, {'attr': {'class': 'block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500', 'min': '10', 'max': '250', 'placeholder': '250'}}) }}
+                    {{ form_errors(form.maxLvl) }}
+                    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Zwischen 10 und 250</p>
+                </div>
+            </div>
+
+            {{ form_rest(form) }}
+
+            <div class="flex items-center justify-between border-t border-gray-200 pt-6 dark:border-gray-800">
+                <a href="{{ path('app_job_index') }}" 
+                   class="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:focus:ring-gray-700">
+                    <svg class="mr-2 inline-block h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Zurück zur Liste
+                </a>
+
+                <button type="submit" 
+                        class="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800">
+                    <svg class="mr-2 inline-block h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    Speichern
+                </button>
+            </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
 {% endblock %}

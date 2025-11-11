@@ -19,8 +19,8 @@ class AuthorType extends AbstractType
 
         $builder
             ->add('auId', TextType::class, [
-                'label' => 'Yazar ID',
-                'help' => 'Format: XXX-XX-XXXX (örn: 123-45-6789)',
+                'label' => 'Autoren-ID',
+                'help' => 'Format: XXX-XX-XXXX (z. B.: 123-45-6789)',
                 'attr' => [
                     'placeholder' => '123-45-6789',
                     'pattern' => '\d{3}-\d{2}-\d{4}',
@@ -29,48 +29,48 @@ class AuthorType extends AbstractType
                 'disabled' => !$isNew,
             ])
             ->add('auLname', TextType::class, [
-                'label' => 'Soyad',
-                'help' => 'Yazarın soyadı',
+                'label' => 'Nachname',
+                'help' => 'Nachname des Autors',
                 'attr' => [
-                    'placeholder' => 'Soyad',
+                    'placeholder' => 'Nachname',
                     'maxlength' => 40,
                 ],
             ])
             ->add('auFname', TextType::class, [
-                'label' => 'Ad',
-                'help' => 'Yazarın adı',
+                'label' => 'Vorname',
+                'help' => 'Vorname des Autors',
                 'attr' => [
-                    'placeholder' => 'Ad',
+                    'placeholder' => 'Vorname',
                     'maxlength' => 20,
                 ],
             ])
             ->add('phone', TextType::class, [
                 'label' => 'Telefon',
-                'help' => 'Format: XXX XXX-XXXX veya "UNKNOWN"',
+                'help' => 'Format: XXX XXX-XXXX oder "UNKNOWN"',
                 'attr' => [
                     'placeholder' => '123 456-7890',
                     'maxlength' => 12,
                 ],
             ])
             ->add('address', TextType::class, [
-                'label' => 'Adres',
+                'label' => 'Adresse',
                 'required' => false,
                 'attr' => [
-                    'placeholder' => 'Adres',
+                    'placeholder' => 'Adresse',
                     'maxlength' => 40,
                 ],
             ])
             ->add('city', TextType::class, [
-                'label' => 'Şehir',
+                'label' => 'Stadt',
                 'required' => false,
                 'attr' => [
-                    'placeholder' => 'Şehir',
+                    'placeholder' => 'Stadt',
                     'maxlength' => 20,
                 ],
             ])
             ->add('state', TextType::class, [
-                'label' => 'Eyalet',
-                'help' => '2 harflik eyalet kodu (örn: CA)',
+                'label' => 'Bundesstaat',
+                'help' => '2-stelliger Bundesstaat-Code (z. B.: CA)',
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'CA',
@@ -79,8 +79,8 @@ class AuthorType extends AbstractType
                 ],
             ])
             ->add('zip', TextType::class, [
-                'label' => 'Posta Kodu',
-                'help' => '5 rakam',
+                'label' => 'Postleitzahl',
+                'help' => '5 Ziffern',
                 'required' => false,
                 'attr' => [
                     'placeholder' => '12345',
@@ -89,8 +89,8 @@ class AuthorType extends AbstractType
                 ],
             ])
             ->add('contract', CheckboxType::class, [
-                'label' => 'Sözleşmeli',
-                'help' => 'Yazar sözleşme imzaladı mı?',
+                'label' => 'Vertraglich',
+                'help' => 'Hat der Autor den Vertrag unterschrieben?',
                 'required' => false,
             ])
         ;

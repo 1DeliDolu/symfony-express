@@ -1,7 +1,7 @@
 {% extends 'admin_base.html.twig' %}
 
-{% block title %}Kitaplar{% endblock %}
-{% block page_title %}Kitap Yönetimi{% endblock %}
+{% block title %}Bücher{% endblock %}
+{% block page_title %}Buchverwaltung{% endblock %}
 
 {% block body %}
 <style>
@@ -37,16 +37,16 @@
 
   <!-- Header with Search -->
   <div class="mb-4 flex items-center justify-between gap-3">
-    <input x-model="q" type="text" placeholder="Kitap ara..."
+    <input x-model="q" type="text" placeholder="Buch suchen..."
            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"/>
     <div class="flex items-center gap-3">
-      <span class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap" x-text="filtered.length + ' Kitap'"></span>
+      <span class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap" x-text="filtered.length + ' Bücher'"></span>
       <a href="{{ path('app_title_new') }}" 
          class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 whitespace-nowrap">
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
-        Yeni Kitap
+        Neues Buch
       </a>
     </div>
   </div>
@@ -63,39 +63,39 @@
           </th>
           <th class="px-4 py-3 text-left">
             <button @click="setSort('title')" class="font-semibold hover:underline">
-              Kitap Adı <span x-show="sort.key==='title'">(<span x-text="sort.dir"></span>)</span>
+              Buchtitel <span x-show="sort.key==='title'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
           <th class="px-4 py-3 text-left">
             <button @click="setSort('type')" class="font-semibold hover:underline">
-              Tür <span x-show="sort.key==='type'">(<span x-text="sort.dir"></span>)</span>
+              Typ <span x-show="sort.key==='type'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
           <th class="px-4 py-3 text-left">
             <button @click="setSort('publisher.pubName')" class="font-semibold hover:underline">
-              Yayıncı <span x-show="sort.key==='publisher.pubName'">(<span x-text="sort.dir"></span>)</span>
+              Verlag <span x-show="sort.key==='publisher.pubName'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
           <th class="px-4 py-3 text-left">
             <button @click="setSort('price')" class="font-semibold hover:underline">
-              Fiyat <span x-show="sort.key==='price'">(<span x-text="sort.dir"></span>)</span>
+              Preis <span x-show="sort.key==='price'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
           <th class="px-4 py-3 text-left">
             <button @click="setSort('ytdSales')" class="font-semibold hover:underline">
-              Satış <span x-show="sort.key==='ytdSales'">(<span x-text="sort.dir"></span>)</span>
+              Verkäufe <span x-show="sort.key==='ytdSales'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
           <th class="px-4 py-3 text-left">
             <button @click="setSort('pubdate.timestamp')" class="font-semibold hover:underline">
-              Yayın Tarihi <span x-show="sort.key==='pubdate.timestamp'">(<span x-text="sort.dir"></span>)</span>
+              Veröffentlichungsdatum <span x-show="sort.key==='pubdate.timestamp'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
-          <th class="px-4 py-3 text-right">Aksiyonlar</th>
+          <th class="px-4 py-3 text-right">Aktionen</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-        <template x-for="book in filtered" :key="book.titleId">
+        <template x-for="(book, index) in filtered" :key="index">
           <tr class="odd:bg-white even:bg-gray-50 hover:bg-blue-50/50 dark:odd:bg-gray-900 dark:even:bg-gray-800 dark:hover:bg-blue-900/20">
             <td class="px-4 py-3">
               <span class="font-mono text-xs font-medium text-gray-900 dark:text-white" x-text="book.titleId"></span>
@@ -132,16 +132,16 @@
                     x-text="book.ytdSales ? book.ytdSales.toLocaleString() : '0'"></span>
             </td>
             <td class="px-4 py-3 text-gray-700 dark:text-gray-300" 
-                x-text="book.pubdate ? new Date(book.pubdate.date).toLocaleDateString('tr-TR') : 'N/A'"></td>
+                x-text="book.pubdate ? new Date(book.pubdate.date).toLocaleDateString('de-DE') : 'N/A'"></td>
             <td class="px-4 py-3 text-right">
-              <div class="inline-flex items-center gap-1">
+              <div class="inline-flex items-center gap-2">
                 <a :href="`{{ path('app_title_show', {'titleId': '__ID__'}) }}`.replace('__ID__', book.titleId)" 
-                   class="rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                  Görüntüle
+                   class="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 whitespace-nowrap">
+                  Anzeigen
                 </a>
                 <a :href="`{{ path('app_title_edit', {'titleId': '__ID__'}) }}`.replace('__ID__', book.titleId)" 
-                   class="rounded-lg bg-green-600 px-3 py-1.5 text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">
-                  Düzenle
+                   class="rounded-lg bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 whitespace-nowrap">
+                  Bearbeiten
                 </a>
               </div>
             </td>
@@ -149,9 +149,9 @@
         </template>
         <tr x-show="filtered.length === 0">
           <td colspan="8" class="px-6 py-12 text-center">
-            <p class="text-gray-600 dark:text-gray-400">Kitap bulunamadı</p>
+            <p class="text-gray-600 dark:text-gray-400">Keine Bücher gefunden</p>
             <button @click="q=''" class="mt-2 text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">
-              Aramayı temizle
+              Suche löschen
             </button>
           </td>
         </tr>

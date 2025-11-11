@@ -1,7 +1,7 @@
 {% extends 'admin_base.html.twig' %}
 
-{% block title %}Satışlar{% endblock %}
-{% block page_title %}Satış Yönetimi{% endblock %}
+{% block title %}Verkäufe{% endblock %}
+{% block page_title %}Verkaufsverwaltung{% endblock %}
 
 {% block body %}
 <style>
@@ -35,16 +35,16 @@
 
   <!-- Header with Search -->
   <div class="mb-4 flex items-center justify-between gap-3">
-    <input x-model="q" type="text" placeholder="Satış ara..."
+    <input x-model="q" type="text" placeholder="Verkauf suchen..."
            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"/>
     <div class="flex items-center gap-3">
-      <span class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap" x-text="filtered.length + ' Satış'"></span>
+      <span class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap" x-text="filtered.length + ' Verkäufe'"></span>
       <a href="{{ path('app_sale_new') }}" 
          class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 whitespace-nowrap">
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
-        Yeni Satış
+        Neuer Verkauf
       </a>
     </div>
   </div>
@@ -56,35 +56,35 @@
         <tr>
           <th class="px-4 py-3 text-left">
             <button @click="setSort('storName')" class="font-semibold hover:underline">
-              Mağaza <span x-show="sort.key==='storName'">(<span x-text="sort.dir"></span>)</span>
+              Geschäft <span x-show="sort.key==='storName'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
           <th class="px-4 py-3 text-left">
             <button @click="setSort('ordNum')" class="font-semibold hover:underline">
-              Sipariş No <span x-show="sort.key==='ordNum'">(<span x-text="sort.dir"></span>)</span>
+              Bestellnummer <span x-show="sort.key==='ordNum'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
           <th class="px-4 py-3 text-left">
             <button @click="setSort('titleName')" class="font-semibold hover:underline">
-              Kitap <span x-show="sort.key==='titleName'">(<span x-text="sort.dir"></span>)</span>
+              Buch <span x-show="sort.key==='titleName'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
           <th class="px-4 py-3 text-left">
             <button @click="setSort('ordDate.timestamp')" class="font-semibold hover:underline">
-              Sipariş Tarihi <span x-show="sort.key==='ordDate.timestamp'">(<span x-text="sort.dir"></span>)</span>
+              Bestelldatum <span x-show="sort.key==='ordDate.timestamp'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
           <th class="px-4 py-3 text-left">
             <button @click="setSort('qty')" class="font-semibold hover:underline">
-              Miktar <span x-show="sort.key==='qty'">(<span x-text="sort.dir"></span>)</span>
+              Menge <span x-show="sort.key==='qty'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
           <th class="px-4 py-3 text-left">
             <button @click="setSort('payterms')" class="font-semibold hover:underline">
-              Ödeme Koşulları <span x-show="sort.key==='payterms'">(<span x-text="sort.dir"></span>)</span>
+              Zahlungsbedingungen <span x-show="sort.key==='payterms'">(<span x-text="sort.dir"></span>)</span>
             </button>
           </th>
-          <th class="px-4 py-3 text-right">Aksiyonlar</th>
+          <th class="px-4 py-3 text-right">Aktionen</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
@@ -113,10 +113,10 @@
               </div>
             </td>
             <td class="px-4 py-3 text-gray-700 dark:text-gray-300" 
-                x-text="sale.ordDate ? new Date(sale.ordDate.date).toLocaleDateString('tr-TR') : 'N/A'"></td>
+                x-text="sale.ordDate ? new Date(sale.ordDate.date).toLocaleDateString('de-DE') : 'N/A'"></td>
             <td class="px-4 py-3">
               <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/20 dark:text-green-400" 
-                    x-text="sale.qty + ' adet'"></span>
+                    x-text="sale.qty + ' Stück'"></span>
             </td>
             <td class="px-4 py-3">
               <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/20 dark:text-blue-400" 
@@ -126,11 +126,11 @@
               <div class="inline-flex items-center gap-1">
                 <a :href="`{{ path('app_sale_show', {'store': '__STORE__', 'ordNum': '__ORDNUM__', 'title': '__TITLE__'}) }}`.replace('__STORE__', sale.storId).replace('__ORDNUM__', sale.ordNum).replace('__TITLE__', sale.titleId)" 
                    class="rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                  Görüntüle
+                  Anzeigen
                 </a>
                 <a :href="`{{ path('app_sale_edit', {'store': '__STORE__', 'ordNum': '__ORDNUM__', 'title': '__TITLE__'}) }}`.replace('__STORE__', sale.storId).replace('__ORDNUM__', sale.ordNum).replace('__TITLE__', sale.titleId)" 
                    class="rounded-lg bg-green-600 px-3 py-1.5 text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">
-                  Düzenle
+                  Bearbeiten
                 </a>
               </div>
             </td>
@@ -138,9 +138,9 @@
         </template>
         <tr x-show="filtered.length === 0">
           <td colspan="7" class="px-6 py-12 text-center">
-            <p class="text-gray-600 dark:text-gray-400">Satış bulunamadı</p>
+            <p class="text-gray-600 dark:text-gray-400">Keine Verkäufe gefunden</p>
             <button @click="q=''" class="mt-2 text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">
-              Aramayı temizle
+              Suche zurücksetzen
             </button>
           </td>
         </tr>

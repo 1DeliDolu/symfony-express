@@ -9,6 +9,7 @@ use App\Form\AuthorType;
 use App\Repository\AuthorRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -73,7 +74,7 @@ final class AuthorController extends AbstractController
     }
 
     #[Route('/{auId}', name: 'app_author_show', methods: ['GET'])]
-    public function show(Author $author): Response
+    public function show(#[MapEntity(mapping: ['auId' => 'auId'])] Author $author): Response
     {
         return $this->render('author/show.html.twig', [
             'author' => $author,
@@ -81,7 +82,7 @@ final class AuthorController extends AbstractController
     }
 
     #[Route('/{auId}/edit', name: 'app_author_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Author $author): Response
+    public function edit(Request $request, #[MapEntity(mapping: ['auId' => 'auId'])] Author $author): Response
     {
         $form = $this->createForm(AuthorType::class, $author, [
             'is_new' => false,
@@ -103,7 +104,7 @@ final class AuthorController extends AbstractController
     }
 
     #[Route('/{auId}', name: 'app_author_delete', methods: ['POST'])]
-    public function delete(Request $request, Author $author): Response
+    public function delete(Request $request, #[MapEntity(mapping: ['auId' => 'auId'])] Author $author): Response
     {
         if ($this->isCsrfTokenValid('delete' . $author->getAuId(), $request->getPayload()->getString('_token'))) {
             $this->entityManager->remove($author);

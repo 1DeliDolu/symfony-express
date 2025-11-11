@@ -21,11 +21,17 @@ class DashboardController extends AbstractController
         private readonly AuthorRepository $authorRepository,
         private readonly PublisherRepository $publisherRepository,
         private readonly SaleRepository $saleRepository,
-    ) {
-    }
+    ) {}
 
     #[Route('/admin', name: 'app_dashboard')]
     public function index(): Response
+    {
+        // Redirect to database selection page
+        return $this->redirectToRoute('app_database_selection');
+    }
+
+    #[Route('/admin/pubs', name: 'app_dashboard_pubs')]
+    public function pubsDashboard(): Response
     {
         // Get statistics for dashboard
         $totalTitles = count($this->titleRepository->findAll());
@@ -39,7 +45,7 @@ class DashboardController extends AbstractController
         // Get all sales for recent activity
         $recentSales = $this->saleRepository->findBy([], ['ordDate' => 'DESC'], 10);
 
-        return $this->render('dashboard/index.html.twig', [
+        return $this->render('dashboard/pubs.html.twig', [
             'totalTitles' => $totalTitles,
             'totalAuthors' => $totalAuthors,
             'totalPublishers' => $totalPublishers,

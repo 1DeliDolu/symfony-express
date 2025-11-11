@@ -15,23 +15,23 @@
             <div class="hidden md:flex md:items-center md:space-x-1">
                 <a href="{{ path('app_dashboard') }}"
                    class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ app.request.get('_route') == 'app_dashboard' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                    Dashboard
+                    Übersicht
                 </a>
                 <a href="{{ path('app_title_index') }}"
                    class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ app.request.get('_route') starts with 'app_title' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                    Kitaplar
+                    Bücher
                 </a>
                 <a href="{{ path('app_author_index') }}"
                    class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ app.request.get('_route') starts with 'app_author' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                    Yazarlar
+                    Autoren
                 </a>
                 <a href="{{ path('app_publisher_index') }}"
                    class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ app.request.get('_route') starts with 'app_publisher' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                    Yay1nc1lar
+                    Verlage
                 </a>
                 <a href="{{ path('app_store_index') }}"
                    class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ app.request.get('_route') starts with 'app_store' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                    Maazalar
+                    Filialen
                 </a>
             </div>
 
@@ -61,7 +61,7 @@
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                                         </svg>
-                                        Çıkış Yap
+                                        Abmelden
                                     </div>
                                 </a>
                             </div>
@@ -70,11 +70,11 @@
                 {% else %}
                     <a href="{{ path('app_login') }}"
                        class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
-                        Giri_
+                        Anmelden
                     </a>
                     <a href="{{ path('app_register') }}"
                        class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg text-sm font-medium hover:from-blue-700 hover:to-purple-700 transition-all shadow-sm">
-                        Kay1t Ol
+                        Registrieren
                     </a>
                 {% endif %}
             </div>
@@ -101,23 +101,23 @@
         <div class="px-2 pt-2 pb-3 space-y-1">
             <a href="{{ path('app_dashboard') }}"
                class="block px-3 py-2 rounded-lg text-base font-medium {{ app.request.get('_route') == 'app_dashboard' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                Dashboard
+                Übersicht
             </a>
             <a href="{{ path('app_title_index') }}"
                class="block px-3 py-2 rounded-lg text-base font-medium {{ app.request.get('_route') starts with 'app_title' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                Kitaplar
+                Bücher
             </a>
             <a href="{{ path('app_author_index') }}"
                class="block px-3 py-2 rounded-lg text-base font-medium {{ app.request.get('_route') starts with 'app_author' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                Yazarlar
+                Autoren
             </a>
             <a href="{{ path('app_publisher_index') }}"
                class="block px-3 py-2 rounded-lg text-base font-medium {{ app.request.get('_route') starts with 'app_publisher' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                Yay1nc1lar
+                Verlage
             </a>
             <a href="{{ path('app_store_index') }}"
                class="block px-3 py-2 rounded-lg text-base font-medium {{ app.request.get('_route') starts with 'app_store' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                Maazalar
+                Filialen
             </a>
 
             {% if app.user %}
@@ -127,18 +127,18 @@
                     </div>
                     <a href="{{ path('app_logout') }}"
                        class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800">
-                        �1k1_ Yap
+                        Abmelden
                     </a>
                 </div>
             {% else %}
                 <div class="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2 space-y-1">
                     <a href="{{ path('app_login') }}"
                        class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800">
-                        Giri_
+                        Anmelden
                     </a>
                     <a href="{{ path('app_register') }}"
                        class="block px-3 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg text-base font-medium text-center">
-                        Kay1t Ol
+                        Registrieren
                     </a>
                 </div>
             {% endif %}

@@ -18,6 +18,19 @@ class RoyschedRepository extends ServiceEntityRepository
         parent::__construct($registry, Roysched::class);
     }
 
+    /**
+     * Find a Roysched by title ID
+     */
+    public function findOneByTitleId(string $titleId): ?Roysched
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin('r.title', 't')
+            ->where('t.titleId = :titleId')
+            ->setParameter('titleId', $titleId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     //    /**
     //     * @return Roysched[] Returns an array of Roysched objects
     //     */

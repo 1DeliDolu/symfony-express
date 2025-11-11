@@ -1,7 +1,7 @@
 {% extends 'admin_base.html.twig' %}
 
-{% block title %}Satış Detayı{% endblock %}
-{% block page_title %}Satış Detayı{% endblock %}
+{% block title %}Verkaufsdetails{% endblock %}
+{% block page_title %}Verkaufsdetails{% endblock %}
 
 {% block body %}
 <!-- Header with Action Buttons -->
@@ -11,7 +11,7 @@
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
         </svg>
-        Listeye Dön
+        Zurück zur Liste
     </a>
     
     <div class="flex items-center gap-2">
@@ -20,11 +20,11 @@
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
             </svg>
-            Düzenle
+            Bearbeiten
         </a>
         
         <form method="post" action="{{ path('app_sale_delete', {'store': sale.store.storId, 'ordNum': sale.ordNum, 'title': sale.title.titleId}) }}" 
-              onsubmit="return confirm('Bu satışı silmek istediğinizden emin misiniz?');"
+              onsubmit="return confirm('Sind Sie sicher, dass Sie diesen Verkauf löschen möchten?');"
               class="inline">
             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sale.store.storId ~ sale.ordNum ~ sale.title.titleId) }}">
             <button type="submit" 
@@ -32,7 +32,7 @@
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                 </svg>
-                Sil
+                Löschen
             </button>
         </form>
     </div>
@@ -50,7 +50,7 @@
             </div>
             <div>
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    Sipariş #{{ sale.ordNum }}
+                    Bestellung #{{ sale.ordNum }}
                 </h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                     {{ sale.store.storName }}
@@ -62,20 +62,20 @@
     <!-- Details Grid -->
     <div class="p-6">
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <!-- Sipariş Numarası -->
+            <!-- Bestellnummer -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Sipariş Numarası
+                    Bestellnummer
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 font-mono text-sm font-semibold text-gray-900 dark:bg-gray-800 dark:text-white">
                     {{ sale.ordNum }}
                 </div>
             </div>
 
-            <!-- Sipariş Tarihi -->
+            <!-- Bestelldatum -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Sipariş Tarihi
+                    Bestelldatum
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
                     {% if sale.ordDate %}
@@ -91,10 +91,10 @@
                 </div>
             </div>
 
-            <!-- Mağaza -->
+            <!-- Geschäft -->
             <div class="md:col-span-2">
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Mağaza
+                    Geschäft
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
                     <div class="flex items-center gap-3">
@@ -119,10 +119,10 @@
                 </div>
             </div>
 
-            <!-- Kitap -->
+            <!-- Buch -->
             <div class="md:col-span-2">
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Kitap
+                    Buch
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
                     <div class="flex items-center gap-3">
@@ -135,28 +135,28 @@
                     </div>
                     {% if sale.title.type %}
                         <p class="mt-2 text-xs text-gray-600 dark:text-gray-400">
-                            Tür: {{ sale.title.type }}
+                            Typ: {{ sale.title.type }}
                         </p>
                     {% endif %}
                 </div>
             </div>
 
-            <!-- Miktar -->
+            <!-- Menge -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Miktar
+                    Menge
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
                     <span class="inline-flex items-center rounded-full bg-green-100 px-4 py-2 text-lg font-bold text-green-800 dark:bg-green-900/20 dark:text-green-400">
-                        {{ sale.qty }} adet
+                        {{ sale.qty }} Stück
                     </span>
                 </div>
             </div>
 
-            <!-- Ödeme Koşulları -->
+            <!-- Zahlungsbedingungen -->
             <div>
                 <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                    Ödeme Koşulları
+                    Zahlungsbedingungen
                 </label>
                 <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
                     <span class="inline-flex items-center rounded-full bg-orange-100 px-3 py-1 text-sm font-medium text-orange-800 dark:bg-orange-900/20 dark:text-orange-400">
@@ -173,7 +173,7 @@
     <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Birim Fiyat</p>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Stückpreis</p>
                 <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
                     {% if sale.title.price %}
                         ${{ sale.title.price|number_format(2, '.', ',') }}
@@ -193,7 +193,7 @@
     <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Toplam Tutar</p>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Gesamtbetrag</p>
                 <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
                     {% if sale.title.price %}
                         ${{ (sale.title.price * sale.qty)|number_format(2, '.', ',') }}
@@ -213,10 +213,10 @@
     <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Sipariş Yaşı</p>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Bestellalter</p>
                 <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
                     {% if sale.ordDate %}
-                        {{ 'now'|date('U') - sale.ordDate.timestamp }} gün
+                        {{ 'now'|date('U') - sale.ordDate.timestamp }} Tage
                     {% else %}
                         -
                     {% endif %}
@@ -231,3 +231,4 @@
     </div>
 </div>
 {% endblock %}
+

@@ -4,238 +4,246 @@
 {% block page_title %}Buch-Autor Zuordnung Details{% endblock %}
 
 {% block body %}
-<!-- Breadcrumb -->
-<nav class="mb-6 flex" aria-label="Breadcrumb">
-    <ol class="inline-flex items-center space-x-1 md:space-x-3">
-        <li class="inline-flex items-center">
-            <a href="{{ path('app_dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-                <svg class="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
-                </svg>
-                Dashboard
-            </a>
-        </li>
-        <li>
-            <div class="flex items-center">
-                <svg class="h-6 w-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
-                </svg>
-                <a href="{{ path('app_title_author_index') }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white md:ml-2">
-                    Buch-Autoren
-                </a>
-            </div>
-        </li>
-        <li aria-current="page">
-            <div class="flex items-center">
-                <svg class="h-6 w-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
-                </svg>
-                <span class="ml-1 text-sm font-medium text-gray-500 dark:text-gray-400 md:ml-2">Details</span>
-            </div>
-        </li>
-    </ol>
-</nav>
-
-<!-- Action Buttons -->
-<div class="mb-6 flex items-center gap-3">
+<!-- Header with Action Buttons -->
+<div class="mb-6 flex items-center justify-between">
     <a href="{{ path('app_title_author_index') }}" 
-       class="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+       class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
         </svg>
         Zurück zur Liste
     </a>
     
-    <a href="{{ path('app_title_author_edit', {'author': title_author.author.auId, 'title': title_author.title.titleId}) }}" 
-       class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-        </svg>
-        Bearbeiten
-    </a>
+    <div class="flex items-center gap-2">
+        <a href="{{ path('app_title_author_edit', {'author': title_author.author.auId, 'title': title_author.title.titleId}) }}" 
+           class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+            Bearbeiten
+        </a>
+        
+        <form method="post" action="{{ path('app_title_author_delete', {'author': title_author.author.auId, 'title': title_author.title.titleId}) }}" 
+              onsubmit="return confirm('Sind Sie sicher, dass Sie diese Zuordnung löschen möchten?');"
+              class="inline">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ title_author.author.auId ~ title_author.title.titleId) }}">
+            <button type="submit" 
+                    class="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                Löschen
+            </button>
+        </form>
+    </div>
 </div>
 
-<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-    <!-- Main Details Card -->
-    <div class="lg:col-span-2">
-        <div class="rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
-            <div class="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    Zuordnungsdetails
-                </h3>
+<!-- Title Author Info Card -->
+<div class="rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <!-- Header -->
+    <div class="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
+        <div class="flex items-center gap-4">
+            <div class="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-2xl font-bold text-blue-600 dark:bg-blue-900/20 dark:text-blue-400">
+                <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
             </div>
-
-            <div class="p-6">
-                <dl class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                    <div class="sm:col-span-2">
-                        <dt class="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">
-                            <svg class="mr-2 inline-block h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                            </svg>
-                            Buchtitel
-                        </dt>
-                        <dd class="text-lg font-semibold text-gray-900 dark:text-white">
-                            {{ title_author.title.title }}
-                        </dd>
-                        {% if title_author.title.type %}
-                            <span class="mt-2 inline-flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-800 dark:bg-purple-900/20 dark:text-purple-400">
-                                {{ title_author.title.type }}
-                            </span>
-                        {% endif %}
-                    </div>
-
-                    <div class="sm:col-span-2">
-                        <dt class="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">
-                            <svg class="mr-2 inline-block h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                            </svg>
-                            Autor
-                        </dt>
-                        <dd class="text-lg font-semibold text-gray-900 dark:text-white">
-                            {{ title_author.author.auFname }} {{ title_author.author.auLname }}
-                        </dd>
-                        {% if title_author.author.phone %}
-                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                📞 {{ title_author.author.phone }}
-                            </p>
-                        {% endif %}
-                    </div>
-
-                    <div>
-                        <dt class="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">
-                            Reihenfolge
-                        </dt>
-                        <dd class="text-gray-900 dark:text-white">
-                            {% if title_author.auOrd %}
-                                <span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-base font-medium text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
-                                    #{{ title_author.auOrd }}
-                                </span>
-                            {% else %}
-                                <span class="text-gray-400">Nicht festgelegt</span>
-                            {% endif %}
-                        </dd>
-                        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                            Position des Autors in der Autorenliste
-                        </p>
-                    </div>
-
-                    <div>
-                        <dt class="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">
-                            Tantiemen
-                        </dt>
-                        <dd class="text-gray-900 dark:text-white">
-                            {% if title_author.royaltyPer %}
-                                <span class="text-2xl font-bold text-green-600 dark:text-green-400">
-                                    {{ title_author.royaltyPer }}%
-                                </span>
-                            {% else %}
-                                <span class="text-gray-400">Nicht festgelegt</span>
-                            {% endif %}
-                        </dd>
-                        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                            Prozentsatz der Tantiemen für diesen Autor
-                        </p>
-                    </div>
-                </dl>
+            <div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    {{ title_author.title.title }}
+                </h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    von {{ title_author.author.auFname }} {{ title_author.author.auLname }}
+                </p>
             </div>
         </div>
     </div>
 
-    <!-- Side Information -->
-    <div class="space-y-6">
-        <!-- Book Info Card -->
-        <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-            <h3 class="mb-4 flex items-center text-lg font-semibold text-gray-900 dark:text-white">
-                <svg class="mr-2 h-5 w-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                </svg>
-                Buchinformationen
-            </h3>
-            <dl class="space-y-3">
-                <div>
-                    <dt class="text-xs font-medium text-gray-500 dark:text-gray-400">Titel</dt>
-                    <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ title_author.title.title }}</dd>
+    <!-- Details Grid -->
+    <div class="p-6">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <!-- Title ID -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Buch-ID
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 font-mono text-sm font-semibold text-gray-900 dark:bg-gray-800 dark:text-white">
+                    {{ title_author.title.titleId }}
                 </div>
-                {% if title_author.title.price %}
-                    <div>
-                        <dt class="text-xs font-medium text-gray-500 dark:text-gray-400">Preis</dt>
-                        <dd class="mt-1 text-sm font-semibold text-gray-900 dark:text-white">${{ title_author.title.price }}</dd>
-                    </div>
-                {% endif %}
-                {% if title_author.title.pubdate %}
-                    <div>
-                        <dt class="text-xs font-medium text-gray-500 dark:text-gray-400">Veröffentlichungsdatum</dt>
-                        <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ title_author.title.pubdate|date('d.m.Y') }}</dd>
-                    </div>
-                {% endif %}
-            </dl>
-            <a href="{{ path('app_title_show', {'titleId': title_author.title.titleId}) }}" 
-               class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-blue-600 px-3 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20">
-                Buch ansehen
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                </svg>
-            </a>
-        </div>
+            </div>
 
-        <!-- Author Info Card -->
-        <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-            <h3 class="mb-4 flex items-center text-lg font-semibold text-gray-900 dark:text-white">
-                <svg class="mr-2 h-5 w-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                </svg>
-                Autorinformationen
-            </h3>
-            <dl class="space-y-3">
-                <div>
-                    <dt class="text-xs font-medium text-gray-500 dark:text-gray-400">Name</dt>
-                    <dd class="mt-1 text-sm text-gray-900 dark:text-white">
-                        {{ title_author.author.auFname }} {{ title_author.author.auLname }}
-                    </dd>
+            <!-- Author ID -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Autor-ID
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 font-mono text-sm font-semibold text-gray-900 dark:bg-gray-800 dark:text-white">
+                    {{ title_author.author.auId }}
                 </div>
-                {% if title_author.author.city %}
-                    <div>
-                        <dt class="text-xs font-medium text-gray-500 dark:text-gray-400">Stadt</dt>
-                        <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ title_author.author.city }}</dd>
-                    </div>
-                {% endif %}
-                {% if title_author.author.state %}
-                    <div>
-                        <dt class="text-xs font-medium text-gray-500 dark:text-gray-400">Bundesstaat</dt>
-                        <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ title_author.author.state }}</dd>
-                    </div>
-                {% endif %}
-            </dl>
-            <a href="{{ path('app_author_show', {'auId': title_author.author.auId}) }}" 
-               class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-green-600 px-3 py-2 text-sm font-medium text-green-600 hover:bg-green-50 dark:border-green-400 dark:text-green-400 dark:hover:bg-green-900/20">
-                Autor ansehen
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                </svg>
-            </a>
-        </div>
+            </div>
 
-        <!-- Delete Card -->
-        <div class="rounded-lg border border-red-200 bg-red-50 p-6 dark:border-red-900/50 dark:bg-red-900/10">
-            <h3 class="mb-2 text-sm font-semibold text-red-900 dark:text-red-400">
-                Zuordnung löschen
-            </h3>
-            <p class="mb-4 text-xs text-red-700 dark:text-red-300">
-                Dies kann nicht rückgängig gemacht werden.
-            </p>
-            
-            <form method="post" 
-                  action="{{ path('app_title_author_delete', {'author': title_author.author.auId, 'title': title_author.title.titleId}) }}" 
-                  onsubmit="return confirm('Sind Sie sicher?');">
-                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ title_author.author.auId ~ title_author.title.titleId) }}">
-                <button type="submit" 
-                        class="w-full rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">
-                    <svg class="mr-2 inline-block h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                    </svg>
-                    Löschen
-                </button>
-            </form>
+            <!-- Book Title -->
+            <div class="md:col-span-2">
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Buchtitel
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:bg-gray-800 dark:text-white">
+                    {{ title_author.title.title }}
+                    {% if title_author.title.type %}
+                        <span class="ml-2 inline-flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-800 dark:bg-purple-900/20 dark:text-purple-400">
+                            {{ title_author.title.type }}
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Author Name -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Autor Vorname
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:bg-gray-800 dark:text-white">
+                    {{ title_author.author.auFname }}
+                </div>
+            </div>
+
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Autor Nachname
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:bg-gray-800 dark:text-white">
+                    {{ title_author.author.auLname }}
+                </div>
+            </div>
+
+            <!-- Author Order -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Reihenfolge
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
+                    {% if title_author.auOrd %}
+                        <span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
+                            #{{ title_author.auOrd }}
+                        </span>
+                    {% else %}
+                        <span class="text-sm text-gray-400">-</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Royalty Percentage -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Tantiemen
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
+                    {% if title_author.royaltyPer is not null %}
+                        <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-800 dark:bg-green-900/20 dark:text-green-400">
+                            {{ title_author.royaltyPer }}%
+                        </span>
+                    {% else %}
+                        <span class="text-sm text-gray-400">-</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Book Price (if available) -->
+            {% if title_author.title.price %}
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Buchpreis
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
+                    <div class="flex items-center gap-2 text-sm text-gray-900 dark:text-white">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        ${{ title_author.title.price|number_format(2, '.', ',') }}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Pub Date (if available) -->
+            {% if title_author.title.pubdate %}
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Veröffentlichungsdatum
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
+                    <div class="flex items-center gap-2 text-sm text-gray-900 dark:text-white">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        {{ title_author.title.pubdate|date('d.m.Y') }}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Additional Stats Card -->
+<div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Autorposition</p>
+                <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
+                    {% if title_author.auOrd %}
+                        #{{ title_author.auOrd }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </p>
+            </div>
+            <div class="rounded-full bg-blue-100 p-3 dark:bg-blue-900/20">
+                <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Tantiemen</p>
+                <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
+                    {% if title_author.royaltyPer is not null %}
+                        {{ title_author.royaltyPer }}%
+                    {% else %}
+                        -
+                    {% endif %}
+                </p>
+            </div>
+            <div class="rounded-full bg-green-100 p-3 dark:bg-green-900/20">
+                <svg class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Buchtyp</p>
+                <p class="mt-2 text-lg font-bold text-gray-900 dark:text-white">
+                    {% if title_author.title.type %}
+                        {{ title_author.title.type|length > 12 ? title_author.title.type|slice(0, 12) ~ '...' : title_author.title.type }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </p>
+            </div>
+            <div class="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
+                <svg class="h-6 w-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                </svg>
+            </div>
         </div>
     </div>
 </div>

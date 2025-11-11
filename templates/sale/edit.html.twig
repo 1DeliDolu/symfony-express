@@ -1,7 +1,7 @@
 {% extends 'admin_base.html.twig' %}
 
-{% block title %}Satış Düzenle{% endblock %}
-{% block page_title %}Satış Düzenle{% endblock %}
+{% block title %}Verkauf bearbeiten{% endblock %}
+{% block page_title %}Verkauf bearbeiten{% endblock %}
 
 {% block body %}
 <!-- Header with Navigation -->
@@ -11,11 +11,11 @@
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
         </svg>
-        Geri Dön
+        Zurück
     </a>
     
     <form method="post" action="{{ path('app_sale_delete', {'store': sale.store.storId, 'ordNum': sale.ordNum, 'title': sale.title.titleId}) }}" 
-          onsubmit="return confirm('Bu satışı silmek istediğinizden emin misiniz?');"
+          onsubmit="return confirm('Sind Sie sicher, dass Sie diesen Verkauf löschen möchten?');"
           class="inline">
         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sale.store.storId ~ sale.ordNum ~ sale.title.titleId) }}">
         <button type="submit" 
@@ -23,7 +23,7 @@
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
             </svg>
-            Satışı Sil
+            Verkauf löschen
         </button>
     </form>
 </div>
@@ -40,10 +40,10 @@
             </div>
             <div>
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    Sipariş #{{ sale.ordNum }} - Düzenle
+                    Bestellung #{{ sale.ordNum }} - Bearbeiten
                 </h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                    Satış bilgilerini güncelleyin
+                    Verkaufsinformationen aktualisieren
                 </p>
             </div>
         </div>
@@ -56,7 +56,7 @@
                 <!-- Mağaza - Read Only -->
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Mağaza
+                        Geschäft
                     </label>
                     <div class="rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
                         <div class="flex items-center gap-2">
@@ -67,27 +67,27 @@
                         </div>
                     </div>
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                        Mağaza değiştirilemez
+                        Geschäft kann nicht geändert werden
                     </p>
                 </div>
 
                 <!-- Sipariş Numarası - Read Only -->
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Sipariş Numarası
+                        Bestellnummer
                     </label>
                     <div class="rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 font-mono text-sm font-semibold text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
                         {{ sale.ordNum }}
                     </div>
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                        Sipariş numarası değiştirilemez
+                        Bestellnummer kann nicht geändert werden
                     </p>
                 </div>
 
                 <!-- Kitap - Read Only -->
                 <div class="md:col-span-2">
                     <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Kitap
+                        Buch
                     </label>
                     <div class="rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
                         <div class="flex items-center gap-2">
@@ -98,14 +98,14 @@
                         </div>
                     </div>
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                        Kitap değiştirilemez
+                        Buch kann nicht geändert werden
                     </p>
                 </div>
 
                 <!-- Sipariş Tarihi -->
                 <div>
                     {{ form_row(form.ordDate, {
-                        'label': 'Sipariş Tarihi',
+                        'label': 'Bestelldatum',
                         'attr': {
                             'class': 'mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-500'
                         },
@@ -116,11 +116,11 @@
                 <!-- Miktar -->
                 <div>
                     {{ form_row(form.qty, {
-                        'label': 'Miktar',
+                        'label': 'Menge',
                         'attr': {
                             'class': 'mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-500',
                             'min': '1',
-                            'placeholder': 'Adet giriniz'
+                            'placeholder': 'Anzahl eingeben'
                         },
                         'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}
                     }) }}
@@ -129,10 +129,10 @@
                 <!-- Ödeme Koşulları -->
                 <div class="md:col-span-2">
                     {{ form_row(form.payterms, {
-                        'label': 'Ödeme Koşulları',
+                        'label': 'Zahlungsbedingungen',
                         'attr': {
                             'class': 'mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-500',
-                            'placeholder': 'Örn: Net 30, Net 60'
+                            'placeholder': 'z.B.: Netto 30, Netto 60'
                         },
                         'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}
                     }) }}
@@ -144,13 +144,13 @@
             <div class="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/10">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-medium text-blue-900 dark:text-blue-300">Birim Fiyat</p>
+                        <p class="text-sm font-medium text-blue-900 dark:text-blue-300">Stückpreis</p>
                         <p class="mt-1 text-2xl font-bold text-blue-600 dark:text-blue-400">
                             ${{ sale.title.price|number_format(2, '.', ',') }}
                         </p>
                     </div>
                     <div class="text-right">
-                        <p class="text-sm font-medium text-blue-900 dark:text-blue-300">Tahmini Toplam</p>
+                        <p class="text-sm font-medium text-blue-900 dark:text-blue-300">Geschätzte Summe</p>
                         <p class="mt-1 text-2xl font-bold text-blue-600 dark:text-blue-400" id="totalPrice">
                             ${{ (sale.title.price * sale.qty)|number_format(2, '.', ',') }}
                         </p>
@@ -163,14 +163,14 @@
             <div class="flex items-center justify-end gap-3 border-t border-gray-200 pt-6 dark:border-gray-800">
                 <a href="{{ path('app_sale_show', {'store': sale.store.storId, 'ordNum': sale.ordNum, 'title': sale.title.titleId}) }}" 
                    class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700">
-                    İptal
+                    Abbrechen
                 </a>
                 <button type="submit" 
                         class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
-                    Değişiklikleri Kaydet
+                    Änderungen speichern
                 </button>
             </div>
         {{ form_end(form) }}
@@ -184,13 +184,14 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
         <div class="text-sm text-blue-800 dark:text-blue-300">
-            <p class="font-semibold">Bilgi:</p>
+            <p class="font-semibold">Hinweis:</p>
             <ul class="mt-2 list-inside list-disc space-y-1">
-                <li>Mağaza, sipariş numarası ve kitap değiştirilemez</li>
-                <li>Sadece sipariş tarihi, miktar ve ödeme koşulları güncellenebilir</li>
-                <li>Miktar pozitif bir sayı olmalıdır</li>
+                <li>Geschäft, Bestellnummer und Buch können nicht geändert werden</li>
+                <li>Nur Bestelldatum, Menge und Zahlungsbedingungen können aktualisiert werden</li>
+                <li>Die Menge muss eine positive Zahl sein</li>
             </ul>
         </div>
     </div>
 </div>
 {% endblock %}
+

@@ -1,39 +1,126 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}Discount index{% endblock %}
+{% block title %}Rabatte{% endblock %}
+{% block page_title %}Rabattverwaltung{% endblock %}
 
 {% block body %}
-    <h1>Discount index</h1>
+<style>
+[x-cloak] { display: none !important; }
+</style>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>DiscountType</th>
-                <th>LowQty</th>
-                <th>HighQty</th>
-                <th>Discount</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for discount in discounts %}
-            <tr>
-                <td>{{ discount.discountType }}</td>
-                <td>{{ discount.lowQty }}</td>
-                <td>{{ discount.highQty }}</td>
-                <td>{{ discount.discount }}</td>
-                <td>
-                    <a href="{{ path('app_discount_show', {'discountType': discount.discountType}) }}">show</a>
-                    <a href="{{ path('app_discount_edit', {'discountType': discount.discountType}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
+{% set discountsJson = discounts|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw %}
+
+<div x-data="{
+  q: '',
+  sort: {key: 'discountType', dir: 'asc'},
+  rows: {{ discountsJson }},
+  get filtered() {
+    let r = this.rows.filter(x => {
+      let searchStr = [x.discountType, x.lowQty||'', x.highQty||'', x.discount||'', x.store?.storName||''].join(' ').toLowerCase();
+      return searchStr.includes(this.q.toLowerCase());
+    });
+    r.sort((a,b) => {
+      const k = this.sort.key, d = this.sort.dir === 'asc' ? 1 : -1;
+      let aVal = k.includes('.') ? k.split('.').reduce((o,i) => o?.[i], a) : a[k];
+      let bVal = k.includes('.') ? k.split('.').reduce((o,i) => o?.[i], b) : b[k];
+      return (aVal > bVal ? 1 : aVal < bVal ? -1 : 0) * d;
+    });
+    return r;
+  },
+  setSort(k) { 
+    this.sort.dir = (this.sort.key === k && this.sort.dir === 'asc') ? 'desc' : 'asc'; 
+    this.sort.key = k; 
+  }
+}">
+
+  <!-- Header with Search -->
+  <div class="mb-4 flex items-center justify-between gap-3">
+    <input x-model="q" type="text" placeholder="Rabatte suchen..."
+           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"/>
+    <div class="flex items-center gap-3">
+      <span class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap" x-text="filtered.length + ' Rabatte'"></span>
+      <a href="{{ path('app_discount_new') }}" 
+         class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 whitespace-nowrap">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Neu
+      </a>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <table class="min-w-full text-sm">
+      <thead class="bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+        <tr>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('discountType')" class="font-semibold hover:underline">
+              Rabatt-Typ <span x-show="sort.key==='discountType'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('lowQty')" class="font-semibold hover:underline">
+              Mindestmenge <span x-show="sort.key==='lowQty'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('highQty')" class="font-semibold hover:underline">
+              Höchstmenge <span x-show="sort.key==='highQty'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('discount')" class="font-semibold hover:underline">
+              Rabatt % <span x-show="sort.key==='discount'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-left">
+            <button @click="setSort('store.storName')" class="font-semibold hover:underline">
+              Geschäft <span x-show="sort.key==='store.storName'">(<span x-text="sort.dir"></span>)</span>
+            </button>
+          </th>
+          <th class="px-4 py-3 text-right">Aktionen</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+        <template x-for="(disc, index) in filtered" :key="index">
+          <tr class="odd:bg-white even:bg-gray-50 hover:bg-blue-50/50 dark:odd:bg-gray-900 dark:even:bg-gray-800 dark:hover:bg-blue-900/20">
+            <td class="px-4 py-3">
+              <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-400" 
+                    x-text="disc.discountType || 'N/A'"></span>
+            </td>
+            <td class="px-4 py-3 text-gray-700 dark:text-gray-300" x-text="disc.lowQty || '-'"></td>
+            <td class="px-4 py-3 text-gray-700 dark:text-gray-300" x-text="disc.highQty || '-'"></td>
+            <td class="px-4 py-3">
+              <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/20 dark:text-green-400" 
+                    x-text="(disc.discount || 0) + '%'"></span>
+            </td>
+            <td class="px-4 py-3 text-gray-700 dark:text-gray-300" x-text="disc.store?.storName || 'N/A'"></td>
+            <td class="px-4 py-3 text-right">
+              <div class="inline-flex items-center gap-1">
+                <a x-bind:href="`{{ path('app_discount_show', {'discountType': 'PLACEHOLDER'}) }}`.replace('PLACEHOLDER', encodeURIComponent(disc.discountType))" 
+                   class="rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
+                  Anzeigen
+                </a>
+                <a x-bind:href="`{{ path('app_discount_edit', {'discountType': 'PLACEHOLDER'}) }}`.replace('PLACEHOLDER', encodeURIComponent(disc.discountType))" 
+                   class="rounded-lg bg-green-600 px-3 py-1.5 text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">
+                  Bearbeiten
+                </a>
+              </div>
+            </td>
+          </tr>
+        </template>
+        <tr x-show="filtered.length === 0">
+          <td colspan="6" class="px-6 py-12 text-center">
+            <p class="text-gray-600 dark:text-gray-400">Keine Rabatte gefunden</p>
+            <button @click="q=''" class="mt-2 text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">
+              Suche zurücksetzen
+            </button>
+          </td>
+        </tr>
+      </tbody>
     </table>
+  </div>
 
-    <a href="{{ path('app_discount_new') }}">Create new</a>
+</div>
 {% endblock %}

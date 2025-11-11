@@ -21,7 +21,7 @@ class RoyschedType extends AbstractType
             ->add('royalty')
             ->add('title', EntityType::class, [
                 'class' => Title::class,
-                'choice_label' => 'id',
+                'choice_label' => 'title',
             ])
         ;
     }
