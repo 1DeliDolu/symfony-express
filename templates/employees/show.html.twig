@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Employees{% endblock %}
+
+{% block body %}
+    <h1>Employees</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ employee.id }}</td>
+            </tr>
+            <tr>
+                <th>LastName</th>
+                <td>{{ employee.lastName }}</td>
+            </tr>
+            <tr>
+                <th>FirstName</th>
+                <td>{{ employee.firstName }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ employee.title }}</td>
+            </tr>
+            <tr>
+                <th>TitleOfCourtesy</th>
+                <td>{{ employee.titleOfCourtesy }}</td>
+            </tr>
+            <tr>
+                <th>BirthDate</th>
+                <td>{{ employee.birthDate ? employee.birthDate|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>HireDate</th>
+                <td>{{ employee.hireDate ? employee.hireDate|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>{{ employee.address }}</td>
+            </tr>
+            <tr>
+                <th>City</th>
+                <td>{{ employee.city }}</td>
+            </tr>
+            <tr>
+                <th>Region</th>
+                <td>{{ employee.region }}</td>
+            </tr>
+            <tr>
+                <th>PostalCode</th>
+                <td>{{ employee.postalCode }}</td>
+            </tr>
+            <tr>
+                <th>Country</th>
+                <td>{{ employee.country }}</td>
+            </tr>
+            <tr>
+                <th>HomePhone</th>
+                <td>{{ employee.homePhone }}</td>
+            </tr>
+            <tr>
+                <th>Extension</th>
+                <td>{{ employee.extension }}</td>
+            </tr>
+            <tr>
+                <th>Photo</th>
+                <td>{{ employee.photo }}</td>
+            </tr>
+            <tr>
+                <th>Notes</th>
+                <td>{{ employee.notes }}</td>
+            </tr>
+            <tr>
+                <th>PhotoPath</th>
+                <td>{{ employee.photoPath }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_employees_index') }}">back to list</a>
+
+    <a href="{{ path('app_employees_edit', {'id': employee.id}) }}">edit</a>
+
+    {{ include('employees/_delete_form.html.twig') }}
+{% endblock %}

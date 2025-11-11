@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Employees index{% endblock %}
+
+{% block body %}
+    <h1>Employees index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>LastName</th>
+                <th>FirstName</th>
+                <th>Title</th>
+                <th>TitleOfCourtesy</th>
+                <th>BirthDate</th>
+                <th>HireDate</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>Region</th>
+                <th>PostalCode</th>
+                <th>Country</th>
+                <th>HomePhone</th>
+                <th>Extension</th>
+                <th>Photo</th>
+                <th>Notes</th>
+                <th>PhotoPath</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for employee in employees %}
+            <tr>
+                <td>{{ employee.id }}</td>
+                <td>{{ employee.lastName }}</td>
+                <td>{{ employee.firstName }}</td>
+                <td>{{ employee.title }}</td>
+                <td>{{ employee.titleOfCourtesy }}</td>
+                <td>{{ employee.birthDate ? employee.birthDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ employee.hireDate ? employee.hireDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ employee.address }}</td>
+                <td>{{ employee.city }}</td>
+                <td>{{ employee.region }}</td>
+                <td>{{ employee.postalCode }}</td>
+                <td>{{ employee.country }}</td>
+                <td>{{ employee.homePhone }}</td>
+                <td>{{ employee.extension }}</td>
+                <td>{{ employee.photo }}</td>
+                <td>{{ employee.notes }}</td>
+                <td>{{ employee.photoPath }}</td>
+                <td>
+                    <a href="{{ path('app_employees_show', {'id': employee.id}) }}">show</a>
+                    <a href="{{ path('app_employees_edit', {'id': employee.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="18">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_employees_new') }}">Create new</a>
+{% endblock %}
