@@ -8,6 +8,7 @@ use App\Entity\Store;
 use App\Form\StoreType;
 use App\Repository\StoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,7 +68,7 @@ final class StoreController extends AbstractController
     }
 
     #[Route('/{storId}', name: 'app_store_show', methods: ['GET'])]
-    public function show(Store $store): Response
+    public function show(#[MapEntity(mapping: ['storId' => 'storId'])] Store $store): Response
     {
         return $this->render('store/show.html.twig', [
             'store' => $store,
@@ -75,7 +76,7 @@ final class StoreController extends AbstractController
     }
 
     #[Route('/{storId}/edit', name: 'app_store_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Store $store): Response
+    public function edit(Request $request, #[MapEntity(mapping: ['storId' => 'storId'])] Store $store): Response
     {
         $form = $this->createForm(StoreType::class, $store, ['is_new' => false]);
         $form->handleRequest($request);
@@ -94,7 +95,7 @@ final class StoreController extends AbstractController
     }
 
     #[Route('/{storId}', name: 'app_store_delete', methods: ['POST'])]
-    public function delete(Request $request, Store $store): Response
+    public function delete(Request $request, #[MapEntity(mapping: ['storId' => 'storId'])] Store $store): Response
     {
         if ($this->isCsrfTokenValid('delete' . $store->getStorId(), $request->getPayload()->getString('_token'))) {
             $this->entityManager->remove($store);

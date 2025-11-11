@@ -124,11 +124,11 @@
             </td>
             <td class="px-4 py-3 text-right">
               <div class="inline-flex items-center gap-1">
-                <a :href="`{{ path('app_sale_show', {'store': '__STORE__'}) }}`.replace('__STORE__', sale.storId)" 
+                <a :href="`{{ path('app_sale_show', {'store': '__STORE__', 'ordNum': '__ORDNUM__', 'title': '__TITLE__'}) }}`.replace('__STORE__', sale.storId).replace('__ORDNUM__', sale.ordNum).replace('__TITLE__', sale.titleId)" 
                    class="rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
                   Görüntüle
                 </a>
-                <a :href="`{{ path('app_sale_edit', {'store': '__STORE__'}) }}`.replace('__STORE__', sale.storId)" 
+                <a :href="`{{ path('app_sale_edit', {'store': '__STORE__', 'ordNum': '__ORDNUM__', 'title': '__TITLE__'}) }}`.replace('__STORE__', sale.storId).replace('__ORDNUM__', sale.ordNum).replace('__TITLE__', sale.titleId)" 
                    class="rounded-lg bg-green-600 px-3 py-1.5 text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">
                   Düzenle
                 </a>

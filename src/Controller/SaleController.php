@@ -8,6 +8,7 @@ use App\Entity\Sale;
 use App\Form\SaleType;
 use App\Repository\SaleRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -65,17 +66,23 @@ final class SaleController extends AbstractController
         ]);
     }
 
-    #[Route('/{store}', name: 'app_sale_show', methods: ['GET'])]
-    public function show(Sale $sale): Response
-    {
+    #[Route('/{store}/{ordNum}/{title}', name: 'app_sale_show', methods: ['GET'])]
+    public function show(
+        #[MapEntity(mapping: ['store' => 'store', 'ordNum' => 'ordNum', 'title' => 'title'])]
+        Sale $sale
+    ): Response {
         return $this->render('sale/show.html.twig', [
             'sale' => $sale,
         ]);
     }
 
-    #[Route('/{store}/edit', name: 'app_sale_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Sale $sale, EntityManagerInterface $entityManager): Response
-    {
+    #[Route('/{store}/{ordNum}/{title}/edit', name: 'app_sale_edit', methods: ['GET', 'POST'])]
+    public function edit(
+        Request $request,
+        #[MapEntity(mapping: ['store' => 'store', 'ordNum' => 'ordNum', 'title' => 'title'])]
+        Sale $sale,
+        EntityManagerInterface $entityManager
+    ): Response {
         $form = $this->createForm(SaleType::class, $sale);
         $form->handleRequest($request);
 
@@ -91,10 +98,15 @@ final class SaleController extends AbstractController
         ]);
     }
 
-    #[Route('/{store}', name: 'app_sale_delete', methods: ['POST'])]
-    public function delete(Request $request, Sale $sale, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $sale->getStore(), $request->getPayload()->getString('_token'))) {
+    #[Route('/{store}/{ordNum}/{title}', name: 'app_sale_delete', methods: ['POST'])]
+    public function delete(
+        Request $request,
+        #[MapEntity(mapping: ['store' => 'store', 'ordNum' => 'ordNum', 'title' => 'title'])]
+        Sale $sale,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $tokenId = 'delete' . $sale->getStore()->getStorId() . $sale->getOrdNum() . $sale->getTitle()->getTitleId();
+        if ($this->isCsrfTokenValid($tokenId, $request->getPayload()->getString('_token'))) {
             $entityManager->remove($sale);
             $entityManager->flush();
         }

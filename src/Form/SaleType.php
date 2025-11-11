@@ -18,16 +18,29 @@ class SaleType extends AbstractType
     {
         $builder
             ->add('ordNum')
-            ->add('ordDate')
-            ->add('qty')
-            ->add('payterms')
+            ->add('ordDate', null, [
+                'widget' => 'single_text',
+                'label' => 'Sipariş Tarihi',
+            ])
+            ->add('qty', null, [
+                'label' => 'Miktar',
+            ])
+            ->add('payterms', null, [
+                'label' => 'Ödeme Koşulları',
+            ])
             ->add('store', EntityType::class, [
                 'class' => Store::class,
-                'choice_label' => 'id',
+                'choice_label' => function (Store $store) {
+                    return $store->getStorId() . ' - ' . $store->getStorName();
+                },
+                'label' => 'Mağaza',
             ])
             ->add('title', EntityType::class, [
                 'class' => Title::class,
-                'choice_label' => 'id',
+                'choice_label' => function (Title $title) {
+                    return $title->getTitleId() . ' - ' . $title->getTitle();
+                },
+                'label' => 'Kitap',
             ])
         ;
     }

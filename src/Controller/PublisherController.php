@@ -8,6 +8,7 @@ use App\Entity\Publisher;
 use App\Form\PublisherType;
 use App\Repository\PublisherRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -69,7 +70,7 @@ final class PublisherController extends AbstractController
     }
 
     #[Route('/{pubId}', name: 'app_publisher_show', methods: ['GET'])]
-    public function show(Publisher $publisher): Response
+    public function show(#[MapEntity(mapping: ['pubId' => 'pubId'])] Publisher $publisher): Response
     {
         return $this->render('publisher/show.html.twig', [
             'publisher' => $publisher,
@@ -77,7 +78,7 @@ final class PublisherController extends AbstractController
     }
 
     #[Route('/{pubId}/edit', name: 'app_publisher_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Publisher $publisher): Response
+    public function edit(Request $request, #[MapEntity(mapping: ['pubId' => 'pubId'])] Publisher $publisher): Response
     {
         $form = $this->createForm(PublisherType::class, $publisher, [
             'is_new' => false,
@@ -99,7 +100,7 @@ final class PublisherController extends AbstractController
     }
 
     #[Route('/{pubId}', name: 'app_publisher_delete', methods: ['POST'])]
-    public function delete(Request $request, Publisher $publisher): Response
+    public function delete(Request $request, #[MapEntity(mapping: ['pubId' => 'pubId'])] Publisher $publisher): Response
     {
         if ($this->isCsrfTokenValid('delete' . $publisher->getPubId(), $request->getPayload()->getString('_token'))) {
             $this->entityManager->remove($publisher);

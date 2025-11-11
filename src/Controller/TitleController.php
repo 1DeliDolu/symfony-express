@@ -8,6 +8,7 @@ use App\Entity\Title;
 use App\Form\TitleType;
 use App\Repository\TitleRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -75,7 +76,7 @@ final class TitleController extends AbstractController
     }
 
     #[Route('/{titleId}', name: 'app_title_show', methods: ['GET'])]
-    public function show(Title $title): Response
+    public function show(#[MapEntity(mapping: ['titleId' => 'titleId'])] Title $title): Response
     {
         return $this->render('title/show.html.twig', [
             'title' => $title,
@@ -83,7 +84,7 @@ final class TitleController extends AbstractController
     }
 
     #[Route('/{titleId}/edit', name: 'app_title_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Title $title): Response
+    public function edit(Request $request, #[MapEntity(mapping: ['titleId' => 'titleId'])] Title $title): Response
     {
         $form = $this->createForm(TitleType::class, $title, ['is_new' => false]);
         $form->handleRequest($request);
@@ -103,7 +104,7 @@ final class TitleController extends AbstractController
     }
 
     #[Route('/{titleId}', name: 'app_title_delete', methods: ['POST'])]
-    public function delete(Request $request, Title $title): Response
+    public function delete(Request $request, #[MapEntity(mapping: ['titleId' => 'titleId'])] Title $title): Response
     {
         if ($this->isCsrfTokenValid('delete' . $title->getTitleId(), $request->getPayload()->getString('_token'))) {
             $this->entityManager->remove($title);
