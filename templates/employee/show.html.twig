@@ -1,42 +1,233 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}Employee{% endblock %}
+{% block title %}Çalışan Detayı{% endblock %}
+{% block page_title %}Çalışan Detayı{% endblock %}
 
 {% block body %}
-    <h1>Employee</h1>
+<!-- Header with Action Buttons -->
+<div class="mb-6 flex items-center justify-between">
+    <a href="{{ path('app_employee_index') }}" 
+       class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Listeye Dön
+    </a>
+    
+    <div class="flex items-center gap-2">
+        <a href="{{ path('app_employee_edit', {'empId': employee.empId}) }}" 
+           class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+            Düzenle
+        </a>
+        
+        <form method="post" action="{{ path('app_employee_delete', {'empId': employee.empId}) }}" 
+              onsubmit="return confirm('Bu çalışanı silmek istediğinizden emin misiniz?');"
+              class="inline">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ employee.empId) }}">
+            <button type="submit" 
+                    class="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                Sil
+            </button>
+        </form>
+    </div>
+</div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>EmpId</th>
-                <td>{{ employee.empId }}</td>
-            </tr>
-            <tr>
-                <th>Fname</th>
-                <td>{{ employee.fname }}</td>
-            </tr>
-            <tr>
-                <th>Minit</th>
-                <td>{{ employee.minit }}</td>
-            </tr>
-            <tr>
-                <th>Lname</th>
-                <td>{{ employee.lname }}</td>
-            </tr>
-            <tr>
-                <th>JobLvl</th>
-                <td>{{ employee.jobLvl }}</td>
-            </tr>
-            <tr>
-                <th>HireDate</th>
-                <td>{{ employee.hireDate ? employee.hireDate|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+<!-- Employee Info Card -->
+<div class="rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <!-- Header -->
+    <div class="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
+        <div class="flex items-center gap-4">
+            <div class="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-2xl font-bold text-blue-600 dark:bg-blue-900/20 dark:text-blue-400">
+                {{ employee.fname|first }}{{ employee.lname|first }}
+            </div>
+            <div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    {{ employee.fname }} {% if employee.minit %}{{ employee.minit }}. {% endif %}{{ employee.lname }}
+                </h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    {{ employee.job ? employee.job.jobDesc : 'Pozisyon belirtilmemiş' }}
+                </p>
+            </div>
+        </div>
+    </div>
 
-    <a href="{{ path('app_employee_index') }}">back to list</a>
+    <!-- Details Grid -->
+    <div class="p-6">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <!-- Çalışan ID -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Çalışan ID
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 font-mono text-sm font-semibold text-gray-900 dark:bg-gray-800 dark:text-white">
+                    {{ employee.empId }}
+                </div>
+            </div>
 
-    <a href="{{ path('app_employee_edit', {'empId': employee.empId}) }}">edit</a>
+            <!-- Ad -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Ad
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:bg-gray-800 dark:text-white">
+                    {{ employee.fname }}
+                </div>
+            </div>
 
-    {{ include('employee/_delete_form.html.twig') }}
+            <!-- Orta İsim -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Orta İsim
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:bg-gray-800 dark:text-white">
+                    {{ employee.minit|default('-') }}
+                </div>
+            </div>
+
+            <!-- Soyad -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Soyad
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:bg-gray-800 dark:text-white">
+                    {{ employee.lname }}
+                </div>
+            </div>
+
+            <!-- İş Pozisyonu -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    İş Pozisyonu
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
+                    {% if employee.job %}
+                        <span class="inline-flex items-center gap-2 text-sm text-gray-900 dark:text-white">
+                            <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
+                                ID: {{ employee.job.jobId }}
+                            </span>
+                            {{ employee.job.jobDesc }}
+                        </span>
+                    {% else %}
+                        <span class="text-sm text-gray-400">-</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- İş Seviyesi -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    İş Seviyesi
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
+                    <span class="inline-flex items-center rounded-full bg-purple-100 px-3 py-1 text-sm font-semibold text-purple-800 dark:bg-purple-900/20 dark:text-purple-400">
+                        Level {{ employee.jobLvl|default(10) }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Yayıncı -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    Yayıncı
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
+                    {% if employee.publisher %}
+                        <span class="inline-flex items-center gap-2 text-sm text-gray-900 dark:text-white">
+                            <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/20 dark:text-green-400">
+                                {{ employee.publisher.pubId }}
+                            </span>
+                            {{ employee.publisher.pubName }}
+                        </span>
+                    {% else %}
+                        <span class="text-sm text-gray-400">-</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- İşe Alım Tarihi -->
+            <div>
+                <label class="mb-1 block text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                    İşe Alım Tarihi
+                </label>
+                <div class="rounded-lg bg-gray-50 px-4 py-3 dark:bg-gray-800">
+                    {% if employee.hireDate %}
+                        <div class="flex items-center gap-2 text-sm text-gray-900 dark:text-white">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            {{ employee.hireDate|date('d.m.Y') }}
+                        </div>
+                    {% else %}
+                        <span class="text-sm text-gray-400">-</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Additional Stats Card -->
+<div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Çalışma Süresi</p>
+                <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
+                    {% if employee.hireDate %}
+                        {{ 'now'|date('Y') - employee.hireDate|date('Y') }} yıl
+                    {% else %}
+                        -
+                    {% endif %}
+                </p>
+            </div>
+            <div class="rounded-full bg-blue-100 p-3 dark:bg-blue-900/20">
+                <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Pozisyon Seviyesi</p>
+                <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
+                    {{ employee.jobLvl|default(10) }}/250
+                </p>
+            </div>
+            <div class="rounded-full bg-purple-100 p-3 dark:bg-purple-900/20">
+                <svg class="h-6 w-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Departman</p>
+                <p class="mt-2 text-lg font-bold text-gray-900 dark:text-white">
+                    {% if employee.publisher %}
+                        {{ employee.publisher.pubName|length > 15 ? employee.publisher.pubName|slice(0, 15) ~ '...' : employee.publisher.pubName }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </p>
+            </div>
+            <div class="rounded-full bg-green-100 p-3 dark:bg-green-900/20">
+                <svg class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

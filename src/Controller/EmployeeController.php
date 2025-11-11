@@ -9,6 +9,7 @@ use App\Form\EmployeeType;
 use App\Repository\EmployeeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -95,7 +96,7 @@ final class EmployeeController extends AbstractController
     }
 
     #[Route('/{empId}', name: 'app_employee_show', methods: ['GET'])]
-    public function show(Employee $employee): Response
+    public function show(#[MapEntity(mapping: ['empId' => 'empId'])] Employee $employee): Response
     {
         return $this->render('employee/show.html.twig', [
             'employee' => $employee,
@@ -103,7 +104,7 @@ final class EmployeeController extends AbstractController
     }
 
     #[Route('/{empId}/edit', name: 'app_employee_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Employee $employee): Response
+    public function edit(Request $request, #[MapEntity(mapping: ['empId' => 'empId'])] Employee $employee): Response
     {
         $form = $this->createForm(EmployeeType::class, $employee, ['is_new' => false]);
         $form->handleRequest($request);
@@ -122,7 +123,7 @@ final class EmployeeController extends AbstractController
     }
 
     #[Route('/{empId}', name: 'app_employee_delete', methods: ['POST'])]
-    public function delete(Request $request, Employee $employee): Response
+    public function delete(Request $request, #[MapEntity(mapping: ['empId' => 'empId'])] Employee $employee): Response
     {
         if ($this->isCsrfTokenValid('delete' . $employee->getEmpId(), $request->getPayload()->getString('_token'))) {
             $this->entityManager->remove($employee);

@@ -122,11 +122,11 @@
             </td>
             <td class="px-4 py-3 text-right">
               <div class="inline-flex items-center gap-1">
-                <a :href="`{{ path('app_author_show', {'id': '__ID__'}) }}`.replace('__ID__', author.auId)" 
+                <a :href="`{{ path('app_author_show', {'auId': '__ID__'}) }}`.replace('__ID__', author.auId)" 
                    class="rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
                   Görüntüle
                 </a>
-                <a :href="`{{ path('app_author_edit', {'id': '__ID__'}) }}`.replace('__ID__', author.auId)" 
+                <a :href="`{{ path('app_author_edit', {'auId': '__ID__'}) }}`.replace('__ID__', author.auId)" 
                    class="rounded-lg bg-green-600 px-3 py-1.5 text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">
                   Düzenle
                 </a>
