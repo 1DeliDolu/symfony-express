@@ -27,7 +27,7 @@ class OrdersController extends AbstractController
     public function index(Request $request): Response
     {
         // Get all orders for Alpine.js client-side filtering (limit to reasonable amount)
-        $sql = "SELECT TOP 200
+        $sql = "SELECT 
                     [OrderID], [CustomerID], [EmployeeID], [OrderDate], [RequiredDate], 
                     [ShippedDate], [ShipVia], [Freight], [ShipName], [ShipAddress],
                     [ShipCity], [ShipRegion], [ShipPostalCode], [ShipCountry],

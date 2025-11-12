@@ -5,6 +5,7 @@ namespace App\Form\Northwind;
 use App\Entity\Northwind\Employees;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,8 +18,16 @@ class EmployeesType extends AbstractType
             ->add('firstName')
             ->add('title')
             ->add('titleOfCourtesy')
-            ->add('birthDate')
-            ->add('hireDate')
+            ->add('birthDate', DateType::class, [
+                'widget' => 'single_text',
+                'required' => false,
+                'html5' => true,
+            ])
+            ->add('hireDate', DateType::class, [
+                'widget' => 'single_text',
+                'required' => false,
+                'html5' => true,
+            ])
             ->add('address')
             ->add('city')
             ->add('region')
