@@ -28,30 +28,32 @@ x-init="
             :class="sidebarToggle ? 'translate-x-0 lg:w-[90px]' : '-translate-x-full'"
             class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overflow-y-hidden border-r border-gray-200 bg-white px-5 dark:border-gray-800 dark:bg-black lg:static lg:translate-x-0"
         >
-            <div class="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
+             <div class="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
                 <nav x-data="{selected: $persist('{{ selected_menu|default('Dashboard') }}')}">
                     <!-- Menu Group -->
                     <div>
-                         <!-- Sidebar Header -->
+            <!-- Sidebar Header -->
             <div :class="sidebarToggle ? 'justify-center' : 'justify-between'" class="flex items-center gap-2 pt-8 sidebar-header pb-7">
                 <a href="{{ path('app_home') }}" class="flex items-center gap-2">
-                    <span class="logo text-2xl font-bold text-blue-600 dark:text-blue-400" :class="sidebarToggle ? 'hidden' : ''">
-                        Pehli<span class="text-blue-600 dark:text-orange-400">ONE
+                    <span class="logo text-2xl font-bold text-white dark:text-white" :class="sidebarToggle ? 'hidden' : ''">
+                        Pehli<span class="text-blue-600 dark:text-orange-400">ONE</span>
                     </span>
-                    <span class="logo-icon text-xl font-bold text-blue-600 dark:text-blue-400" :class="sidebarToggle ? 'lg:block' : 'hidden'">
+                    <span class="logo-icon text-xl font-bold text-white dark:text-white" :class="sidebarToggle ? 'lg:block' : 'hidden'">
                         PV
                     </span>
                 </a>
             </div>
 
+           
+
             <div class="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
                 <nav x-data="{selected: $persist('{{ selected_menu|default('Dashboard') }}')}">
                     <!-- Menu Group -->
                     <div>
-                        <h3 class="mb-4 text-xs uppercase leading-[20px] text-gray-400">
+
+                         <h3 class="mb-4 text-xs uppercase leading-[20px] text-gray-400">
                             <span class="menu-group-title" :class="sidebarToggle ? 'lg:hidden' : ''">MENÜ</span>
                         </h3>
-
                         <ul class="flex flex-col gap-2 mb-6">
                             <!-- Dashboard -->
                             <li>
