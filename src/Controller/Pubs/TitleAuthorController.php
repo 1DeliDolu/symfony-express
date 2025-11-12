@@ -33,7 +33,7 @@ final class TitleAuthorController extends AbstractController
             ];
         }, $titleAuthors);
 
-        return $this->render('title_author/index.html.twig', [
+        return $this->render('pubs/title_author/index.html.twig', [
             'title_authors' => $titleAuthorsData,
         ]);
     }
@@ -52,7 +52,7 @@ final class TitleAuthorController extends AbstractController
             return $this->redirectToRoute('app_title_author_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('title_author/new.html.twig', [
+        return $this->render('pubs/title_author/new.html.twig', [
             'title_author' => $titleAuthor,
             'form' => $form,
         ]);
@@ -67,7 +67,7 @@ final class TitleAuthorController extends AbstractController
             throw $this->createNotFoundException('Die Buch-Autor Zuordnung wurde nicht gefunden.');
         }
 
-        return $this->render('title_author/show.html.twig', [
+        return $this->render('pubs/title_author/show.html.twig', [
             'title_author' => $titleAuthor,
         ]);
     }
@@ -90,7 +90,7 @@ final class TitleAuthorController extends AbstractController
             return $this->redirectToRoute('app_title_author_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('title_author/edit.html.twig', [
+        return $this->render('pubs/title_author/edit.html.twig', [
             'title_author' => $titleAuthor,
             'form' => $form,
         ]);
@@ -113,4 +113,3 @@ final class TitleAuthorController extends AbstractController
         return $this->redirectToRoute('app_title_author_index', [], Response::HTTP_SEE_OTHER);
     }
 }
-
