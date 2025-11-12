@@ -13,7 +13,7 @@ x-init="
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Admin-Dashboard{% endblock %} - Express Pubs</title>
+    <title>{% block title %}Admin-Dashboard{% endblock %} - Pehli<span class="text-blue-600 dark:text-orange-400">ONE</span></title>
 
     {% block stylesheets %}
         <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
@@ -36,7 +36,7 @@ x-init="
             <div :class="sidebarToggle ? 'justify-center' : 'justify-between'" class="flex items-center gap-2 pt-8 sidebar-header pb-7">
                 <a href="{{ path('app_home') }}" class="flex items-center gap-2">
                     <span class="logo text-2xl font-bold text-white dark:text-white" :class="sidebarToggle ? 'hidden' : ''">
-                        Express Pubs
+                        Pehli<span class="text-blue-600 dark:text-orange-400">ONE</span>
                     </span>
                     <span class="logo-icon text-xl font-bold text-white dark:text-white" :class="sidebarToggle ? 'lg:block' : 'hidden'">
                         PV
