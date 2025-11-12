@@ -1,36 +1,54 @@
 doctrine:
     dbal:
-        url: "%env(resolve:DATABASE_URL)%"
+        default_connection: default
+        connections:
+            default:
+                url: "%env(resolve:DATABASE_URL)%"
+                mapping_types:
+                    id: string
+                    tid: string
+                    empid: string
+                    pub_id: string
+                    stor_id: string
+                profiling_collect_backtrace: "%kernel.debug%"
+                use_savepoints: true
 
-        # IMPORTANT: You MUST configure your server version,
-        # either here or in the DATABASE_URL env var (see .env file)
-        #server_version: '16'
+            northwind:
+                url: "%env(resolve:DATABASE_URL_NORTHWIND)%"
+                profiling_collect_backtrace: "%kernel.debug%"
+                use_savepoints: true
 
-        mapping_types:
-            id: string
-            tid: string
-            empid: string
-            pub_id: string
-            stor_id: string
-
-        profiling_collect_backtrace: "%kernel.debug%"
-        use_savepoints: true
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
-        report_fields_where_declared: true
-        validate_xml_mapping: true
-        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
-        identity_generation_preferences:
-            Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
-        auto_mapping: true
-        mappings:
-            App:
-                type: attribute
-                is_bundle: false
-                dir: "%kernel.project_dir%/src/Entity"
-                prefix: 'App\Entity'
-                alias: App
+        default_entity_manager: default
+        entity_managers:
+            default:
+                connection: default
+                report_fields_where_declared: true
+                validate_xml_mapping: true
+                naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+                identity_generation_preferences:
+                    Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
+                auto_mapping: false
+                mappings:
+                    App:
+                        type: attribute
+                        is_bundle: false
+                        dir: "%kernel.project_dir%/src/Entity"
+                        prefix: 'App\Entity'
+                        alias: App
+
+            northwind:
+                connection: northwind
+                naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+                mappings:
+                    Northwind:
+                        type: attribute
+                        is_bundle: false
+                        dir: "%kernel.project_dir%/src/Entity/Northwind"
+                        prefix: 'App\Entity\Northwind'
+                        alias: Northwind
         controller_resolver:
             auto_mapping: false
 

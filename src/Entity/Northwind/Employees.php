@@ -1,68 +1,69 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Northwind;
 
-use App\Repository\EmployeesRepository;
+use App\Repository\Northwind\EmployeesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: App\Repository\EmployeesRepository::class)]
+#[ORM\Entity(repositoryClass: EmployeesRepository::class)]
 #[ORM\Table(name: "Employees", schema: "dbo")]
 class Employees
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(name: "EmployeeID", type: "integer")]
     private ?int $id = null;
 
-    #[ORM\Column(length: 20)]
+    #[ORM\Column(name: "LastName", length: 20)]
     private ?string $lastName = null;
 
-    #[ORM\Column(length: 20)]
+    #[ORM\Column(name: "FirstName", length: 20)]
     private ?string $firstName = null;
 
-    #[ORM\Column(length: 30, nullable: true)]
+    #[ORM\Column(name: "Title", length: 30, nullable: true)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 25, nullable: true)]
+    #[ORM\Column(name: "TitleOfCourtesy", length: 25, nullable: true)]
     private ?string $titleOfCourtesy = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(name: "BirthDate", type: "datetime", nullable: true)]
     private ?\DateTime $birthDate = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(name: "HireDate", type: "datetime", nullable: true)]
     private ?\DateTime $hireDate = null;
 
-    #[ORM\Column(length: 60, nullable: true)]
+    #[ORM\Column(name: "Address", length: 60, nullable: true)]
     private ?string $address = null;
 
-    #[ORM\Column(length: 15, nullable: true)]
+    #[ORM\Column(name: "City", length: 15, nullable: true)]
     private ?string $city = null;
 
-    #[ORM\Column(length: 15, nullable: true)]
+    #[ORM\Column(name: "Region", length: 15, nullable: true)]
     private ?string $region = null;
 
-    #[ORM\Column(length: 10, nullable: true)]
+    #[ORM\Column(name: "PostalCode", length: 10, nullable: true)]
     private ?string $postalCode = null;
 
-    #[ORM\Column(length: 15)]
+    #[ORM\Column(name: "Country", length: 15)]
     private ?string $country = null;
 
-    #[ORM\Column(length: 24, nullable: true)]
+    #[ORM\Column(name: "HomePhone", length: 24, nullable: true)]
     private ?string $homePhone = null;
 
-    #[ORM\Column(length: 4, nullable: true)]
+    #[ORM\Column(name: "Extension", length: 4, nullable: true)]
     private ?string $extension = null;
 
-    #[ORM\Column(type: Types::BLOB, nullable: true)]
+    #[ORM\Column(name: "Photo", type: Types::BLOB, nullable: true)]
     private $photo = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(name: "Notes", type: Types::TEXT, nullable: true)]
     private ?string $notes = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'employees')]
+    #[ORM\JoinColumn(name: "ReportsTo", referencedColumnName: "EmployeeID")]
     private ?self $reportsTo = null;
 
     /**
@@ -71,7 +72,7 @@ class Employees
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'reportsTo')]
     private Collection $employees;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(name: "PhotoPath", length: 255, nullable: true)]
     private ?string $photoPath = null;
 
     public function __construct()

@@ -1,0 +1,124 @@
+{% extends 'northwind_base.html.twig' %}
+
+{% block title %}{{ employee.firstName }} {{ employee.lastName }} - Employee Details{% endblock %}
+{% block page_title %}Mitarbeiter Details{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6">
+        <a href="{{ path('app_northwind_employees') }}" 
+           class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mb-4 inline-block">
+            ← Back to Employees
+        </a>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+            {{ employee.firstName }} {{ employee.lastName }}
+        </h1>
+        {% if employee.title %}
+            <p class="text-gray-600 dark:text-gray-400 mt-2">{{ employee.title }}</p>
+        {% endif %}
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+        <div class="px-6 py-5">
+            <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Employee ID</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ employee.id }}</dd>
+                </div>
+
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Title of Courtesy</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ employee.titleOfCourtesy ?? '-' }}</dd>
+                </div>
+
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Birth Date</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                        {{ employee.birthDate ? employee.birthDate|date('Y-m-d') : '-' }}
+                    </dd>
+                </div>
+
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Hire Date</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                        {{ employee.hireDate ? employee.hireDate|date('Y-m-d') : '-' }}
+                    </dd>
+                </div>
+
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Address</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ employee.address ?? '-' }}</dd>
+                </div>
+
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">City</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ employee.city ?? '-' }}</dd>
+                </div>
+
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Region</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ employee.region ?? '-' }}</dd>
+                </div>
+
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Postal Code</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ employee.postalCode ?? '-' }}</dd>
+                </div>
+
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Country</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ employee.country }}</dd>
+                </div>
+
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Home Phone</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ employee.homePhone ?? '-' }}</dd>
+                </div>
+
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Extension</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ employee.extension ?? '-' }}</dd>
+                </div>
+
+                {% if employee.reportsTo %}
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Reports To</dt>
+                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                            <a href="{{ path('app_northwind_employees_show', {'id': employee.reportsTo.id}) }}" 
+                               class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">
+                                {{ employee.reportsTo.firstName }} {{ employee.reportsTo.lastName }}
+                            </a>
+                        </dd>
+                    </div>
+                {% endif %}
+
+                {% if employee.notes %}
+                    <div class="sm:col-span-2">
+                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Notes</dt>
+                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ employee.notes }}</dd>
+                    </div>
+                {% endif %}
+            </dl>
+
+            {% if employee.employees|length > 0 %}
+                <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Direct Reports ({{ employee.employees|length }})</h2>
+                    <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+                        {% for subordinate in employee.employees %}
+                            <li class="py-3">
+                                <a href="{{ path('app_northwind_employees_show', {'id': subordinate.id}) }}" 
+                                   class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">
+                                    {{ subordinate.firstName }} {{ subordinate.lastName }}
+                                </a>
+                                {% if subordinate.title %}
+                                    <span class="text-gray-500 dark:text-gray-400"> - {{ subordinate.title }}</span>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="de" x-data="{
+    page: '{{ page|default('dashboard') }}',
+    darkMode: false,
+    sidebarToggle: false,
+    scrollTop: false
+}"
+x-init="
+    darkMode = JSON.parse(localStorage.getItem('darkMode'));
+    $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))
+"
+:class="{'dark': darkMode === true}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Northwind Dashboard{% endblock %} - Express Pubs</title>
+
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+    {% endblock %}
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-900 dark:to-slate-900">
+    <!-- Page Wrapper -->
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside
+            :class="sidebarToggle ? 'translate-x-0 lg:w-[90px]' : '-translate-x-full'"
+            class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overflow-y-hidden border-r border-gray-200 bg-white px-5 dark:border-gray-800 dark:bg-black lg:static lg:translate-x-0"
+        >
+            <!-- Sidebar Header -->
+            <div :class="sidebarToggle ? 'justify-center' : 'justify-between'" class="flex items-center gap-2 pt-8 sidebar-header pb-7">
+                <a href="{{ path('app_home') }}" class="flex items-center gap-2">
+                    <span class="logo text-2xl font-bold text-indigo-600 dark:text-indigo-400" :class="sidebarToggle ? 'hidden' : ''">
+                        Northwind
+                    </span>
+                    <span class="logo-icon text-xl font-bold text-indigo-600 dark:text-indigo-400" :class="sidebarToggle ? 'lg:block' : 'hidden'">
+                        NW
+                    </span>
+                </a>
+            </div>
+
+            <div class="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
+                <nav x-data="{selected: $persist('{{ selected_menu|default('Dashboard') }}')}">
+                    <!-- Menu Group -->
+                    <div>
+                        <h3 class="mb-4 text-xs uppercase leading-[20px] text-gray-400">
+                            <span class="menu-group-title" :class="sidebarToggle ? 'lg:hidden' : ''">NORTHWIND MENÜ</span>
+                        </h3>
+
+                        <ul class="flex flex-col gap-2 mb-6">
+                            <!-- Dashboard -->
+                            <li>
+                                <a href="{{ path('app_dashboard_northwind') }}"
+                                   class="group flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium duration-300
+                                   {{ app.request.get('_route') == 'app_dashboard_northwind' ? 'bg-indigo-50 text-indigo-600 dark:bg-gray-800 dark:text-indigo-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
+                                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M2.5 2.5h6.667v6.667H2.5V2.5zm0 8.333h6.667V17.5H2.5v-6.667zm8.333-8.333H17.5v6.667h-6.667V2.5zm0 8.333H17.5V17.5h-6.667v-6.667z"/>
+                                    </svg>
+                                    <span :class="sidebarToggle ? 'lg:hidden' : ''">Dashboard</span>
+                                </a>
+                            </li>
+
+                            <!-- Products (Produkte) -->
+                            <li>
+                                <a href="#"
+                                   class="group flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium duration-300 text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800">
+                                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/>
+                                    </svg>
+                                    <span :class="sidebarToggle ? 'lg:hidden' : ''">Produkte</span>
+                                </a>
+                            </li>
+
+                            <!-- Categories (Kategorien) -->
+                            <li>
+                                <a href="#"
+                                   class="group flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium duration-300 text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800">
+                                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M3 3h6v6H3V3zm0 8h6v6H3v-6zm8-8h6v6h-6V3zm0 8h6v6h-6v-6z"/>
+                                    </svg>
+                                    <span :class="sidebarToggle ? 'lg:hidden' : ''">Kategorien</span>
+                                </a>
+                            </li>
+
+                            <!-- Customers (Kunden) -->
+                            <li>
+                                <a href="#"
+                                   class="group flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium duration-300 text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800">
+                                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                    </svg>
+                                    <span :class="sidebarToggle ? 'lg:hidden' : ''">Kunden</span>
+                                </a>
+                            </li>
+
+                            <!-- Orders (Bestellungen) -->
+                            <li>
+                                <a href="#"
+                                   class="group flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium duration-300 text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800">
+                                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                                    </svg>
+                                    <span :class="sidebarToggle ? 'lg:hidden' : ''">Bestellungen</span>
+                                </a>
+                            </li>
+
+                            <!-- Order Details (Bestelldetails) -->
+                            <li>
+                                <a href="#"
+                                   class="group flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium duration-300 text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800">
+                                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M4 4h12v2H4V4zm0 5h12v2H4V9zm0 5h12v2H4v-2z"/>
+                                    </svg>
+                                    <span :class="sidebarToggle ? 'lg:hidden' : ''">Bestelldetails</span>
+                                </a>
+                            </li>
+
+                            <!-- Employees (Mitarbeiter) -->
+                            <li>
+                                <a href="{{ path('app_northwind_employees') }}"
+                                   class="group flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium duration-300
+                                   {{ app.request.get('_route') starts with 'app_northwind_employees' ? 'bg-indigo-50 text-indigo-600 dark:bg-gray-800 dark:text-indigo-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
+                                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                                    </svg>
+                                    <span :class="sidebarToggle ? 'lg:hidden' : ''">Mitarbeiter</span>
+                                </a>
+                            </li>
+
+                            <!-- Suppliers (Lieferanten) -->
+                            <li>
+                                <a href="#"
+                                   class="group flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium duration-300 text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800">
+                                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+                                    </svg>
+                                    <span :class="sidebarToggle ? 'lg:hidden' : ''">Lieferanten</span>
+                                </a>
+                            </li>
+
+                            <!-- Shippers (Spediteure) -->
+                            <li>
+                                <a href="#"
+                                   class="group flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium duration-300 text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800">
+                                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                                    </svg>
+                                    <span :class="sidebarToggle ? 'lg:hidden' : ''">Spediteure</span>
+                                </a>
+                            </li>
+
+                            <!-- Regions (Regionen) -->
+                            <li>
+                                <a href="#"
+                                   class="group flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium duration-300 text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800">
+                                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                    </svg>
+                                    <span :class="sidebarToggle ? 'lg:hidden' : ''">Regionen</span>
+                                </a>
+                            </li>
+
+                            <!-- Territories (Gebiete) -->
+                            <li>
+                                <a href="#"
+                                   class="group flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium duration-300 text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800">
+                                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L7 13v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H6V8h2c.55 0 1-.45 1-1V5h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                                    </svg>
+                                    <span :class="sidebarToggle ? 'lg:hidden' : ''">Gebiete</span>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <!-- Divider -->
+                        <div class="my-4 border-t border-gray-200 dark:border-gray-700"></div>
+
+                        <!-- Navigation to Pubs -->
+                        <h3 class="mb-4 text-xs uppercase leading-[20px] text-gray-400">
+                            <span class="menu-group-title" :class="sidebarToggle ? 'lg:hidden' : ''">ANDERE SYSTEME</span>
+                        </h3>
+
+                        <ul class="flex flex-col gap-2">
+                            <li>
+                                <a href="{{ path('app_dashboard') }}"
+                                   class="group flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium duration-300 text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800">
+                                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V4.804z"/>
+                                    </svg>
+                                    <span :class="sidebarToggle ? 'lg:hidden' : ''">Pubs System</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="relative flex flex-col flex-1 overflow-x-hidden overflow-y-auto">
+            <!-- Small Device Overlay -->
+            <div
+                @click="sidebarToggle = false"
+                :class="sidebarToggle ? 'block' : 'hidden'"
+                class="fixed inset-0 z-9998 bg-black/20 lg:hidden"
+            ></div>
+
+            <!-- Header -->
+            <header class="sticky top-0 z-999 flex w-full border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+                <div class="flex grow items-center justify-between px-4 py-4 md:px-6">
+                    <div class="flex items-center gap-2 sm:gap-4">
+                        <!-- Hamburger Toggle BTN -->
+                        <button
+                            class="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 dark:border-gray-800 dark:text-gray-400"
+                            @click.stop="sidebarToggle = !sidebarToggle"
+                        >
+                            <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                <path d="M2 4h16v2H2V4zm0 5h16v2H2V9zm0 5h16v2H2v-2z"/>
+                            </svg>
+                        </button>
+
+                        <h1 class="text-xl font-semibold text-gray-800 dark:text-white">
+                            {% block page_title %}Northwind Dashboard{% endblock %}
+                        </h1>
+                    </div>
+
+                    <div class="flex items-center gap-3 sm:gap-4">
+                        <!-- Dark Mode Toggle -->
+                        <button
+                            @click="darkMode = !darkMode"
+                            class="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:text-gray-700 dark:border-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                        >
+                            <svg x-show="!darkMode" class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                <path d="M10 15a5 5 0 100-10 5 5 0 000 10zm0-2a3 3 0 110-6 3 3 0 010 6zM10 0a1 1 0 011 1v2a1 1 0 11-2 0V1a1 1 0 011-1zm0 16a1 1 0 011 1v2a1 1 0 11-2 0v-2a1 1 0 011-1zM1 10a1 1 0 011-1h2a1 1 0 110 2H2a1 1 0 01-1-1zm14 0a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1z"/>
+                            </svg>
+                            <svg x-show="darkMode" class="fill-current" width="20" height="20" viewBox="0 0 20 20">
+                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+                            </svg>
+                        </button>
+
+                        <!-- User Dropdown -->
+                        <div x-data="{ open: false }" class="relative">
+                            <button
+                                @click="open = !open"
+                                class="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800"
+                            >
+                                <span class="hidden text-sm font-medium text-gray-700 dark:text-gray-200 sm:block">
+                                    {{ app.user.email }}
+                                </span>
+                                <div class="h-8 w-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-medium">
+                                    {{ app.user.email|slice(0, 2)|upper }}
+                                </div>
+                            </button>
+
+                            <div
+                                x-show="open"
+                                @click.away="open = false"
+                                x-transition
+                                class="absolute right-0 mt-2 w-48 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900"
+                            >
+                                <a href="{{ path('app_logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800">
+                                    Abmelden
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="grow">
+                <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+                    {% for message in app.flashes('success') %}
+                        <div class="mb-4 rounded-lg bg-green-50 px-4 py-3 text-sm text-green-800 dark:bg-green-900/20 dark:text-green-300">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+                    {% for message in app.flashes('error') %}
+                        <div class="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800 dark:bg-red-900/20 dark:text-red-300">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+                    {% block body %}{% endblock %}
+                </div>
+            </main>
+        </div>
+    </div>
+
+    {% block javascripts %}
+        <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    {% endblock %}
+</body>
+</html>
