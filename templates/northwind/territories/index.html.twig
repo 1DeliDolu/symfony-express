@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Territories index{% endblock %}
+
+{% block body %}
+    <h1>Territories index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>TerritoryId</th>
+                <th>TerritoryDescription</th>
+                <th>RegionId</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for territory in territories %}
+            <tr>
+                <td>{{ territory.territoryId }}</td>
+                <td>{{ territory.territoryDescription }}</td>
+                <td>{{ territory.regionId }}</td>
+                <td>
+                    <a href="{{ path('app_northwind_territories_show', {'territoryId': territory.territoryId}) }}">show</a>
+                    <a href="{{ path('app_northwind_territories_edit', {'territoryId': territory.territoryId}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_northwind_territories_new') }}">Create new</a>
+{% endblock %}

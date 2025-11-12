@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Shippers{% endblock %}
+
+{% block body %}
+    <h1>Shippers</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ shipper.id }}</td>
+            </tr>
+            <tr>
+                <th>CompanyName</th>
+                <td>{{ shipper.companyName }}</td>
+            </tr>
+            <tr>
+                <th>Phone</th>
+                <td>{{ shipper.phone }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_northwind_shippers_index') }}">back to list</a>
+
+    <a href="{{ path('app_northwind_shippers_edit', {'id': shipper.id}) }}">edit</a>
+
+    {{ include('northwind/shippers/_delete_form.html.twig') }}
+{% endblock %}

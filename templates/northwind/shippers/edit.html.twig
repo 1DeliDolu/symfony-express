@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Shippers{% endblock %}
+
+{% block body %}
+    <h1>Edit Shippers</h1>
+
+    {{ include('northwind/shippers/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_northwind_shippers_index') }}">back to list</a>
+
+    {{ include('northwind/shippers/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Territories{% endblock %}
+
+{% block body %}
+    <h1>Territories</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>TerritoryId</th>
+                <td>{{ territory.territoryId }}</td>
+            </tr>
+            <tr>
+                <th>TerritoryDescription</th>
+                <td>{{ territory.territoryDescription }}</td>
+            </tr>
+            <tr>
+                <th>RegionId</th>
+                <td>{{ territory.regionId }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_northwind_territories_index') }}">back to list</a>
+
+    <a href="{{ path('app_northwind_territories_edit', {'territoryId': territory.territoryId}) }}">edit</a>
+
+    {{ include('northwind/territories/_delete_form.html.twig') }}
+{% endblock %}

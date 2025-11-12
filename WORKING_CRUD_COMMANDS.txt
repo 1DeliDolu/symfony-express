@@ -1,0 +1,43 @@
+# ====================================
+# NORTHWIND CRUD GENERATION - WORKING METHOD
+# ====================================
+# Bu komutları PowerShell'de TEK TEK çalıştırın
+# Her komuttan sonra:
+# 1. Controller adı soracak -> ENTER basın (default kullanın)
+# 2. Test oluşturulsun mu? -> no yazıp ENTER
+
+# 1. Products (ÖNEMLİ - çok kullanılır)
+php bin/console make:crud Northwind\Products
+
+# 2. Suppliers
+php bin/console make:crud Northwind\Suppliers
+
+# 3. Shippers
+php bin/console make:crud Northwind\Shippers
+
+# 4. CustomerDemographics
+php bin/console make:crud Northwind\CustomerDemographics
+
+# 5. Orders (Form eksik, tekrar çalıştırabilirsiniz)
+php bin/console make:crud Northwind\Orders
+
+# 6. Categories (Controller eksik, tekrar çalıştırabilirsiniz)
+php bin/console make:crud Northwind\Categories
+
+# ====================================
+# NOT: Composite Key Entity'ler için ÇALIŞMAZ
+# ====================================
+# Manuel oluşturulmalı:
+# - CustomerCustomerDemo
+# - OrderDetails  
+# - EmployeeTerritories
+
+# ====================================
+# Son olarak cache temizle
+# ====================================
+php bin/console cache:clear
+
+# ====================================
+# Routes kontrol et
+# ====================================
+php bin/console debug:router | findstr northwind

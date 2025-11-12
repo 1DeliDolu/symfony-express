@@ -1,0 +1,11 @@
+{% extends 'northwind_base.html.twig' %}
+
+{% block title %}New Category{% endblock %}
+
+{% block body %}
+    <h1>Create new Category</h1>
+
+    {{ include('northwind/categories/_form.html.twig') }}
+
+    <a href="{{ path('app_northwind_categories_index') }}" class="btn btn-secondary">back to list</a>
+{% endblock %}

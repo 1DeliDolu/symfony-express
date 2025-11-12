@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Shippers{% endblock %}
+
+{% block body %}
+    <h1>Create new Shippers</h1>
+
+    {{ include('northwind/shippers/_form.html.twig') }}
+
+    <a href="{{ path('app_northwind_shippers_index') }}">back to list</a>
+{% endblock %}

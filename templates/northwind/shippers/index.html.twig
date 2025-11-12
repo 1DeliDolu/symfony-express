@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Shippers index{% endblock %}
+
+{% block body %}
+    <h1>Shippers index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CompanyName</th>
+                <th>Phone</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for shipper in shippers %}
+            <tr>
+                <td>{{ shipper.id }}</td>
+                <td>{{ shipper.companyName }}</td>
+                <td>{{ shipper.phone }}</td>
+                <td>
+                    <a href="{{ path('app_northwind_shippers_show', {'id': shipper.id}) }}">show</a>
+                    <a href="{{ path('app_northwind_shippers_edit', {'id': shipper.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_northwind_shippers_new') }}">Create new</a>
+{% endblock %}

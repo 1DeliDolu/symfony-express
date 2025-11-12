@@ -62,6 +62,12 @@ class RegistrationFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            // CSRF korumasını etkinleştir (varsayılan olarak zaten true)
+            'csrf_protection' => true,
+            // Gizli CSRF alanının adı
+            'csrf_field_name' => '_token',
+            // Token ID - her form için benzersiz olmalı (güvenlik için)
+            'csrf_token_id' => 'user_registration',
         ]);
     }
 }

@@ -1,0 +1,43 @@
+{% extends 'northwind_base.html.twig' %}
+
+{% block title %}Customers{% endblock %}
+
+{% block body %}
+    <h1>Customers</h1>
+
+    <a href="{{ path('app_northwind_customers_new') }}" class="btn btn-primary mb-3">Create new</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Customer ID</th>
+                <th>Company Name</th>
+                <th>Contact Name</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>Phone</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for customer in customers %}
+            <tr>
+                <td>{{ customer.customerId }}</td>
+                <td>{{ customer.companyName }}</td>
+                <td>{{ customer.contactName }}</td>
+                <td>{{ customer.city }}</td>
+                <td>{{ customer.country }}</td>
+                <td>{{ customer.phone }}</td>
+                <td>
+                    <a href="{{ path('app_northwind_customers_show', {'customerId': customer.customerId}) }}" class="btn btn-sm btn-info">show</a>
+                    <a href="{{ path('app_northwind_customers_edit', {'customerId': customer.customerId}) }}" class="btn btn-sm btn-warning">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

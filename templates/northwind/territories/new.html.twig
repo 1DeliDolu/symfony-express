@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Territories{% endblock %}
+
+{% block body %}
+    <h1>Create new Territories</h1>
+
+    {{ include('northwind/territories/_form.html.twig') }}
+
+    <a href="{{ path('app_northwind_territories_index') }}">back to list</a>
+{% endblock %}

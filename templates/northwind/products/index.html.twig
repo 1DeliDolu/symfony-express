@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Products index{% endblock %}
+
+{% block body %}
+    <h1>Products index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ProductId</th>
+                <th>ProductName</th>
+                <th>SupplierId</th>
+                <th>CategoryId</th>
+                <th>QuantityPerUnit</th>
+                <th>UnitPrice</th>
+                <th>UnitsInStock</th>
+                <th>UnitsOnOrder</th>
+                <th>ReorderLevel</th>
+                <th>Discontinued</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
+            <tr>
+                <td>{{ product.productId }}</td>
+                <td>{{ product.productName }}</td>
+                <td>{{ product.supplierId }}</td>
+                <td>{{ product.categoryId }}</td>
+                <td>{{ product.quantityPerUnit }}</td>
+                <td>{{ product.unitPrice }}</td>
+                <td>{{ product.unitsInStock }}</td>
+                <td>{{ product.unitsOnOrder }}</td>
+                <td>{{ product.reorderLevel }}</td>
+                <td>{{ product.discontinued ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_northwind_products_show', {'productId': product.productId}) }}">show</a>
+                    <a href="{{ path('app_northwind_products_edit', {'productId': product.productId}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_northwind_products_new') }}">Create new</a>
+{% endblock %}

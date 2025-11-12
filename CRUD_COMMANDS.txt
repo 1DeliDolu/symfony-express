@@ -1,0 +1,54 @@
+# ====================================
+# NORTHWIND CRUD GENERATION COMMANDS
+# ====================================
+# PowerShell veya CMD için komutlar
+# Her satırı tek tek kopyalayıp çalıştırın
+
+# 1. Önce cache temizle
+php bin/console cache:clear
+
+# 2. Basit entity'ler için CRUD oluştur (tek tek deneyin)
+
+# Categories (Zaten oluşturuldu)
+php bin/console make:crud "App\Entity\Northwind\Categories"
+
+# Customers
+php bin/console make:crud "App\Entity\Northwind\Customers"
+
+# Products
+php bin/console make:crud "App\Entity\Northwind\Products"
+
+# Orders
+php bin/console make:crud "App\Entity\Northwind\Orders"
+
+# Suppliers
+php bin/console make:crud "App\Entity\Northwind\Suppliers"
+
+# Shippers
+php bin/console make:crud "App\Entity\Northwind\Shippers"
+
+# Employees
+php bin/console make:crud "App\Entity\Northwind\Employees"
+
+# Territories
+php bin/console make:crud "App\Entity\Northwind\Territories"
+
+# CustomerDemographics
+php bin/console make:crud "App\Entity\Northwind\CustomerDemographics"
+
+# ====================================
+# ÖNEMLİ NOT:
+# ====================================
+# Composite Primary Key kullanan entity'ler için make:crud ÇALIŞMAZ:
+# - CustomerCustomerDemo (CustomerID + CustomerTypeID)
+# - OrderDetails (OrderID + ProductID)
+# - EmployeeTerritories (EmployeeID + TerritoryID)
+# 
+# Bu entity'ler için manuel CRUD dosyaları oluşturulmalı
+# ====================================
+
+# Son olarak cache tekrar temizle
+php bin/console cache:clear
+
+# Symfony server'ı başlat
+symfony server:start

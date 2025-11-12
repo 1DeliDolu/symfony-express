@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Territories{% endblock %}
+
+{% block body %}
+    <h1>Edit Territories</h1>
+
+    {{ include('northwind/territories/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_northwind_territories_index') }}">back to list</a>
+
+    {{ include('northwind/territories/_delete_form.html.twig') }}
+{% endblock %}
