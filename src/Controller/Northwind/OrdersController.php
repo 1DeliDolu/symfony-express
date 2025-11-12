@@ -29,98 +29,185 @@ class OrdersController extends AbstractController
         // Get filter parameters
         $country = $request->query->get('country');
         $customer = $request->query->get('customer');
-        $limit = (int) $request->query->get('limit', 50);
+        $page = max(1, (int) $request->query->get('page', 1));
+        $perPage = 50;
+        $offset = ($page - 1) * $perPage;
 
-        // Create QueryBuilder
-        $qb = $this->connection->createQueryBuilder();
-        $qb->select(
-            'OrderID',
-            'CustomerID',
-            'EmployeeID',
-            'OrderDate',
-            'RequiredDate',
-            'ShippedDate',
-            'ShipVia',
-            'Freight',
-            'ShipName',
-            'ShipCity',
-            'ShipCountry',
-            'CompanyName',
-            'City',
-            'Country'
-        )
-            ->from('[Orders Qry]')
-            ->orderBy('OrderDate', 'DESC')
-            ->setMaxResults($limit);
+        // Build base WHERE clause for filters
+        $whereClauses = [];
+        $params = [];
+        $types = [];
 
-        // Apply filters
         if ($country) {
-            $qb->andWhere('ShipCountry = :country')
-                ->setParameter('country', $country);
+            $whereClauses[] = "[ShipCountry] = :country";
+            $params['country'] = $country;
+            $types['country'] = \PDO::PARAM_STR;
         }
 
         if ($customer) {
-            $qb->andWhere('CustomerID = :customer')
-                ->setParameter('customer', $customer);
+            $whereClauses[] = "[CustomerID] = :customer";
+            $params['customer'] = $customer;
+            $types['customer'] = \PDO::PARAM_STR;
         }
 
-        $orders = $qb->executeQuery()->fetchAllAssociative();
+        $whereClause = !empty($whereClauses) ? " WHERE " . implode(' AND ', $whereClauses) : "";
+
+        // Get total count for pagination
+        $totalCount = (int) $this->connection->executeQuery(
+            "SELECT COUNT(*) FROM [northwind].[dbo].[Orders Qry]" . $whereClause,
+            $params,
+            $types
+        )->fetchOne();
+
+        // Build SQL query with pagination
+        $sql = "SELECT 
+                    [OrderID], [CustomerID], [EmployeeID], [OrderDate], [RequiredDate], 
+                    [ShippedDate], [ShipVia], [Freight], [ShipName], [ShipAddress],
+                    [ShipCity], [ShipRegion], [ShipPostalCode], [ShipCountry],
+                    [CompanyName], [Address], [City], [Region], [PostalCode], [Country]
+                FROM [northwind].[dbo].[Orders Qry]"
+            . $whereClause .
+            " ORDER BY [OrderDate] DESC
+                OFFSET {$offset} ROWS
+                FETCH NEXT {$perPage} ROWS ONLY";
+
+        try {
+            $orders = $this->connection->executeQuery($sql, $params, $types)->fetchAllAssociative();
+        } catch (\Exception $e) {
+            throw new \RuntimeException("SQL Error: " . $e->getMessage() . "\nSQL: " . $sql);
+        }
 
         // Get unique countries for filter dropdown
-        $countriesQb = $this->connection->createQueryBuilder();
-        $countries = $countriesQb->select('DISTINCT ShipCountry')
-            ->from('[Orders Qry]')
-            ->where('ShipCountry IS NOT NULL')
-            ->orderBy('ShipCountry', 'ASC')
-            ->executeQuery()
-            ->fetchFirstColumn();
+        $countries = $this->connection->executeQuery(
+            "SELECT DISTINCT [ShipCountry] FROM [northwind].[dbo].[Orders Qry] WHERE [ShipCountry] IS NOT NULL ORDER BY [ShipCountry] ASC"
+        )->fetchFirstColumn();
+
+        $totalPages = (int) ceil($totalCount / $perPage);
 
         return $this->render('northwind/orders/index.html.twig', [
             'orders' => $orders,
             'countries' => $countries,
             'filter_country' => $country,
             'filter_customer' => $customer,
-            'total_count' => count($orders),
+            'current_page' => $page,
+            'per_page' => $perPage,
+            'total_count' => $totalCount,
+            'total_pages' => $totalPages,
         ]);
     }
 
     #[Route('/{id}', name: 'app_northwind_orders_show', methods: ['GET'])]
     public function show(int $id): Response
     {
-        // Get order details from view
-        $qb = $this->connection->createQueryBuilder();
-        $order = $qb->select('*')
-            ->from('[Orders Qry]')
-            ->where('OrderID = :id')
-            ->setParameter('id', $id)
-            ->executeQuery()
-            ->fetchAssociative();
+        // Get order details from view using raw SQL with full column names
+        $order = $this->connection->executeQuery(
+            "SELECT TOP 1 
+                [OrderID], [CustomerID], [EmployeeID], [OrderDate], [RequiredDate], 
+                [ShippedDate], [ShipVia], [Freight], [ShipName], [ShipAddress],
+                [ShipCity], [ShipRegion], [ShipPostalCode], [ShipCountry],
+                [CompanyName], [Address], [City], [Region], [PostalCode], [Country]
+            FROM [northwind].[dbo].[Orders Qry] 
+            WHERE [OrderID] = :id",
+            ['id' => $id],
+            ['id' => \PDO::PARAM_INT]
+        )->fetchAssociative();
 
         if (!$order) {
             throw $this->createNotFoundException('Order not found');
         }
 
-        // Get order details (line items)
-        $detailsQb = $this->connection->createQueryBuilder();
-        $orderDetails = $detailsQb->select(
-            'od.OrderID',
-            'od.ProductID',
-            'p.ProductName',
-            'od.UnitPrice',
-            'od.Quantity',
-            'od.Discount',
-            '(od.UnitPrice * od.Quantity * (1 - od.Discount)) as ExtendedPrice'
-        )
-            ->from('[Order Details]', 'od')
-            ->innerJoin('od', 'Products', 'p', 'od.ProductID = p.ProductID')
-            ->where('od.OrderID = :id')
-            ->setParameter('id', $id)
-            ->executeQuery()
-            ->fetchAllAssociative();
+        // Get order details (line items) with JOIN
+        $orderDetails = $this->connection->executeQuery(
+            "SELECT 
+                od.[OrderID], 
+                od.[ProductID], 
+                p.[ProductName], 
+                od.[UnitPrice], 
+                od.[Quantity], 
+                od.[Discount],
+                CAST(od.[UnitPrice] * od.[Quantity] * (1 - od.[Discount]) AS DECIMAL(19,2)) AS [ExtendedPrice]
+             FROM [northwind].[dbo].[OrderDetails] od
+             INNER JOIN [northwind].[dbo].[Products] p ON od.[ProductID] = p.[ProductID]
+             WHERE od.[OrderID] = :id
+             ORDER BY p.[ProductName]",
+            ['id' => $id],
+            ['id' => \PDO::PARAM_INT]
+        )->fetchAllAssociative();
 
         return $this->render('northwind/orders/show.html.twig', [
             'order' => $order,
             'orderDetails' => $orderDetails,
+        ]);
+    }
+
+    #[Route('/{id}/edit', name: 'app_northwind_orders_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, int $id): Response
+    {
+        // Get order from Orders table (not view)
+        $order = $this->connection->executeQuery(
+            "SELECT TOP 1 
+                [OrderID], [CustomerID], [EmployeeID], [OrderDate], [RequiredDate], 
+                [ShippedDate], [ShipVia], [Freight], [ShipName], [ShipAddress],
+                [ShipCity], [ShipRegion], [ShipPostalCode], [ShipCountry]
+            FROM [northwind].[dbo].[Orders] 
+            WHERE [OrderID] = :id",
+            ['id' => $id],
+            ['id' => \PDO::PARAM_INT]
+        )->fetchAssociative();
+
+        if (!$order) {
+            throw $this->createNotFoundException('Order not found');
+        }
+
+        // Get all customers for dropdown
+        $customers = $this->connection->executeQuery(
+            "SELECT [CustomerID], [CompanyName] FROM [northwind].[dbo].[Customers] ORDER BY [CompanyName]"
+        )->fetchAllAssociative();
+
+        // Get all employees for dropdown
+        $employees = $this->connection->executeQuery(
+            "SELECT [EmployeeID], [FirstName], [LastName] FROM [northwind].[dbo].[Employees] ORDER BY [LastName], [FirstName]"
+        )->fetchAllAssociative();
+
+        // Get all shippers for dropdown
+        $shippers = $this->connection->executeQuery(
+            "SELECT [ShipperID], [CompanyName] FROM [northwind].[dbo].[Shippers] ORDER BY [CompanyName]"
+        )->fetchAllAssociative();
+
+        if ($request->isMethod('POST')) {
+            try {
+                $this->connection->update(
+                    '[northwind].[dbo].[Orders]',
+                    [
+                        '[CustomerID]' => $request->request->get('customer_id'),
+                        '[EmployeeID]' => $request->request->get('employee_id') ?: null,
+                        '[OrderDate]' => $request->request->get('order_date') ?: null,
+                        '[RequiredDate]' => $request->request->get('required_date') ?: null,
+                        '[ShippedDate]' => $request->request->get('shipped_date') ?: null,
+                        '[ShipVia]' => $request->request->get('ship_via') ?: null,
+                        '[Freight]' => $request->request->get('freight') ?: null,
+                        '[ShipName]' => $request->request->get('ship_name') ?: null,
+                        '[ShipAddress]' => $request->request->get('ship_address') ?: null,
+                        '[ShipCity]' => $request->request->get('ship_city') ?: null,
+                        '[ShipRegion]' => $request->request->get('ship_region') ?: null,
+                        '[ShipPostalCode]' => $request->request->get('ship_postal_code') ?: null,
+                        '[ShipCountry]' => $request->request->get('ship_country') ?: null,
+                    ],
+                    ['[OrderID]' => $id]
+                );
+
+                $this->addFlash('success', 'Order updated successfully!');
+                return $this->redirectToRoute('app_northwind_orders_show', ['id' => $id]);
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Error updating order: ' . $e->getMessage());
+            }
+        }
+
+        return $this->render('northwind/orders/edit.html.twig', [
+            'order' => $order,
+            'customers' => $customers,
+            'employees' => $employees,
+            'shippers' => $shippers,
         ]);
     }
 }

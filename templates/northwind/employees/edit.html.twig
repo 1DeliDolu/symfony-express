@@ -1,0 +1,163 @@
+{% extends 'northwind_base.html.twig' %}
+
+{% block page_title %}Edit Employee{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-6">
+    <!-- Back Button -->
+    <div class="mb-4">
+        <a href="{{ path('app_northwind_employees_show', {'id': employee.id}) }}" 
+           class="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-800 dark:text-indigo-400">
+            <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Back to Employee Details
+        </a>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+        <div class="mb-6 border-b border-gray-200 pb-4 dark:border-gray-700">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+                Edit Employee: {{ employee.firstName }} {{ employee.lastName }}
+            </h1>
+        </div>
+
+        {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+            
+            <!-- Personal Information -->
+            <div class="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+                <h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Personal Information</h2>
+                
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div>
+                        {{ form_label(form.firstName, 'First Name', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                        {{ form_widget(form.firstName, {'attr': {'class': 'w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'}}) }}
+                        {{ form_errors(form.firstName) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.lastName, 'Last Name', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                        {{ form_widget(form.lastName, {'attr': {'class': 'w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'}}) }}
+                        {{ form_errors(form.lastName) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.title, 'Title', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                        {{ form_widget(form.title, {'attr': {'class': 'w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'}}) }}
+                        {{ form_errors(form.title) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.titleOfCourtesy, 'Title Of Courtesy', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                        {{ form_widget(form.titleOfCourtesy, {'attr': {'class': 'w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'}}) }}
+                        {{ form_errors(form.titleOfCourtesy) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.birthDate, 'Birth Date', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                        {{ form_widget(form.birthDate, {'attr': {'class': 'w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'}}) }}
+                        {{ form_errors(form.birthDate) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.hireDate, 'Hire Date', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                        {{ form_widget(form.hireDate, {'attr': {'class': 'w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'}}) }}
+                        {{ form_errors(form.hireDate) }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+                <h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Contact Information</h2>
+                
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div class="md:col-span-2">
+                        {{ form_label(form.address, 'Address', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                        {{ form_widget(form.address, {'attr': {'class': 'w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'}}) }}
+                        {{ form_errors(form.address) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.city, 'City', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                        {{ form_widget(form.city, {'attr': {'class': 'w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'}}) }}
+                        {{ form_errors(form.city) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.region, 'Region', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                        {{ form_widget(form.region, {'attr': {'class': 'w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'}}) }}
+                        {{ form_errors(form.region) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.postalCode, 'Postal Code', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                        {{ form_widget(form.postalCode, {'attr': {'class': 'w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'}}) }}
+                        {{ form_errors(form.postalCode) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.country, 'Country', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                        {{ form_widget(form.country, {'attr': {'class': 'w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'}}) }}
+                        {{ form_errors(form.country) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.homePhone, 'Home Phone', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                        {{ form_widget(form.homePhone, {'attr': {'class': 'w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'}}) }}
+                        {{ form_errors(form.homePhone) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.extension, 'Extension', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                        {{ form_widget(form.extension, {'attr': {'class': 'w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'}}) }}
+                        {{ form_errors(form.extension) }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Information -->
+            <div class="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+                <h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Additional Information</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        {{ form_label(form.reportsTo, 'Reports To', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                        {{ form_widget(form.reportsTo, {'attr': {'class': 'w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'}}) }}
+                        {{ form_errors(form.reportsTo) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.notes, 'Notes', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                        {{ form_widget(form.notes, {'attr': {'class': 'w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white', 'rows': 4}}) }}
+                        {{ form_errors(form.notes) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.photoPath, 'Photo Path', {'label_attr': {'class': 'mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                        {{ form_widget(form.photoPath, {'attr': {'class': 'w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'}}) }}
+                        {{ form_errors(form.photoPath) }}
+                    </div>
+                </div>
+            </div>
+
+            {{ form_row(form.photo, {'attr': {'class': 'hidden'}}) }}
+
+            <!-- Action Buttons -->
+            <div class="flex items-center justify-end gap-4 border-t border-gray-200 pt-6 dark:border-gray-700">
+                <a href="{{ path('app_northwind_employees_show', {'id': employee.id}) }}"
+                   class="rounded-lg border border-gray-300 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700">
+                    Cancel
+                </a>
+                <button 
+                    type="submit"
+                    class="rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700">
+                    Update Employee
+                </button>
+            </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Northwind;
 
-use App\Entity\Employees;
+use App\Entity\Northwind\Employees;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -31,7 +31,15 @@ class EmployeesType extends AbstractType
             ->add('photoPath')
             ->add('reportsTo', EntityType::class, [
                 'class' => Employees::class,
-                'choice_label' => 'id',
+                'em' => 'northwind',
+                'choice_label' => function (?Employees $employee) {
+                    if (!$employee) {
+                        return '';
+                    }
+                    return $employee->getLastName() . ', ' . $employee->getFirstName();
+                },
+                'required' => false,
+                'placeholder' => '-- Select Manager --',
             ])
         ;
     }

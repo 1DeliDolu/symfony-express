@@ -10,10 +10,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Doctrine\Persistence\ManagerRegistry;
 
 #[Route('/northwind/employees')]
 final class EmployeesController extends AbstractController
 {
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(ManagerRegistry $registry)
+    {
+        $this->entityManager = $registry->getManager('northwind');
+    }
     #[Route(name: 'app_northwind_employees', methods: ['GET'])]
     public function index(EmployeesRepository $employeesRepository): Response
     {
@@ -23,15 +30,15 @@ final class EmployeesController extends AbstractController
     }
 
     #[Route('/new', name: 'app_northwind_employees_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request): Response
     {
         $employee = new Employees();
         $form = $this->createForm(EmployeesType::class, $employee);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($employee);
-            $entityManager->flush();
+            $this->entityManager->persist($employee);
+            $this->entityManager->flush();
 
             return $this->redirectToRoute('app_northwind_employees', [], Response::HTTP_SEE_OTHER);
         }
@@ -51,13 +58,13 @@ final class EmployeesController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_northwind_employees_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Employees $employee, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Employees $employee): Response
     {
         $form = $this->createForm(EmployeesType::class, $employee);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            $this->entityManager->flush();
 
             return $this->redirectToRoute('app_northwind_employees', [], Response::HTTP_SEE_OTHER);
         }
@@ -67,13 +74,12 @@ final class EmployeesController extends AbstractController
             'form' => $form,
         ]);
     }
-
     #[Route('/{id}', name: 'app_northwind_employees_delete', methods: ['POST'])]
-    public function delete(Request $request, Employees $employee, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Employees $employee): Response
     {
         if ($this->isCsrfTokenValid('delete' . $employee->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($employee);
-            $entityManager->flush();
+            $this->entityManager->remove($employee);
+            $this->entityManager->flush();
         }
 
         return $this->redirectToRoute('app_northwind_employees', [], Response::HTTP_SEE_OTHER);

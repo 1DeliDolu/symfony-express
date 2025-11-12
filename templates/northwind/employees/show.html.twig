@@ -10,12 +10,20 @@
            class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mb-4 inline-block">
             ← Back to Employees
         </a>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-            {{ employee.firstName }} {{ employee.lastName }}
-        </h1>
-        {% if employee.title %}
-            <p class="text-gray-600 dark:text-gray-400 mt-2">{{ employee.title }}</p>
-        {% endif %}
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+                    {{ employee.firstName }} {{ employee.lastName }}
+                </h1>
+                {% if employee.title %}
+                    <p class="text-gray-600 dark:text-gray-400 mt-2">{{ employee.title }}</p>
+                {% endif %}
+            </div>
+            <a href="{{ path('app_northwind_employees_edit', {'id': employee.id}) }}"
+               class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300">
+                Edit Employee
+            </a>
+        </div>
     </div>
 
     <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
