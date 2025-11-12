@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Repository\AuthorRepository;
-use App\Repository\PublisherRepository;
-use App\Repository\StoreRepository;
-use App\Repository\TitleRepository;
+use App\Repository\Pubs\AuthorRepository;
+use App\Repository\Pubs\PublisherRepository;
+use App\Repository\Pubs\StoreRepository;
+use App\Repository\Pubs\TitleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -19,8 +19,7 @@ class HomeController extends AbstractController
         private readonly AuthorRepository $authorRepository,
         private readonly PublisherRepository $publisherRepository,
         private readonly StoreRepository $storeRepository,
-    ) {
-    }
+    ) {}
 
     #[Route('/', name: 'app_home', methods: ['GET'])]
     public function index(): Response
