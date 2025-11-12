@@ -50,17 +50,18 @@ this.sort.key = k;
 </div>
 </div>
 
-<div class="flex items-center gap-3">
-    <input x-model="q" type="text" placeholder="Search employees..."
-            class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"/>
-    <span class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap" x-text="filtered.length + ' employees'"></span>
-<a href="{{ path('app_northwind_employees_new') }}" 
-                class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 whitespace-nowrap">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-                New Employee
-            </a>    </div>
+    <div class="flex items-center gap-3">
+        <input x-model="q" type="text" placeholder="Search employees..."
+                class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"/>
+        <span class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap" x-text="filtered.length + ' employees'"></span>
+        <a href="{{ path('app_northwind_employees_new') }}" 
+            class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 whitespace-nowrap">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            New Employee
+        </a>   
+    </div>
 </div>
 
 <!-- Table -->

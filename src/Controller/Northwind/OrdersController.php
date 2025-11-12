@@ -26,53 +26,17 @@ class OrdersController extends AbstractController
     #[Route('', name: 'app_northwind_orders', methods: ['GET'])]
     public function index(Request $request): Response
     {
-        // Get filter parameters
-        $country = $request->query->get('country');
-        $customer = $request->query->get('customer');
-        $page = max(1, (int) $request->query->get('page', 1));
-        $perPage = 50;
-        $offset = ($page - 1) * $perPage;
-
-        // Build base WHERE clause for filters
-        $whereClauses = [];
-        $params = [];
-        $types = [];
-
-        if ($country) {
-            $whereClauses[] = "[ShipCountry] = :country";
-            $params['country'] = $country;
-            $types['country'] = \PDO::PARAM_STR;
-        }
-
-        if ($customer) {
-            $whereClauses[] = "[CustomerID] = :customer";
-            $params['customer'] = $customer;
-            $types['customer'] = \PDO::PARAM_STR;
-        }
-
-        $whereClause = !empty($whereClauses) ? " WHERE " . implode(' AND ', $whereClauses) : "";
-
-        // Get total count for pagination
-        $totalCount = (int) $this->connection->executeQuery(
-            "SELECT COUNT(*) FROM [northwind].[dbo].[Orders Qry]" . $whereClause,
-            $params,
-            $types
-        )->fetchOne();
-
-        // Build SQL query with pagination
-        $sql = "SELECT 
+        // Get all orders for Alpine.js client-side filtering (limit to reasonable amount)
+        $sql = "SELECT TOP 200
                     [OrderID], [CustomerID], [EmployeeID], [OrderDate], [RequiredDate], 
                     [ShippedDate], [ShipVia], [Freight], [ShipName], [ShipAddress],
                     [ShipCity], [ShipRegion], [ShipPostalCode], [ShipCountry],
                     [CompanyName], [Address], [City], [Region], [PostalCode], [Country]
-                FROM [northwind].[dbo].[Orders Qry]"
-            . $whereClause .
-            " ORDER BY [OrderDate] DESC
-                OFFSET {$offset} ROWS
-                FETCH NEXT {$perPage} ROWS ONLY";
+                FROM [northwind].[dbo].[Orders Qry]
+                ORDER BY [OrderDate] DESC";
 
         try {
-            $orders = $this->connection->executeQuery($sql, $params, $types)->fetchAllAssociative();
+            $orders = $this->connection->executeQuery($sql)->fetchAllAssociative();
         } catch (\Exception $e) {
             throw new \RuntimeException("SQL Error: " . $e->getMessage() . "\nSQL: " . $sql);
         }
@@ -82,17 +46,9 @@ class OrdersController extends AbstractController
             "SELECT DISTINCT [ShipCountry] FROM [northwind].[dbo].[Orders Qry] WHERE [ShipCountry] IS NOT NULL ORDER BY [ShipCountry] ASC"
         )->fetchFirstColumn();
 
-        $totalPages = (int) ceil($totalCount / $perPage);
-
         return $this->render('northwind/orders/index.html.twig', [
             'orders' => $orders,
             'countries' => $countries,
-            'filter_country' => $country,
-            'filter_customer' => $customer,
-            'current_page' => $page,
-            'per_page' => $perPage,
-            'total_count' => $totalCount,
-            'total_pages' => $totalPages,
         ]);
     }
 
