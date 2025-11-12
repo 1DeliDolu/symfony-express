@@ -7,19 +7,21 @@
 <section class="bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 text-white py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center">
-            <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                Pehli<span class="text-blue-600 dark:text-orange-400">ONE</span>
+            <h1 class="text-5xl md:text-6xl font-bold mb-4">
+                Pehli<span class="text-orange-400">ONE</span>
             </h1>
-            <p class="text-xl sm:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto">
-                Eine umfassende Lösung für modernes Verlagsmanagement. Verwalten Sie Ihre Bücher, Autoren und Verkäufe an einem zentralen Ort.
+            <p class="text-xl sm:text-2xl mb-4 text-blue-100 max-w-3xl mx-auto">
+                Umfassende Datenbank-Verwaltungslösung für Pubs und Northwind
+            </p>
+            <p class="text-base sm:text-lg mb-8 text-blue-200 max-w-4xl mx-auto">
+                Verwalten Sie zwei verschiedene Microsoft SQL Server Beispieldatenbanken in einer modernen Webanwendung. 
+                <strong>Pubs</strong> für Verlagsverwaltung (Bücher, Autoren, Verlage) und 
+                <strong>Northwind</strong> für Handelsverwaltung (Bestellungen, Produkte, Kunden).
             </p>
             <div class="flex flex-wrap justify-center gap-4">
                 {% if app.user %}
                     <a href="{{ path('app_dashboard') }}" class="px-8 py-4 bg-white text-blue-600 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                         Zum Dashboard
-                    </a>
-                    <a href="{{ path('app_title_index') }}" class="px-8 py-4 bg-blue-500/30 backdrop-blur-sm border-2 border-white/50 text-white rounded-lg font-semibold text-lg hover:bg-blue-500/40 transition-all">
-                        Bücher anzeigen
                     </a>
                 {% else %}
                     <a href="{{ path('app_login') }}" class="px-8 py-4 bg-white text-blue-600 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
@@ -30,6 +32,127 @@
                     </a>
                 {% endif %}
             </div>
+        </div>
+    </div>
+</section>
+
+<!-- Database Cards Section -->
+<section class="py-16 bg-gray-50 dark:bg-gray-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                Verfügbare Datenbanken
+            </h2>
+            <p class="text-lg text-gray-600 dark:text-gray-400">
+                Zwei Microsoft SQL Server Beispieldatenbanken in einer Anwendung
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <!-- Pubs Database Card -->
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl p-8 border-2 border-blue-200 dark:border-blue-800 hover:shadow-2xl transition-all transform hover:-translate-y-1">
+                <div class="flex items-center mb-6">
+                    <div class="p-4 bg-blue-600 rounded-xl mr-4">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Pubs Database</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Verlagsverwaltung</p>
+                    </div>
+                </div>
+
+                <p class="text-gray-700 dark:text-gray-300 mb-6">
+                    Klassische Microsoft SQL Server Beispieldatenbank für Verlagsverwaltung. 
+                    Enthält Bücher, Autoren, Verlage, Filialen und Verkaufsdaten.
+                </p>
+
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+                        <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ pubsStats.totalTitles }}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Bücher</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+                        <p class="text-3xl font-bold text-green-600 dark:text-green-400">{{ pubsStats.totalAuthors }}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Autoren</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+                        <p class="text-3xl font-bold text-purple-600 dark:text-purple-400">{{ pubsStats.totalPublishers }}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Verlage</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+                        <p class="text-3xl font-bold text-orange-600 dark:text-orange-400">{{ pubsStats.totalStores }}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Filialen</p>
+                    </div>
+                </div>
+
+                <a href="{{ path('app_dashboard_pubs') }}" class="block w-full text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                    Pubs öffnen
+                </a>
+            </div>
+
+            <!-- Northwind Database Card -->
+            {% if northwindStats %}
+                <div class="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-8 border-2 border-green-200 dark:border-green-800 hover:shadow-2xl transition-all transform hover:-translate-y-1">
+                    <div class="flex items-center mb-6">
+                        <div class="p-4 bg-green-600 rounded-xl mr-4">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Northwind Database</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Handelsverwaltung</p>
+                        </div>
+                    </div>
+
+                    <p class="text-gray-700 dark:text-gray-300 mb-6">
+                        Bekannte Microsoft SQL Server Beispieldatenbank für Handelsverwaltung. 
+                        Enthält Bestellungen, Produkte, Kunden, Mitarbeiter und Lieferanten.
+                    </p>
+
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+                            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ northwindStats.totalOrders }}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Bestellungen</p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+                            <p class="text-3xl font-bold text-green-600 dark:text-green-400">{{ northwindStats.totalProducts }}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Produkte</p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+                            <p class="text-3xl font-bold text-purple-600 dark:text-purple-400">{{ northwindStats.totalCustomers }}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Kunden</p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+                            <p class="text-3xl font-bold text-orange-600 dark:text-orange-400">{{ northwindStats.totalEmployees }}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Mitarbeiter</p>
+                        </div>
+                    </div>
+
+                    <a href="{{ path('app_dashboard_northwind') }}" class="block w-full text-center px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                        Northwind öffnen
+                    </a>
+                </div>
+            {% else %}
+                <div class="bg-gray-100 dark:bg-gray-800 rounded-2xl p-8 border-2 border-gray-300 dark:border-gray-700 opacity-60">
+                    <div class="flex items-center mb-6">
+                        <div class="p-4 bg-gray-400 rounded-xl mr-4">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Northwind Database</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Nicht verfügbar</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 mb-6">
+                        Die Northwind-Datenbank ist derzeit nicht konfiguriert oder nicht verfügbar.
+                    </p>
+                </div>
+            {% endif %}
         </div>
     </div>
 </section>

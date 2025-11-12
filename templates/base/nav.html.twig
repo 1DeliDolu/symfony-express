@@ -11,30 +11,6 @@
                 </a>
             </div>
 
-            <!-- Desktop Navigation -->
-            <div class="hidden md:flex md:items-center md:space-x-1">
-                <a href="{{ path('app_dashboard') }}"
-                   class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ app.request.get('_route') == 'app_dashboard' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                    Übersicht
-                </a>
-                <a href="{{ path('app_title_index') }}"
-                   class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ app.request.get('_route') starts with 'app_title' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                    Bücher
-                </a>
-                <a href="{{ path('app_author_index') }}"
-                   class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ app.request.get('_route') starts with 'app_author' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                    Autoren
-                </a>
-                <a href="{{ path('app_publisher_index') }}"
-                   class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ app.request.get('_route') starts with 'app_publisher' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                    Verlage
-                </a>
-                <a href="{{ path('app_store_index') }}"
-                   class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ app.request.get('_route') starts with 'app_store' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                    Filialen
-                </a>
-            </div>
-
             <!-- Right Side Actions -->
             <div class="hidden md:flex md:items-center md:space-x-3">
                 {% if app.user %}
