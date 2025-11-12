@@ -1,0 +1,185 @@
+{% extends 'northwind_base.html.twig' %}
+
+{% block page_title %}Order #{{ order.OrderID }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <!-- Back Button -->
+    <div class="mb-4">
+        <a href="{{ path('app_northwind_orders') }}" 
+           class="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-800 dark:text-indigo-400">
+            <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Back to Orders
+        </a>
+    </div>
+
+    <!-- Order Header -->
+    <div class="mb-6 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+        <div class="flex items-center justify-between border-b border-gray-200 pb-4 dark:border-gray-700">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+                    Order #{{ order.OrderID }}
+                </h1>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                    {{ order.OrderDate ? order.OrderDate|date('F d, Y') : 'N/A' }}
+                </p>
+            </div>
+            <div>
+                {% if order.ShippedDate %}
+                    <span class="rounded-lg bg-green-100 px-4 py-2 text-sm font-semibold text-green-800 dark:bg-green-900 dark:text-green-300">
+                        ✓ Shipped
+                    </span>
+                {% else %}
+                    <span class="rounded-lg bg-yellow-100 px-4 py-2 text-sm font-semibold text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
+                        ⏳ Pending
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Order Info Grid -->
+        <div class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <!-- Customer Info -->
+            <div>
+                <h3 class="mb-3 text-sm font-semibold uppercase text-gray-500 dark:text-gray-400">Customer</h3>
+                <div class="space-y-2">
+                    <p class="text-sm">
+                        <span class="font-medium text-gray-900 dark:text-white">{{ order.CompanyName }}</span>
+                    </p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        ID: {{ order.CustomerID }}
+                    </p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ order.City ?? 'N/A' }}, {{ order.Country ?? 'N/A' }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Shipping Info -->
+            <div>
+                <h3 class="mb-3 text-sm font-semibold uppercase text-gray-500 dark:text-gray-400">Shipping</h3>
+                <div class="space-y-2">
+                    <p class="text-sm font-medium text-gray-900 dark:text-white">
+                        {{ order.ShipName }}
+                    </p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ order.ShipCity ?? 'N/A' }}
+                    </p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ order.ShipCountry ?? 'N/A' }}
+                    </p>
+                    {% if order.ShippedDate %}
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            Shipped: {{ order.ShippedDate|date('Y-m-d') }}
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Order Details -->
+            <div>
+                <h3 class="mb-3 text-sm font-semibold uppercase text-gray-500 dark:text-gray-400">Order Info</h3>
+                <div class="space-y-2">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        Employee ID: <span class="font-medium">{{ order.EmployeeID ?? 'N/A' }}</span>
+                    </p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        Required: {{ order.RequiredDate ? order.RequiredDate|date('Y-m-d') : 'N/A' }}
+                    </p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        Freight: <span class="font-medium">${{ order.Freight ? order.Freight|number_format(2, '.', ',') : '0.00' }}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Items -->
+    <div class="rounded-lg bg-white shadow dark:bg-gray-800">
+        <div class="border-b border-gray-200 px-6 py-4 dark:border-gray-700">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Order Items</h2>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+                <thead class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Product</th>
+                        <th scope="col" class="px-6 py-3 text-right">Unit Price</th>
+                        <th scope="col" class="px-6 py-3 text-right">Quantity</th>
+                        <th scope="col" class="px-6 py-3 text-right">Discount</th>
+                        <th scope="col" class="px-6 py-3 text-right">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set grandTotal = 0 %}
+                    {% for item in orderDetails %}
+                        {% set itemTotal = item.ExtendedPrice ?? 0 %}
+                        {% set grandTotal = grandTotal + itemTotal %}
+                        <tr class="border-b bg-white dark:border-gray-700 dark:bg-gray-800">
+                            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                                {{ item.ProductName }}
+                                <span class="block text-xs text-gray-500 dark:text-gray-400">
+                                    Product ID: {{ item.ProductID }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                ${{ item.UnitPrice|number_format(2, '.', ',') }}
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                {{ item.Quantity }}
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                {% if item.Discount > 0 %}
+                                    <span class="text-red-600 dark:text-red-400">
+                                        {{ (item.Discount * 100)|number_format(0) }}%
+                                    </span>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-right font-medium text-gray-900 dark:text-white">
+                                ${{ itemTotal|number_format(2, '.', ',') }}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                                No items found for this order.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot class="border-t-2 border-gray-300 bg-gray-50 font-semibold dark:border-gray-600 dark:bg-gray-700">
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 text-right text-gray-900 dark:text-white">
+                            Subtotal:
+                        </td>
+                        <td class="px-6 py-4 text-right text-gray-900 dark:text-white">
+                            ${{ grandTotal|number_format(2, '.', ',') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 text-right text-gray-900 dark:text-white">
+                            Freight:
+                        </td>
+                        <td class="px-6 py-4 text-right text-gray-900 dark:text-white">
+                            ${{ order.Freight ? order.Freight|number_format(2, '.', ',') : '0.00' }}
+                        </td>
+                    </tr>
+                    <tr class="text-lg">
+                        <td colspan="4" class="px-6 py-4 text-right text-gray-900 dark:text-white">
+                            Total:
+                        </td>
+                        <td class="px-6 py-4 text-right text-indigo-600 dark:text-indigo-400">
+                            ${{ (grandTotal + (order.Freight ?? 0))|number_format(2, '.', ',') }}
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

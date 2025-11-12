@@ -1,28 +1,28 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Northwind;
 
-use App\Entity\Employees;
-use App\Form\EmployeesType;
-use App\Repository\EmployeesRepository;
+use App\Entity\Northwind\Employees;
+use App\Form\Northwind\EmployeesType;
+use App\Repository\Northwind\EmployeesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/employees')]
+#[Route('/northwind/employees')]
 final class EmployeesController extends AbstractController
 {
-    #[Route(name: 'app_employees_index', methods: ['GET'])]
+    #[Route(name: 'app_northwind_employees', methods: ['GET'])]
     public function index(EmployeesRepository $employeesRepository): Response
     {
-        return $this->render('employees/index.html.twig', [
+        return $this->render('northwind/employees/index.html.twig', [
             'employees' => $employeesRepository->findAll(),
         ]);
     }
 
-    #[Route('/new', name: 'app_employees_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'app_northwind_employees_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $employee = new Employees();
@@ -33,24 +33,24 @@ final class EmployeesController extends AbstractController
             $entityManager->persist($employee);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_employees_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_northwind_employees', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('employees/new.html.twig', [
+        return $this->render('northwind/employees/new.html.twig', [
             'employee' => $employee,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_employees_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_northwind_employees_show', methods: ['GET'])]
     public function show(Employees $employee): Response
     {
-        return $this->render('employees/show.html.twig', [
+        return $this->render('northwind/employees/show.html.twig', [
             'employee' => $employee,
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_employees_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_northwind_employees_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Employees $employee, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(EmployeesType::class, $employee);
@@ -59,16 +59,16 @@ final class EmployeesController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_employees_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_northwind_employees', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('employees/edit.html.twig', [
+        return $this->render('northwind/employees/edit.html.twig', [
             'employee' => $employee,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_employees_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_northwind_employees_delete', methods: ['POST'])]
     public function delete(Request $request, Employees $employee, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $employee->getId(), $request->getPayload()->getString('_token'))) {
@@ -76,6 +76,6 @@ final class EmployeesController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_employees_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_northwind_employees', [], Response::HTTP_SEE_OTHER);
     }
 }
