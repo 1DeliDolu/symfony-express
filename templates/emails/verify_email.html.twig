@@ -1,0 +1,7 @@
+<h1>Verifizieren Sie Ihr Konto</h1>
+<p>Hallo {{ user.email }},</p>
+<p>Vielen Dank für Ihre Registrierung! Um Ihr Konto zu aktivieren, klicken Sie bitte auf den folgenden Link:</p>
+<p><a href="{{ verifyUrl }}" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 4px;">E-Mail-Adresse bestätigen</a></p>
+<p>Falls der Button nicht funktioniert, kopieren Sie bitte diese URL in Ihren Browser:</p>
+<p><code style="background-color: #f4f4f4; padding: 8px; border-radius: 4px; display: inline-block;">{{ verifyUrl }}</code></p>
+<p>Mit freundlichen Grüßen,<br>Ihr Team</p>

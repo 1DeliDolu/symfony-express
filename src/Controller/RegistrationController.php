@@ -12,15 +12,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Mime\Address;
 
 final class RegistrationController extends AbstractController
 {
     public function __construct(
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly EntityManagerInterface $entityManager,
-    ) {
-    }
+        private readonly MailerInterface $mailer,
+    ) {}
 
     #[Route('/register', name: 'app_register', methods: ['GET', 'POST'])]
     public function register(Request $request, RateLimiterFactory $registrationLimiter): Response
@@ -56,10 +59,37 @@ final class RegistrationController extends AbstractController
             $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
             $user->setPassword($hashedPassword);
 
+            $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
+            $user->setPassword($hashedPassword);
+
+            // generate verification token
+            $token = bin2hex(random_bytes(32));
+            $user->setVerificationToken($token);
+            $user->setIsVerified(false);
+
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 
-            $this->addFlash('success', 'Hesabınız başarıyla oluşturuldu. Şimdi giriş yapabilirsiniz.');
+            // send verification email
+            $verifyUrl = $this->generateUrl('app_verify_email', ['token' => $token], \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_URL);
+
+            $email = (new TemplatedEmail())
+                ->from(new Address('no-reply@localhost', 'No Reply'))
+                ->to(new Address($user->getEmail()))
+                ->subject('Hesabınızı doğrulayın')
+                ->htmlTemplate('emails/verify_email.html.twig')
+                ->context([
+                    'user' => $user,
+                    'verifyUrl' => $verifyUrl,
+                ]);
+
+            try {
+                $this->mailer->send($email);
+            } catch (\Throwable $e) {
+                // Log or ignore - still create the account
+            }
+
+            $this->addFlash('success', 'Hesabınız oluşturuldu. Lütfen e-posta adresinizi doğrulamak için posta kutunuzu kontrol edin.');
 
             return $this->redirectToRoute('app_login');
         }

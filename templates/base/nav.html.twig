@@ -13,8 +13,62 @@
 
             <!-- Right Side Actions -->
             <div class="hidden md:flex md:items-center md:space-x-3">
+
+                <!-- Notification Bell -->
+                <div x-data="{ notificationOpen: false }" class="relative">
+                    <button @click="notificationOpen = !notificationOpen"
+                            class="relative p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <svg class="w-6 h-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                        </svg>
+                        <!-- Notification Badge -->
+                        <span class="absolute top-1 right-1 flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-red-500 rounded-full">
+                            1
+                        </span>
+                    </button>
+
+                    <!-- Notification Dropdown -->
+                    <div x-show="notificationOpen"
+                         @click.away="notificationOpen = false"
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 scale-95"
+                         x-transition:enter-end="opacity-100 scale-100"
+                         class="absolute right-0 mt-2 w-80 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 dark:bg-gray-800">
+                        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                            <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Benachrichtigungen</h3>
+                        </div>
+                        <div class="max-h-96 overflow-y-auto">
+                            <!-- Notification Item -->
+                            <a href="#" class="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                <div class="flex items-start space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-gray-900 dark:text-white">Neue E-Mail erhalten</p>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">Sie haben eine neue Nachricht</p>
+                                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">vor 5 Minuten</p>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <span class="inline-block w-2 h-2 bg-blue-500 rounded-full"></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="p-3 border-t border-gray-200 dark:border-gray-700">
+                            <a href="#" class="block text-sm text-center text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium">
+                                Alle anzeigen
+                            </a>
+                        </div>
+                    </div>
+                </div>
                 {% if app.user %}
                     <!-- User Menu -->
+
                     <div x-data="{ userMenuOpen: false }" class="relative">
                         <button @click="userMenuOpen = !userMenuOpen"
                                 class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
@@ -74,25 +128,31 @@
          x-transition:enter-end="opacity-100 translate-y-0"
          class="md:hidden border-t border-gray-200 dark:border-gray-800">
         <div class="px-2 pt-2 pb-3 space-y-1">
-            <a href="{{ path('app_dashboard') }}"
-               class="block px-3 py-2 rounded-lg text-base font-medium {{ app.request.get('_route') == 'app_dashboard' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                Übersicht
-            </a>
-            <a href="{{ path('app_title_index') }}"
-               class="block px-3 py-2 rounded-lg text-base font-medium {{ app.request.get('_route') starts with 'app_title' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                Bücher
-            </a>
-            <a href="{{ path('app_author_index') }}"
-               class="block px-3 py-2 rounded-lg text-base font-medium {{ app.request.get('_route') starts with 'app_author' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                Autoren
-            </a>
-            <a href="{{ path('app_publisher_index') }}"
-               class="block px-3 py-2 rounded-lg text-base font-medium {{ app.request.get('_route') starts with 'app_publisher' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                Verlage
-            </a>
+           
             <a href="{{ path('app_store_index') }}"
                class="block px-3 py-2 rounded-lg text-base font-medium {{ app.request.get('_route') starts with 'app_store' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800' }}">
-                Filialen
+                <div
+                    aria-label="noti"
+                    className="relative flex items-center justify-center w-10 h-10 bg-white rounded-full shadow"
+                >
+                    <span className="absolute top-0 right-0 flex items-center justify-center w-5 h-5 text-xs text-white bg-orange-500 rounded-full">
+                        5
+                    </span>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-6 h-6 text-slate-600"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                        />
+                    </svg>
+                </div>
             </a>
 
             {% if app.user %}
